@@ -1,12 +1,5 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Swayam’s Scripts",
-    "section": "",
-    "text": "Understanding Perplexity\n\n\nA New Perspective on Model Uncertainty\n\n\n\nLLM\n\n\n\n\n\n\n\n\n\nOct 10, 2024\n\n\nSwayam Singh\n\n\n3 min\n\n\n600 words\n\n\n\n\n\n\n\n\n\n\n\n\nSelf-Attention Mimicking Gradient Descent\n\n\n\n\n\n\nNLP\n\n\nTransformers\n\n\n\n\n\n\n\n\n\nOct 14, 2023\n\n\nSwayam Singh\n\n\n9 min\n\n\n1,671 words\n\n\n\n\n\n\nNo matching items"
-  },
-  {
     "objectID": "posts/Understanding Perplexity/index.html",
     "href": "posts/Understanding Perplexity/index.html",
     "title": "Understanding Perplexity",
@@ -40,6 +33,13 @@
     "title": "Understanding Perplexity",
     "section": "",
     "text": "Next, we can use the perplexity formula to analyze this situation:\n\\[\n\\text{Perplexity} = \\exp(\\mathcal{L}) = \\exp(\\log V) = V\n\\]\nThis result reveals a fascinating insight: when the model is completely uncertain, the perplexity is exactly equal to the size of the vocabulary \\(V\\).\n\n\nNow, what does this mean in terms of interpretation? When the perplexity equals \\(V\\), it indicates that the model is effectively considering all \\(V\\) tokens as potential candidates for the next token, reflecting a state of maximum uncertainty.\nOn the other hand, if the model has a lower perplexity, say 100, it means that the model behaves as if it is uncertain only among 100 tokens. This aligns perfectly with the statement from Raschka’s book: perplexity signifies the effective vocabulary size about which the model is uncertain at each step."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Swayam’s Scripts",
+    "section": "",
+    "text": "Understanding Perplexity\n\n\nA New Perspective on Model Uncertainty\n\n\n\nLLM\n\n\n\n\n\n\n\n\n\nOct 10, 2024\n\n\nSwayam Singh\n\n\n3 min\n\n\n600 words\n\n\n\n\n\n\n\n\n\n\n\n\nSelf-Attention Mimicking Gradient Descent\n\n\n\n\n\n\nNLP\n\n\nTransformers\n\n\n\n\n\n\n\n\n\nOct 14, 2023\n\n\nSwayam Singh\n\n\n9 min\n\n\n1,671 words\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/Self-Attention Mimicking Gradient Descent/index.html",
