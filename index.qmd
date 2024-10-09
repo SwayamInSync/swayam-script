@@ -1,0 +1,16 @@
+---
+title: "Swayam's Scripts"
+subtitle: "Swayam's Original Writings"
+listing:
+  contents: posts
+  sort: "date desc"
+  type: default
+  fields: [image, date, title, author, reading-time, description, subtitle, word-count, categories]
+  categories: true
+  sort-ui: false
+  filter-ui: false
+page-layout: full
+title-block-banner: true
+---
+
+

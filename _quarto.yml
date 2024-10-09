@@ -1,0 +1,20 @@
+project:
+  type: website
+
+website:
+  title: "Swayam's Scripts"
+  open-graph: true
+  favicon: favicon.png
+  page-footer: © 2024 Swayam Singh. All rights reserved.
+  navbar:
+    right:
+      - icon: house-fill
+        href: https://swayaminsync.github.io/
+      - icon: github
+        href: https://github.com/SwayamInSync
+      - icon: twitter
+        href: https://x.com/swayaminsync
+format:
+  html:
+    theme: cyborg
+    css: styles.css
