@@ -16,5 +16,7 @@ website:
         href: https://x.com/swayaminsync
 format:
   html:
-    theme: cyborg
+    theme:
+      dark: cyborg
+      light: cosmo
     css: styles.css

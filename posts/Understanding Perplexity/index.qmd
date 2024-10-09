@@ -7,7 +7,6 @@ categories: [LLM]
 format:
   html:
     code-fold: false
-jupyter: python3
 toc: true
 highlight-style: pygments
 execute: 
@@ -21,7 +20,7 @@ social:
 # Understanding Perplexity: A New Perspective on Model Uncertainty
 <hr>
 
-![](meme.jpg){fig-alt="Meme representing perplexity" fig-align="center" width=70%}
+![](meme.jpg){fig-alt="Meme representing perplexity" fig-align="center" width=70% .preview-image}
 
 <hr>
 Recently, I was diving into Chapter 5 (Pretraining) of the insightful book *"[Build a Large Language Model (From Scratch)](https://www.manning.com/books/build-a-large-language-model-from-scratch)"* by [Sebastian Raschka](https://x.com/rasbt?lang=en). While exploring the intricacies of language models, I stumbled upon an intriguing interpretation of **perplexity**. The author noted:

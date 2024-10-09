@@ -10,4 +10,6 @@ title-block-banner: true
 comments:
   giscus:
     repo: SwayamInSync/swayam-script
-    theme: dark_dimmed
+    theme:
+      light: light
+      dark: dark_dimmed
