@@ -1,6 +1,6 @@
 ---
 title: "Swayam's Scripts"
-subtitle: "Swayam's Original Writings"
+subtitle: "A collection of my original writings"
 listing:
   contents: posts
   sort: "date desc"

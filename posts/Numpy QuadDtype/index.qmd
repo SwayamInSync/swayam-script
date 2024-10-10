@@ -1,0 +1,15 @@
+---
+title: "Numpy QuadDType: Quadruple Precision for Everyone"
+subtitle: "Quad Precision for All: Simplifying High-Accuracy Computing with numpy_quaddtype"
+author: "Swayam Singh"
+date: "2024-09-30"
+categories: [NumPy, Open-Source]
+format:
+  html:
+    code-fold: false
+toc: true
+highlight-style: pygments
+image: "https://labs.quansight.org/_next/image?url=%2Fposts%2Fnumpy-quaddtype-blog%2Ffeature.png&w=3840&q=75"
+---
+
+<meta http-equiv="Refresh" content="0; url='https://labs.quansight.org/blog/numpy-quaddtype-blog'" />
