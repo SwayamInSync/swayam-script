@@ -23,7 +23,7 @@ social:
 ![](meme.jpg){fig-alt="Meme representing perplexity" fig-align="center" width=70% .preview-image}
 
 <hr>
-Recently, I was diving into Chapter 5 (Pretraining) of the insightful book *"[Build a Large Language Model (From Scratch)](https://www.manning.com/books/build-a-large-language-model-from-scratch)"* by [Sebastian Raschka](https://x.com/rasbt?lang=en). While exploring the intricacies of language models, I stumbled upon an intriguing interpretation of **perplexity**. The author noted:
+Recently, I was reading the Chapter 5 (Pretraining) of the book *"[Build a Large Language Model (From Scratch)](https://www.manning.com/books/build-a-large-language-model-from-scratch)"* by [Sebastian Raschka](https://x.com/rasbt?lang=en). I stumbled upon an intriguing interpretation of **perplexity**. The author noted:
 
 
 > "Perplexity is often considered more interpretable than the raw loss value because it signifies the effective vocabulary size about which the model is uncertain at each step."
@@ -76,7 +76,7 @@ $$
 Now, substituting this uniform probability into the cross-entropy loss equation, we get:
 
 $$
-\mathcal{L} = - \log P(x_t | \mathbf{x}_{<t}) = - \log \frac{1}{V} = \log V
+\mathcal{L} = - \frac{1}{T} \sum_{t=1}^{T} \log P(x_t | \mathbf{x}_{<t}) = - \log \frac{1}{V} = \log V
 $$
 
 Here, $-\log P(x_t | \mathbf{x}_{<t})$ reflects the loss incurred for each token when the model is entirely uncertain.
