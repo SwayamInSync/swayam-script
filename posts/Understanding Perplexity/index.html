@@ -219,7 +219,7 @@ window.Quarto = {
 </figure>
 </div>
 <hr>
-<p>Recently, I was diving into Chapter 5 (Pretraining) of the insightful book <em>“<a href="https://www.manning.com/books/build-a-large-language-model-from-scratch">Build a Large Language Model (From Scratch)</a>”</em> by <a href="https://x.com/rasbt?lang=en">Sebastian Raschka</a>. While exploring the intricacies of language models, I stumbled upon an intriguing interpretation of <strong>perplexity</strong>. The author noted:</p>
+<p>Recently, I was reading the Chapter 5 (Pretraining) of the book <em>“<a href="https://www.manning.com/books/build-a-large-language-model-from-scratch">Build a Large Language Model (From Scratch)</a>”</em> by <a href="https://x.com/rasbt?lang=en">Sebastian Raschka</a>. I stumbled upon an intriguing interpretation of <strong>perplexity</strong>. The author noted:</p>
 <blockquote class="blockquote">
 <p>“Perplexity is often considered more interpretable than the raw loss value because it signifies the effective vocabulary size about which the model is uncertain at each step.”</p>
 </blockquote>
@@ -271,7 +271,7 @@ P(x_t | \mathbf{x}_{&lt;t}) = \frac{1}{V}
 \]</span></p>
 <p>Now, substituting this uniform probability into the cross-entropy loss equation, we get:</p>
 <p><span class="math display">\[
-\mathcal{L} = - \log P(x_t | \mathbf{x}_{&lt;t}) = - \log \frac{1}{V} = \log V
+\mathcal{L} = - \frac{1}{T} \sum_{t=1}^{T} \log P(x_t | \mathbf{x}_{&lt;t}) = - \log \frac{1}{V} = \log V
 \]</span></p>
 <p>Here, <span class="math inline">\(-\log P(x_t | \mathbf{x}_{&lt;t})\)</span> reflects the loss incurred for each token when the model is entirely uncertain.</p>
 </section>
