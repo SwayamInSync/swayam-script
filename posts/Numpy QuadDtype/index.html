@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Swayam Singh">
+<meta name="dcterms.date" content="2024-09-30">
 
-<title>Swayam’s Scripts</title>
+<title>Numpy QuadDType: Quadruple Precision for Everyone – Swayam’s Scripts</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,27 +25,25 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./favicon.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -71,69 +71,11 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-image','listing-date','listing-title','listing-author','listing-reading-time','listing-description','listing-subtitle','listing-word-count','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-subtitle","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="Swayam’s Scripts">
-<meta property="og:description" content="A collection of my original writings">
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Numpy QuadDType: Quadruple Precision for Everyone – Swayam’s Scripts">
+<meta property="og:description" content="Quad Precision for All: Simplifying High-Accuracy Computing with numpy_quaddtype">
 <meta property="og:image" content="https://labs.quansight.org/_next/image?url=%2Fposts%2Fnumpy-quaddtype-blog%2Ffeature.png&amp;w=3840&amp;q=75">
 <meta property="og:site_name" content="Swayam's Scripts">
 </head>
@@ -145,7 +87,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Swayam’s Scripts</span>
     </a>
   </div>
@@ -181,168 +123,55 @@ window.Quarto = {
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page-left">
-      <h1 class="title">Swayam’s Scripts</h1>
-            <p class="subtitle lead">A collection of my original writings</p>
-                      </div>
+    <div class="quarto-title column-body">
+      <h1 class="title">Numpy QuadDType: Quadruple Precision for Everyone</h1>
+            <p class="subtitle lead">Quad Precision for All: Simplifying High-Accuracy Computing with numpy_quaddtype</p>
+                                <div class="quarto-categories">
+                <div class="quarto-category">NumPy</div>
+                <div class="quarto-category">Open-Source</div>
+              </div>
+                  </div>
   </div>
     
   
-  <div class="quarto-title-meta column-page-left">
+  <div class="quarto-title-meta">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Swayam Singh </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">September 30, 2024</p>
+      </div>
+    </div>
     
       
     </div>
     
   
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
         
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(3)</span></div><div class="category" data-category="LLM">LLM <span class="quarto-category-count">(1)</span></div><div class="category" data-category="NLP">NLP <span class="quarto-category-count">(1)</span></div><div class="category" data-category="NumPy">NumPy <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Open-Source">Open-Source <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Transformers">Transformers <span class="quarto-category-count">(1)</span></div></div></div>
+    </div>
 <!-- main -->
-<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
 
+<meta http-equiv="Refresh" content="0; url='https://labs.quansight.org/blog/numpy-quaddtype-blog'">
 
 
 
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="LLM" data-listing-date-sort="1728518400000" data-listing-file-modified-sort="1728545213920" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="601">
-<div class="thumbnail">
-<p><a href="./posts/Understanding Perplexity/index.html" class="no-external"></a></p><a href="./posts/Understanding Perplexity/index.html" class="no-external">
-<p><img loading="lazy" src="./posts/Understanding Perplexity/meme.jpg" class="thumbnail-image"></p>
-</a><p><a href="./posts/Understanding Perplexity/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/Understanding Perplexity/index.html" class="no-external">Understanding Perplexity</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/Understanding Perplexity/index.html" class="no-external">A New Perspective on Model Uncertainty</a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('LLM'); return false;">
-LLM
-</div>
-</div>
-<div class="listing-description">
-<a href="./posts/Understanding Perplexity/index.html" class="no-external">Recently, I was diving into Chapter 5 (Pretraining) of the insightful book <em>“Build a Large Language Model (From Scratch)”</em> by Sebastian Raschka. While exploring the…<strong></strong></a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/Understanding Perplexity/index.html" class="no-external">
-<div class="listing-date">
-Oct 10, 2024
-</div>
-<div class="listing-author">
-Swayam Singh
-</div>
-<div class="listing-reading-time">
-4 min
-</div>
-<div class="metadata-value listing-word-count">
-601 words
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="NumPy,Open-Source" data-listing-date-sort="1727654400000" data-listing-file-modified-sort="1728545213920" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="5">
-<div class="thumbnail">
-<p><a href="./posts/Numpy QuadDtype/index.html" class="no-external"></a></p><a href="./posts/Numpy QuadDtype/index.html" class="no-external">
-<p><img loading="lazy" src="https://labs.quansight.org/_next/image?url=%2Fposts%2Fnumpy-quaddtype-blog%2Ffeature.png&amp;w=3840&amp;q=75" class="thumbnail-image"></p>
-</a><p><a href="./posts/Numpy QuadDtype/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/Numpy QuadDtype/index.html" class="no-external">Numpy QuadDType: Quadruple Precision for Everyone</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/Numpy QuadDtype/index.html" class="no-external">Quad Precision for All: Simplifying High-Accuracy Computing with numpy_quaddtype</a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('NumPy'); return false;">
-NumPy
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Open-Source'); return false;">
-Open-Source
-</div>
-</div>
-<div class="listing-description">
-<a href="./posts/Numpy QuadDtype/index.html" class="no-external"></a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/Numpy QuadDtype/index.html" class="no-external">
-<div class="listing-date">
-Sep 30, 2024
-</div>
-<div class="listing-author">
-Swayam Singh
-</div>
-<div class="listing-reading-time">
-1 min
-</div>
-<div class="metadata-value listing-word-count">
-5 words
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-categories="NLP,Transformers" data-listing-date-sort="1697241600000" data-listing-file-modified-sort="1728545213920" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1671">
-<div class="thumbnail">
-<p><a href="./posts/Self-Attention Mimicking Gradient Descent/index.html" class="no-external"></a></p><a href="./posts/Self-Attention Mimicking Gradient Descent/index.html" class="no-external">
-<p class="card-img-top"><img src="posts/Self-Attention Mimicking Gradient Descent/section-image.png"  class="thumbnail-image card-img"/></p>
-</a><p><a href="./posts/Self-Attention Mimicking Gradient Descent/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/Self-Attention Mimicking Gradient Descent/index.html" class="no-external">Self-Attention Mimicking Gradient Descent</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/Self-Attention Mimicking Gradient Descent/index.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('NLP'); return false;">
-NLP
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Transformers'); return false;">
-Transformers
-</div>
-</div>
-<div class="listing-description">
-<a href="./posts/Self-Attention Mimicking Gradient Descent/index.html" class="no-external">This section of paper <strong>Uncovering mesa-optimization algorithms in Transformers</strong> presents a theoretical construction where a linear self-attention layer in a Transformer…</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/Self-Attention Mimicking Gradient Descent/index.html" class="no-external">
-<div class="listing-date">
-Oct 14, 2023
-</div>
-<div class="listing-author">
-Swayam Singh
-</div>
-<div class="listing-reading-time">
-9 min
-</div>
-<div class="metadata-value listing-word-count">
-1,671 words
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -907,6 +736,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
+<script src="https://giscus.app/client.js" data-repo="SwayamInSync/swayam-script" data-repo-id="R_kgDOM9t4DA" data-category="General" data-category-id="DIC_kwDOM9t4DM4CjN7v" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="dark_dimmed" data-lang="en" crossorigin="anonymous" async="">
+</script>
+<input type="hidden" id="giscus-base-theme" value="dark_dimmed">
+<input type="hidden" id="giscus-alt-theme" value="light">
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">

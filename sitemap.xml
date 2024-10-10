@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://SwayamInSync.github.io/swayam-script/posts/Understanding Perplexity/index.html</loc>
-    <lastmod>2024-10-09T23:34:42.909Z</lastmod>
-  </url>
-  <url>
-    <loc>https://SwayamInSync.github.io/swayam-script/index.html</loc>
-    <lastmod>2024-10-09T23:34:42.909Z</lastmod>
+    <loc>https://SwayamInSync.github.io/swayam-script/posts/Numpy QuadDtype/index.html</loc>
+    <lastmod>2024-10-10T07:26:53.920Z</lastmod>
   </url>
   <url>
     <loc>https://SwayamInSync.github.io/swayam-script/posts/Self-Attention Mimicking Gradient Descent/index.html</loc>
-    <lastmod>2024-10-09T23:34:42.909Z</lastmod>
+    <lastmod>2024-10-10T07:26:53.920Z</lastmod>
+  </url>
+  <url>
+    <loc>https://SwayamInSync.github.io/swayam-script/index.html</loc>
+    <lastmod>2024-10-10T07:26:53.920Z</lastmod>
+  </url>
+  <url>
+    <loc>https://SwayamInSync.github.io/swayam-script/posts/Understanding Perplexity/index.html</loc>
+    <lastmod>2024-10-10T07:26:53.920Z</lastmod>
   </url>
 </urlset>
