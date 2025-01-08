@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Swayam Singh">
-<meta name="dcterms.date" content="2024-09-30">
+<meta name="dcterms.date" content="2025-01-09">
 
-<title>Numpy QuadDType: Quadruple Precision for Everyone – Swayam’s Scripts</title>
+<title>Information Theory in Machine Learning: A Fun Approach – Swayam’s Scripts</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -72,11 +106,40 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Numpy QuadDType: Quadruple Precision for Everyone – Swayam’s Scripts">
-<meta property="og:description" content="Quad Precision for All: Simplifying High-Accuracy Computing with numpy_quaddtype">
-<meta property="og:image" content="https://labs.quansight.org/_next/image?url=%2Fposts%2Fnumpy-quaddtype-blog%2Ffeature.png&amp;w=3840&amp;q=75">
+<meta property="og:title" content="Information Theory in Machine Learning: A Fun Approach – Swayam’s Scripts">
+<meta property="og:description" content="Teaching Neural Networks to Handle Their Trust Issues">
+<meta property="og:image" content="https://SwayamInSync.github.io/swayam-script/posts/Information-Theory-In-ML/intro.jpg">
 <meta property="og:site_name" content="Swayam's Scripts">
 </head>
 
@@ -124,11 +187,11 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Numpy QuadDType: Quadruple Precision for Everyone</h1>
-            <p class="subtitle lead">Quad Precision for All: Simplifying High-Accuracy Computing with numpy_quaddtype</p>
+      <h1 class="title">Information Theory in Machine Learning: A Fun Approach</h1>
+            <p class="subtitle lead">Teaching Neural Networks to Handle Their Trust Issues</p>
                                 <div class="quarto-categories">
-                <div class="quarto-category">NumPy</div>
-                <div class="quarto-category">Open-Source</div>
+                <div class="quarto-category">ML</div>
+                <div class="quarto-category">Information-Theory</div>
               </div>
                   </div>
   </div>
@@ -146,7 +209,7 @@ ul.task-list li input[type="checkbox"] {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">September 30, 2024</p>
+        <p class="date">January 9, 2025</p>
       </div>
     </div>
     
@@ -157,8 +220,26 @@ ul.task-list li input[type="checkbox"] {
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-uncertainty-principle-lol" id="toc-the-uncertainty-principle-lol" class="nav-link active" data-scroll-target="#the-uncertainty-principle-lol">The Uncertainty Principle (LOL):</a></li>
+  <li><a href="#when-accuracy-isnt-enough" id="toc-when-accuracy-isnt-enough" class="nav-link" data-scroll-target="#when-accuracy-isnt-enough">When Accuracy Isn’t Enough?</a>
+  <ul class="collapse">
+  <li><a href="#the-frequentist-approach" id="toc-the-frequentist-approach" class="nav-link" data-scroll-target="#the-frequentist-approach">The Frequentist Approach</a></li>
+  <li><a href="#when-frequencies-fail" id="toc-when-frequencies-fail" class="nav-link" data-scroll-target="#when-frequencies-fail">When Frequencies Fail</a></li>
+  <li><a href="#enter-bayesian-thinking" id="toc-enter-bayesian-thinking" class="nav-link" data-scroll-target="#enter-bayesian-thinking">Enter Bayesian Thinking</a></li>
+  <li><a href="#the-bayesian-formula" id="toc-the-bayesian-formula" class="nav-link" data-scroll-target="#the-bayesian-formula">The Bayesian Formula</a></li>
+  </ul></li>
+  <li><a href="#entropy-how-surprising-is-a-surprise" id="toc-entropy-how-surprising-is-a-surprise" class="nav-link" data-scroll-target="#entropy-how-surprising-is-a-surprise">Entropy: How Surprising is a Surprise?</a></li>
+  <li><a href="#cross-entropy-when-reality-doesnt-match-our-beliefs" id="toc-cross-entropy-when-reality-doesnt-match-our-beliefs" class="nav-link" data-scroll-target="#cross-entropy-when-reality-doesnt-match-our-beliefs">Cross-Entropy: When Reality Doesn’t Match Our Beliefs</a></li>
+  <li><a href="#kl-divergence-how-wrong-is-wrong" id="toc-kl-divergence-how-wrong-is-wrong" class="nav-link" data-scroll-target="#kl-divergence-how-wrong-is-wrong">KL-Divergence: How Wrong Is Wrong?</a></li>
+  <li><a href="#the-final-piece-making-likely-stories" id="toc-the-final-piece-making-likely-stories" class="nav-link" data-scroll-target="#the-final-piece-making-likely-stories">The Final Piece: Making Likely Stories</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -167,9 +248,383 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<meta http-equiv="Refresh" content="0; url='https://labs.quansight.org/blog/numpy-quaddtype-blog'">
+<hr>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="intro.jpg" class="preview-image img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="Opening Meme"></p>
+</figure>
+</div>
+<hr>
+<section id="the-uncertainty-principle-lol" class="level1">
+<h1>The Uncertainty Principle (LOL):</h1>
+<p>Have you ever noticed how the best stories start with uncertainty? Like that moment when you’re watching a thriller and <em>think</em> you know who the culprit is, but you’re not quite sure. Your mind races through possibilities:</p>
+<ul>
+<li>“It’s definitely the butler” (75% confident)</li>
+<li>“Wait, maybe it’s the mysterious neighbor” (20% sure)</li>
+<li>“Plot twist: what if it’s the detective?” (5% wild guess)</li>
+</ul>
+<p>Here’s the plot twist: this same dance of probabilities that makes mysteries exciting is <em>exactly</em> what makes machine learning powerful. Modern AI isn’t a know-it-all; it’s more like a seasoned detective weighing evidence.</p>
+<p>Think about how <strong>revolutionary</strong> this is. We’ve moved from computers that could only understand “yes” or “no” to systems that can say:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>confidence_level <span class="op">=</span> {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"This is a cat"</span>: <span class="fl">0.93</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"This might be a very small dog"</span>: <span class="fl">0.06</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Is that a weird-looking rabbit?"</span>: <span class="fl">0.01</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>What makes this especially fascinating is how we can capture all this uncertainty in elegant mathematical equations. But before you run away screaming “Not math!”, let me promise you something:</p>
+<p>Every equation we’ll look at is just putting numbers to things your brain already does intuitively so just STAY WITH ME!!</p>
+<p>Throughout the article we’ll try to analyze some thoughts like:</p>
+<ol type="1">
+<li>How to mathematically model “maybe”</li>
+<li>Why unexpected events carry more information</li>
+<li>How to measure the gap between what we think and what actually is</li>
+<li>How systems get better by embracing uncertainty</li>
+</ol>
+<p>Ready to embrace the beauty of uncertainty? Let’s begin our investigation into the probabilistic nature of intelligence, both artificial and natural!</p>
+</section>
+<section id="when-accuracy-isnt-enough" class="level1">
+<h1>When Accuracy Isn’t Enough?</h1>
+<p>Let’s start with a real problem:</p>
+<blockquote class="blockquote">
+<p>You’re a doctor who just received a new test for a rare disease. The test manufacturer says it’s “95% accurate”. A patient walks in, takes the test, and gets a positive result. What’s the probability they actually have the disease?</p>
+</blockquote>
+<section id="the-frequentist-approach" class="level2">
+<h2 class="anchored" data-anchor-id="the-frequentist-approach">The Frequentist Approach</h2>
+<p>Most people would say “Easy! It’s 95%!” After all, that’s the test’s accuracy, right?</p>
+<p>Let’s try the traditional frequency-based solution:</p>
+<ul>
+<li>Run the test on 1000 people</li>
+<li>Count how many positive results were correct</li>
+<li>Divide by total positive results</li>
+<li>That’s our probability!</li>
+</ul>
+<p>But wait… there’s a catch. The disease is rare, affecting only 1 in 1000 people. Now our frequency calculations get interesting:</p>
+<ul>
+<li>In 1000 people, only 1 person actually has the disease</li>
+<li>With 95% accuracy, the test will correctly identify this 1 person</li>
+<li>But it will also incorrectly flag about 50 healthy people (5% of 999)</li>
+<li>So out of 51 positive results, only 1 is correct!</li>
+</ul>
+<p>The actual probability is closer to 2%, not 95%. Mind blown yet?</p>
+</section>
+<section id="when-frequencies-fail" class="level2">
+<h2 class="anchored" data-anchor-id="when-frequencies-fail">When Frequencies Fail</h2>
+<p>But here’s the real problem - we can’t actually run this experiment 1000 times for our current patient. We have:</p>
+<ul>
+<li>One patient</li>
+<li>One test result</li>
+<li>One decision to make</li>
+</ul>
+<p>We need a way to reason about this specific case, using everything we know.</p>
+</section>
+<section id="enter-bayesian-thinking" class="level2">
+<h2 class="anchored" data-anchor-id="enter-bayesian-thinking">Enter Bayesian Thinking</h2>
+<p>This is where Bayesian probability shines. Instead of counting frequencies, we think about:</p>
+<ol type="1">
+<li>What we knew before the test (prior)</li>
+<li>What the test tells us (evidence)</li>
+<li>How to combine these (update)</li>
+</ol>
+<p>For our patient:</p>
+<ul>
+<li>Prior: 1/1000 chance of disease (population rate)</li>
+<li>Evidence: Positive test result (95% accurate)</li>
+<li>Update: Combine these mathematically (we’ll show how!)</li>
+</ul>
+</section>
+<section id="the-bayesian-formula" class="level2">
+<h2 class="anchored" data-anchor-id="the-bayesian-formula">The Bayesian Formula</h2>
+<p>This thinking gives us the famous Bayes’ Theorem: <span class="math display">\[
+P(Disease|Positive) = \frac{P(Positive|Disease) \times P(Disease)}{P(Positive)}
+\]</span></p>
+<p>Where:</p>
+<ul>
+<li><span class="math inline">\(P(Disease|Positive)\)</span> is what we want: probability of disease given a positive test</li>
+<li><span class="math inline">\(P(Positive|Disease)\)</span> is 0.95 (test sensitivity)</li>
+<li><span class="math inline">\(P(Disease)\)</span> is 1/1000 (disease prevalence)</li>
+<li><span class="math inline">\(P(Positive)\)</span> needs to be calculated using total probability</li>
+</ul>
+<p>To find <span class="math inline">\(P(Positive)\)</span>, we consider both ways to get a positive result:</p>
+<ol type="1">
+<li>Having the disease and testing positive</li>
+<li>Not having the disease but testing positive anyway</li>
+</ol>
+<p>Mathematically: <span class="math inline">\(P(Positive) = P(Positive|Disease)P(Disease) + P(Positive|No Disease)P(No Disease)\)</span></p>
+<p>Plugging in our numbers: <span class="math inline">\(P(Positive) = 0.95 \times (1/1000) + 0.05 \times (999/1000)\)</span> = 0.0509</p>
+<p>Now we can solve our original equation:</p>
+<p><span class="math display">\[
+P(Disease|Positive) = \frac{0.95 \times (1/1000)}{0.0509} \approx 0.019
+\]</span></p>
+<p>That’s about 2%! Even with a “95% accurate” test, a positive result only means a 2% chance of actually having the disease. This surprising result comes from combining three pieces of information:</p>
+<ol type="1">
+<li>How rare the disease is (prior probability)</li>
+<li>How accurate the test is (sensitivity)</li>
+<li>How often it gives false alarms (specificity)</li>
+</ol>
+<p>Modern ML models work in a similar way. When a model says “I’m 90% confident this is a cat’s image”, it’s not just matching pixels - it’s combining prior knowledge about what cats look like with the specific evidence in the image. Just like our medical test, it’s all about updating beliefs with evidence!</p>
+</section>
+</section>
+<section id="entropy-how-surprising-is-a-surprise" class="level1">
+<h1>Entropy: How Surprising is a Surprise?</h1>
+<p>Remember our medical test that was “95% accurate” but only gave us 2% certainty? This raises an interesting question: How much did that test result actually tell us?</p>
+<p>Sure, we went from 0.1% (prior probability) to 2% (posterior probability) - but how do we measure how much information we actually gained? If another test took us from 2% to 40%, which update was more significant?</p>
+<p>Think about surprise in your daily life:</p>
+<ul>
+<li>If I tell you the sun will rise tomorrow, that’s 0% surprising</li>
+<li>If I tell you it will snow in the Sahara today, that’s extremely surprising</li>
+<li>If I tell you a fair coin landed heads, that’s somewhere in between</li>
+</ul>
+<blockquote class="blockquote">
+<p>This gets to the heart of information theory - the more surprising an event is, the more information it contains. When something completely expected happens, we learn nothing new. When something unexpected happens, we learn a lot.</p>
+</blockquote>
+<p>Let’s make this concrete. In the first chapter, you might think:</p>
+<ul>
+<li>The butler did it (50%)</li>
+<li>The maid did it (30%)</li>
+<li>The gardener did it (20%)</li>
+</ul>
+<p>When you learn it wasn’t the butler, how much does this tell you? This revelation forces a big update in your beliefs. But if you learn it wasn’t the gardener? That’s less informative - you already thought they were unlikely.</p>
+<p>But how do we actually measure surprise? Let’s think about what properties our measure should have:</p>
+<p>First, surprise must be a function of probability - the likelihood of an event should determine how surprising it is. Let’s call this function f(p).</p>
+<p>What properties should <span class="math inline">\(f(p)\)</span> satisfy?</p>
+<ol type="1">
+<li>When we’re certain <span class="math inline">\((p = 1)\)</span>, we should have zero surprise: <span class="math inline">\(f(1) = 0\)</span></li>
+<li>As events become less likely <span class="math inline">\((p → 0)\)</span>, our surprise should increase: <span class="math inline">\(f(p)\)</span> should increase as <span class="math inline">\(p\)</span> decreases</li>
+<li>When two independent events occur together, their surprises should add: <span class="math inline">\(f(p₁p₂) = f(p₁) + f(p₂)\)</span></li>
+</ol>
+<p>The logarithm emerges as the perfect candidate! It’s the only simple function that satisfies all these properties:</p>
+<p><span class="math display">\[ \text{surprise}(p) = -\log(p) \]</span></p>
+<p>Look how beautifully it works:</p>
+<ol type="1">
+<li><span class="math inline">\(log(1) = 0\)</span>, so certain events have zero surprise</li>
+<li>As p gets smaller, <span class="math inline">\(-log(p)\)</span> grows larger</li>
+<li><span class="math inline">\(log(p₁p₂) = log(p₁) + log(p₂)\)</span>, so surprises add up</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="log.png" class="preview-image img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="Opening Meme"></p>
+</figure>
+</div>
+<p>Now that we have our measure of surprise <span class="math inline">\((-log(p))\)</span>, let’s think about entire probability distributions, not just single events. In our mystery novel, at any point we have:</p>
+<ul>
+<li>A list of suspects</li>
+<li>Each with their own probability</li>
+<li>Each probability would give us some surprise if that person turned out to be guilty</li>
+</ul>
+<p>What if we want to measure how “<em>uncertain</em>” this whole situation is? We can:</p>
+<ol type="1">
+<li>Calculate how surprising each outcome would be <span class="math inline">\((-log(p))\)</span></li>
+<li>Weight each surprise by how likely it is to happen (multiply by p)</li>
+<li>Add them all up</li>
+</ol>
+<p>OR in simple language, just take the average, this gives us <strong>Entropy</strong>:</p>
+<p><span class="math display">\[ H(P) = -\sum_i p_i \log(p_i) \]</span></p>
+<p>The higher the entropy:</p>
+<ul>
+<li>The more spread out our probabilities are</li>
+<li>The more uncertain we are about what will happen</li>
+<li>The more information we’ll gain when we learn the truth</li>
+</ul>
+<p>This idea is central to machine learning. When a model says “80% sure this is a cat”, it’s not just picking the most likely answer - it’s navigating a landscape of possibilities, each with its own probability and potential for surprise.</p>
+</section>
+<section id="cross-entropy-when-reality-doesnt-match-our-beliefs" class="level1">
+<h1>Cross-Entropy: When Reality Doesn’t Match Our Beliefs</h1>
+<p>From measuring “<em>how uncertain we are</em>” (entropy), we can pose a natural question about “<em>how wrong we are</em>”.</p>
+<p>In our mystery novel example:</p>
+<ul>
+<li>You have your theory about who did it (your probability distribution)</li>
+<li>Your friend has a different theory (their distribution)</li>
+<li>The author knows the truth (the real distribution)</li>
+</ul>
+<p>Or back to our medical test:</p>
+<ul>
+<li>The test manufacturer claims 95% accuracy (their distribution)</li>
+<li>The reality turned out quite different (true distribution)</li>
+</ul>
+<p>How do we measure this mismatch? This brings us to <strong>cross-entropy</strong> - <em>a measure of how surprised we’d be if we believed in one distribution but reality followed another.</em></p>
+<p>Let’s make this concrete using our mystery novel. Suppose:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Suspect</th>
+<th>Truth (Author) (P)</th>
+<th>Your Belief (Q)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Maid</td>
+<td>100%</td>
+<td>30%</td>
+</tr>
+<tr class="even">
+<td>Butler</td>
+<td>0%</td>
+<td>60%</td>
+</tr>
+<tr class="odd">
+<td>Gardener</td>
+<td>0%</td>
+<td>10%</td>
+</tr>
+</tbody>
+</table>
+<p>Cross-entropy measures your surprise when reality (P) reveals itself, but you’ve been working with your beliefs (Q). Mathematically:</p>
+<p><span class="math display">\[ H(P,Q) = -\sum_i p_i \log(q_i) \]</span></p>
+<p>The larger this value, the more your beliefs diverged from reality. In essence, it measures how well your probability distribution matches the true distribution.</p>
+<blockquote class="blockquote">
+<p>As a fun exercise, I encourage you to think about why we place <span class="math inline">\(q_i\)</span> inside the logarithm and use <span class="math inline">\(p_i\)</span> as the weight. Reflect on this question, and feel free to share your thoughts with me on my socials—I’d love to read your responses! 😄</p>
+</blockquote>
+<p>This is why cross-entropy is everywhere in machine learning:</p>
+<ul>
+<li>P represents the true labels (“it really is a cat”)</li>
+<li>Q represents the model’s predictions (“I think it’s 80% cat, 20% dog”)</li>
+<li>Training aims to make Q match P as closely as possible</li>
+</ul>
+</section>
+<section id="kl-divergence-how-wrong-is-wrong" class="level1">
+<h1>KL-Divergence: How Wrong Is Wrong?</h1>
+<p>We’ve seen how cross-entropy measures our total surprise when reality doesn’t match our beliefs. But here’s an interesting question: isn’t some of that surprise just… inevitable? Even if we knew the true probabilities, wouldn’t we still have some uncertainty?</p>
+<p>Let’s say we’re analyzing student performance in an exam:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Grade</th>
+<th>True Distribution (P)</th>
+<th>Your Model’s Prediction (Q)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td>30%</td>
+<td>60%</td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td>45%</td>
+<td>25%</td>
+</tr>
+<tr class="odd">
+<td>C</td>
+<td>25%</td>
+<td>15%</td>
+</tr>
+</tbody>
+</table>
+<p>Even if you knew the true distribution:</p>
+<ul>
+<li>You still can’t predict exactly what grade each student will get</li>
+<li>There’s inherent uncertainty in the system</li>
+<li>This base uncertainty is measured by entropy of <span class="math inline">\(P\)</span></li>
+</ul>
+<p>But with your model’s predictions:</p>
+<ul>
+<li>You’re not just facing the inherent uncertainty</li>
+<li>You’re also dealing with being wrong about the probabilities</li>
+</ul>
+<p>This extra uncertainty is what <strong><em>KL divergence</em></strong> measures. Think about it:</p>
+<ul>
+<li><span class="math inline">\(H(P,Q)\)</span> is your total surprise using wrong beliefs</li>
+<li><span class="math inline">\(H(P)\)</span> is the surprise you’d have with perfect knowledge</li>
+<li>Subtracting <span class="math inline">\(H(P)\)</span> from <span class="math inline">\(H(P,Q)\)</span> leaves just the extra surprise from being wrong!</li>
+</ul>
+<p>So we can write it down mathematically as: <span class="math display">\[ D_{KL}(P||Q) = H(P,Q) - H(P) \]</span></p>
+<p>Or written another way: <span class="math display">\[ D_{KL}(P||Q) = \sum_i p_i \log(\frac{p_i}{q_i}) \]</span></p>
+<p>Think of KL divergence as the “price of ignorance” - how much extra uncertainty we face because our beliefs don’t match reality. It’s like nature saying “Here’s your penalty for being wrong!”</p>
+<p>This is why KL divergence is so important in machine learning. When we train models, we want to minimize this extra surprise - the part that comes from our model being wrong, not from the inherent uncertainty in the problem.</p>
+</section>
+<section id="the-final-piece-making-likely-stories" class="level1">
+<h1>The Final Piece: Making Likely Stories</h1>
+<p>So we started by questioning probabilities? And then dove deep into measuring surprise, uncertainty, and even how wrong our beliefs can be? Well, there’s one more perspective that ties everything together beautifully.</p>
+<p>Let’s flip our thinking:</p>
+<blockquote class="blockquote">
+<p>Instead of asking “how surprised are we when reality differs from our beliefs?”, let’s ask “how likely was reality according to our beliefs?”</p>
+</blockquote>
+<p>Think about our student grades example:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Grade</th>
+<th>True Distribution (P)</th>
+<th>Your Model’s Prediction (Q)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td>30%</td>
+<td>60%</td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td>45%</td>
+<td>25%</td>
+</tr>
+<tr class="odd">
+<td>C</td>
+<td>25%</td>
+<td>15%</td>
+</tr>
+</tbody>
+</table>
+<p>Now imagine we observe 3 students getting grades: <code>B, A, B</code> According to your model, the likelihood of seeing this sequence is:</p>
+<p><span class="math display">\[
+P(BAB) = 0.60 × 0.25 × 0.25 = 0.0375
+\]</span></p>
+<p>But according to the true distribution: <span class="math display">\[
+P(BAB) = 0.30 × 0.45 × 0.45 = 0.06075
+\]</span></p>
+<p>The true distribution made these observations more “likely” than your model did. This suggests your model isn’t great - but we already knew that!</p>
+<p>The interesting part? When we work with logarithms of these likelihoods: <span class="math display">\[
+\text{Log Likelihood} = \log(P(BAB))
+                = \log(P(B)) + \log(P(A)) + \log(P(B))
+\]</span></p>
+<p>Notice something familiar? These are exactly our surprise values from before, just with a different sign! <span class="math display">\[
+\text{Less surprise} = \text{higher likelihood}
+\]</span></p>
+<p>This gives us another way to think about training models:</p>
+<ul>
+<li>Instead of minimizing surprise (cross-entropy)</li>
+<li>We can maximize likelihood</li>
+<li>They’re two sides of the same coin!</li>
+</ul>
+<p>Mathematically, for a model with parameters θ, maximizing likelihood means:</p>
+<p><span class="math display">\[ \theta^* = \arg\max_\theta \prod_{i=1}^n P(x_i|\theta) \]</span></p>
+<p>But because logs are monotonic (and easier to work with), we usually maximize log likelihood:</p>
+<p><span class="math display">\[ \theta^* = \arg\max_\theta \sum_{i=1}^n \log P(x_i|\theta) \]</span></p>
+<p>And here’s the beautiful part - maximizing log likelihood is equivalent to minimizing KL divergence between our model and reality!</p>
+<p>Wait… WHY? Let’s connect the dots:</p>
+<ol type="1">
+<li>Remember KL divergence? <span class="math inline">\(D_{KL}(P||Q) = H(P,Q) - H(P)\)</span></li>
+<li>That <span class="math inline">\(H(P)\)</span> term? It’s the entropy of the true distribution - a constant we can’t control!</li>
+<li>So minimizing KL divergence is the same as minimizing cross-entropy <span class="math inline">\(H(P,Q)\)</span></li>
+<li>And cross-entropy is just our average surprise using the wrong distribution: <span class="math inline">\(H(P,Q) = - \sum_i p_i \log(q_i)\)</span></li>
+<li>Flip the sign, and what do you get? Log likelihood!</li>
+</ol>
+<p>We’ve come full circle:</p>
+<ul>
+<li>Entropy measures uncertainty</li>
+<li>Cross-entropy measures total surprise</li>
+<li>KL divergence measures extra surprise</li>
+<li>And likelihood ties it all together!</li>
+</ul>
+<p>So next time someone asks why we use log likelihood in machine learning, you can tell them: “Because surprise and likelihood are just two ways of looking at the same thing!”</p>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>We started by questioning simple probabilities and ended up discovering how machines learn from their mistakes. From counting to beliefs, from surprise to uncertainty, from measuring our mistakes to finding the most likely truth - every piece connected beautifully to reveal the deeper patterns in how we learn from data.</p>
+<blockquote class="blockquote">
+<p>Next time you see terms like “cross-entropy loss” or “maximum likelihood” in machine learning, you’ll know there’s a deeper story - one about beliefs, surprises and lots of uncertainty 😄</p>
+</blockquote>
+<p>Want more intuitive explanations like these? Find me on:</p>
+<ul>
+<li>X: <a href="https://x.com/swayaminsync"><span class="citation" data-cites="swayaminsync">@swayaminsync</span></a></li>
+<li>LinkedIn: <a href="https://www.linkedin.com/in/swayam-singh-406610213/">/in/swayam-singh-406610213</a></li>
+<li>Website: <a href="https://swayaminsync.github.io/">https://swayaminsync.github.io/</a></li>
+</ul>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

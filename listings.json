@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/Information-Theory-In-ML/index.html",
       "/posts/Understanding Perplexity/index.html",
       "/posts/Numpy QuadDtype/index.html",
       "/posts/Self-Attention Mimicking Gradient Descent/index.html"
