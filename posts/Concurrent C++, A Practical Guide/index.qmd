@@ -3,7 +3,7 @@ title: "Concurrent C++ A Practical Guide"
 subtitle: "A concise and practical guide to mastering C++ concurrency, covering threads, synchronization, parallelism, and debugging—all in one place."
 author: "Swayam Singh"
 date: "2025-02-09"
-categories: [C++]
+categories: [C++, Book]
 format:
   html:
     code-fold: false
