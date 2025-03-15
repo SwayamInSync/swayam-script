@@ -1,0 +1,28 @@
+---
+title: "[WIP] The Transparent Algorithm"
+subtitle: "A bridge between formal mathematical proofs and intuitive understanding, guiding readers through the theoretical foundations of machine learning with clarity and precision."
+author: "Swayam Singh"
+date: "2025-03-15"
+categories: [ML, Theory, Book]
+format:
+  html:
+    code-fold: false
+toc: false
+highlight-style: pygments
+execute: 
+  freeze: auto
+image: images/cover.png
+social:
+  - image: images/cover.png
+    description: "Homepage"
+---
+![](images/cover.png){fig-alt="Cover Image" fig-align="center" width=70% .preview-image}
+
+# The Transparent Algorithm
+
+## Table of Content
+
+| # | Title | Description |
+|---------|-------|-------------|
+| 1 | [The Mathematics of Learning Guarantees](../../pages/The%20Transparent%20Algorithm/chapter-1.qmd) | Foundations of learning theory, error bounds, and the concept of misleading samples |
+
