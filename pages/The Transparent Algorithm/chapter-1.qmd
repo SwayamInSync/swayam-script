@@ -123,6 +123,11 @@ This is a fundamental result that tells us exactly how much data we need to lear
 
 This means that we can learn even from very large hypothesis classes with a reasonable amount of data, as long as we're willing to accept a small probability of failure and a small error threshold.
 
+![](images/chapter-1/bounds-verification.jpeg)
+
+We can make the similar interpretation from the experiment shown in the image.
+
+
 ## 1.7 Summary and Looking Ahead
 
 In this chapter, we developed the fundamental mathematics that allow us to provide guarantees about learning algorithms. Rather than relying on intuition or empirical evidence alone, we now have precise tools to analyze when and why learning succeeds.
