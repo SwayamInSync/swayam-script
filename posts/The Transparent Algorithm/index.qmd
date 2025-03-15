@@ -15,6 +15,7 @@ image: images/cover.png
 social:
   - image: images/cover.png
     description: "Homepage"
+comments: false
 ---
 ![](images/cover.png){fig-alt="Cover Image" fig-align="center" width=70% .preview-image}
 
