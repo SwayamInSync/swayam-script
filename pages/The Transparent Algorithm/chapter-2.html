@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>chapter-1 – Swayam's Scripts</title>
+<title>chapter-2 – Swayam's Scripts</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -70,39 +70,9 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="Swayam’s Scripts">
-<meta property="og:image" content="https://SwayamInSync.github.io/swayam-script/pages/The Transparent Algorithm/images/chapter-1/bounds-verification.jpeg">
 <meta property="og:site_name" content="Swayam's Scripts">
 </head>
 
@@ -157,103 +127,8 @@ window.Quarto = {
 
 
 
-<section id="chapter-1-the-mathematics-of-learning-guarantees" class="level1">
-<h1>Chapter 1: The Mathematics of Learning Guarantees</h1>
-<section id="introduction-to-learning-theory" class="level2">
-<h2 class="anchored" data-anchor-id="introduction-to-learning-theory">1.1 Introduction to Learning Theory</h2>
-<p>When a machine learning algorithm examines data and produces a model, how can we be confident that this model will perform well on new, unseen examples? This fundamental question lies at the heart of learning theory. Rather than focusing on specific algorithms like neural networks or decision trees, learning theory provides a mathematical framework to understand when and why learning works.</p>
-<p>Consider a simple problem: we want to determine if an email is spam based on its content. We might train a classifier on thousands of labeled examples, but how do we know if it will work well on future emails? Intuitively, we expect that with enough diverse training examples, our classifier should generalize well to new data. But how many examples are “enough”? And how can we formally prove this intuition?</p>
-<p>Learning theory gives us tools to answer these questions with mathematical precision. Instead of vague assurances, we can derive exact bounds on how likely our algorithm is to succeed and how much data it needs. This chapter introduces the fundamental concepts needed to build such guarantees.</p>
-</section>
-<section id="key-notation-and-definitions" class="level2">
-<h2 class="anchored" data-anchor-id="key-notation-and-definitions">1.2 Key Notation and Definitions</h2>
-<p>To reason precisely about learning, we need formal definitions. Let’s establish our notation:</p>
-<ul>
-<li><strong>Input space</strong> <span class="math inline">\(\mathcal{X}\)</span>: The set of all possible inputs (e.g., all possible emails)</li>
-<li><strong>Output space</strong> <span class="math inline">\(\mathcal{Y}\)</span>: The set of all possible outputs (e.g., “spam” or “not spam”)</li>
-<li><strong>Training sample</strong> <span class="math inline">\(S = ((x_1, y_1), (x_2, y_2), ..., (x_m, y_m))\)</span>: A set of m labeled examples</li>
-<li><span class="math inline">\(S|_x = (x_1, x_2, ..., x_m)\)</span>: Just the inputs from the training sample</li>
-<li><strong>Distribution</strong> <span class="math inline">\(\mathcal{D}\)</span>: The probability distribution from which examples are drawn</li>
-<li><strong>Labeling function</strong> <span class="math inline">\(f: \mathcal{X} \rightarrow \mathcal{Y}\)</span>: The true, underlying function we’re trying to learn</li>
-<li><strong>Hypothesis class</strong> <span class="math inline">\(\mathcal{H}\)</span>: The set of possible prediction rules our algorithm can output</li>
-<li><strong>Hypothesis</strong> <span class="math inline">\(h \in \mathcal{H}\)</span>: A specific prediction rule (e.g., a specific classifier)</li>
-</ul>
-<p>Given these definitions, we can formalize two crucial concepts:</p>
-<ol type="1">
-<li><p><strong>True error</strong>: The probability that a hypothesis makes an incorrect prediction on an example drawn from the true distribution: <span class="math display">\[L_{(D,f)}(h) = \mathbb{P}_{x \sim D}[h(x) \neq f(x)]\]</span></p></li>
-<li><p><strong>Training error</strong>: The fraction of mistakes a hypothesis makes on the training sample: <span class="math display">\[L_S(h) = \frac{1}{m}\sum_{i=1}^{m} \mathbb{1}_{[h(x_i) \neq y_i]}\]</span> where <span class="math inline">\(\mathbb{1}\)</span> is the indicator function that equals 1 when <span class="math inline">\(h(x_i) \neq y_i\)</span> and 0 otherwise.</p></li>
-</ol>
-<p>Our learning algorithm examines the training data <span class="math inline">\(S\)</span> and outputs a hypothesis <span class="math inline">\(h_S\)</span>. We want <span class="math inline">\(h_S\)</span> to have low true error, but we can only measure its training error. The key challenge in learning theory is understanding the relationship between these two errors.</p>
-<p>For simplicity, we’ll initially work under the <strong>realizability assumption</strong>: there exists at least one hypothesis <span class="math inline">\(h^* \in \mathcal{H}\)</span> with zero true error (<span class="math inline">\(L_{(D,f)}(h^*) = 0\)</span>). This means our hypothesis class contains at least one perfect predictor.</p>
-</section>
-<section id="understanding-failure-events" class="level2">
-<h2 class="anchored" data-anchor-id="understanding-failure-events">1.3 Understanding Failure Events</h2>
-<p>When does a learning algorithm fail? We define failure as producing a hypothesis with true error exceeding some acceptable threshold <span class="math inline">\(\epsilon\)</span>:</p>
-<p><span class="math display">\[L_{(D,f)}(h_S) &gt; \epsilon\]</span></p>
-<p>Our goal is to understand how likely this failure is when we train on <span class="math inline">\(m\)</span> randomly drawn examples.</p>
-<p>To approach this systematically, let’s define the set of “bad” hypotheses:</p>
-<p><span class="math display">\[\mathcal{H}_B = \{h \in \mathcal{H} : L_{(D,f)}(h) &gt; \epsilon\}\]</span></p>
-<p>These are hypotheses that perform poorly on the true distribution. If our algorithm outputs such a hypothesis, it fails.</p>
-<p>But here’s the key insight: under the realizability assumption, our algorithm will always output a hypothesis with zero training error. So failure can only happen if some “bad” hypothesis also happens to have zero training error on our sample.</p>
-<p>This leads us to define the set of “misleading samples”:</p>
-<p><span class="math display">\[M = \{S|_x : \exists h \in \mathcal{H}_B, L_S(h) = 0\}\]</span></p>
-<p>These are training sets where at least one bad hypothesis looks perfect (has zero training error). Since our algorithm chooses a hypothesis with zero training error, if a bad hypothesis has zero training error, our algorithm might select it and fail.</p>
-<p>The crucial relationship is: <span class="math display">\[\{S|_x : L_{(D,f)}(h_S) &gt; \epsilon\} \subseteq M\]</span></p>
-<p>Every sample that leads to algorithm failure must be a misleading sample. This insight allows us to bound the probability of failure by analyzing the probability of drawing a misleading sample.</p>
-</section>
-<section id="probabilistic-error-bounds" class="level2">
-<h2 class="anchored" data-anchor-id="probabilistic-error-bounds">1.4 Probabilistic Error Bounds</h2>
-<p>Now we can calculate the probability of drawing a misleading sample. First, we express <span class="math inline">\(M\)</span> as a union:</p>
-<p><span class="math display">\[M = \bigcup_{h \in \mathcal{H}_B} \{S|_x : L_S(h) = 0\}\]</span></p>
-<p>This allows us to apply the union bound:</p>
-<p><span class="math display">\[\mathcal{D}^m(\{S|_x : L_{(D,f)}(h_S) &gt; \epsilon\}) \leq \mathcal{D}^m(M) \leq \sum_{h \in \mathcal{H}_B} \mathcal{D}^m(\{S|_x : L_S(h) = 0\})\]</span></p>
-<p>Next, we calculate the probability that a specific bad hypothesis <span class="math inline">\(h\)</span> has zero training error. Since the true error of <span class="math inline">\(h\)</span> is greater than <span class="math inline">\(\epsilon\)</span>, and our samples are drawn independently:</p>
-<p><span class="math display">\[\mathcal{D}^m(\{S|_x : L_S(h) = 0\}) = \mathcal{D}^m(\{S|_x : \forall i, h(x_i) = f(x_i)\}) = \prod_{i=1}^m \mathcal{D}(\{x_i : h(x_i) = f(x_i)\})\]</span></p>
-<p>For each individual sample, the probability of correct classification is:</p>
-<p><span class="math display">\[\mathcal{D}(\{x_i : h(x_i) = f(x_i)\}) = 1 - L_{(D,f)}(h) \leq 1 - \epsilon\]</span></p>
-<p>Therefore: <span class="math display">\[\mathcal{D}^m(\{S|_x : L_S(h) = 0\}) \leq (1 - \epsilon)^m\]</span></p>
-<p>To simplify our expressions, we use the standard inequality <span class="math inline">\(1 - \epsilon \leq e^{-\epsilon}\)</span>, which gives us:</p>
-<p><span class="math display">\[\mathcal{D}^m(\{S|_x : L_S(h) = 0\}) \leq (1 - \epsilon)^m \leq e^{-\epsilon m}\]</span></p>
-<p>Combining this with our union bound:</p>
-<p><span class="math display">\[\mathcal{D}^m(\{S|_x : L_{(D,f)}(h_S) &gt; \epsilon\}) \leq \sum_{h \in \mathcal{H}_B} e^{-\epsilon m} = |\mathcal{H}_B| \cdot e^{-\epsilon m} \leq |\mathcal{H}| \cdot e^{-\epsilon m}\]</span></p>
-<p>This gives us our fundamental bound: the probability of failure is at most <span class="math inline">\(|\mathcal{H}| \cdot e^{-\epsilon m}\)</span>.</p>
-</section>
-<section id="the-probably-approximately-correct-framework" class="level2">
-<h2 class="anchored" data-anchor-id="the-probably-approximately-correct-framework">1.5 The Probably Approximately Correct Framework</h2>
-<p>The bound we’ve derived forms the foundation of Probably Approximately Correct (PAC) learning. Let’s understand what it means in practical terms.</p>
-<p>If we want to ensure that our algorithm fails with probability at most <span class="math inline">\(\delta\)</span> (a confidence parameter), we need:</p>
-<p><span class="math display">\[|\mathcal{H}| \cdot e^{-\epsilon m} \leq \delta\]</span></p>
-<p>Solving for the required sample size <span class="math inline">\(m\)</span>:</p>
-<p><span class="math display">\[e^{-\epsilon m} \leq \frac{\delta}{|\mathcal{H}|}\]</span></p>
-<p>Taking logarithms:</p>
-<p><span class="math display">\[-\epsilon m \leq \ln\left(\frac{\delta}{|\mathcal{H}|}\right) = \ln(\delta) - \ln(|\mathcal{H}|)\]</span></p>
-<p>Dividing by <span class="math inline">\(-\epsilon\)</span> and flipping the inequality:</p>
-<p><span class="math display">\[m \geq \frac{\ln(|\mathcal{H}|) - \ln(\delta)}{\epsilon} = \frac{\ln(|\mathcal{H}|/\delta)}{\epsilon}\]</span></p>
-<p>This gives us the PAC learning guarantee: With probability at least <span class="math inline">\(1-\delta\)</span>, a learning algorithm that outputs a hypothesis with zero training error will have true error at most <span class="math inline">\(\epsilon\)</span>, provided the training sample size is at least:</p>
-<p><span class="math display">\[m \geq \frac{\ln(|\mathcal{H}|/\delta)}{\epsilon}\]</span></p>
-<p>This is a fundamental result that tells us exactly how much data we need to learn effectively. It shows that the sample complexity: - Scales logarithmically with the size of the hypothesis class (<span class="math inline">\(|\mathcal{H}|\)</span>) - Scales logarithmically with the inverse of the confidence parameter (<span class="math inline">\(1/\delta\)</span>) - Scales linearly with the inverse of the error threshold (<span class="math inline">\(1/\epsilon\)</span>)</p>
-<p>This means that we can learn even from very large hypothesis classes with a reasonable amount of data, as long as we’re willing to accept a small probability of failure and a small error threshold.</p>
-<p><img src="images/chapter-1/bounds-verification.jpeg" class="img-fluid"></p>
-<p>We can make the similar interpretation from the experiment shown in the image.</p>
-</section>
-<section id="summary-and-looking-ahead" class="level2">
-<h2 class="anchored" data-anchor-id="summary-and-looking-ahead">1.7 Summary and Looking Ahead</h2>
-<p>In this chapter, we developed the fundamental mathematics that allow us to provide guarantees about learning algorithms. Rather than relying on intuition or empirical evidence alone, we now have precise tools to analyze when and why learning succeeds.</p>
-<p>Let’s review the key insights we’ve gained:</p>
-<ol type="1">
-<li><p>We formalized the learning problem through precise definitions of hypotheses, errors, and learning algorithms.</p></li>
-<li><p>We identified that learning failure occurs when our algorithm outputs a hypothesis with high true error.</p></li>
-<li><p>We discovered that such failure can only happen when our training sample is “misleading” - making a bad hypothesis look perfect.</p></li>
-<li><p>We derived tight bounds on the probability of drawing misleading samples, leading to our fundamental inequality: <span class="math display">\[\mathcal{D}^m(\{S|_x : L_{(D,f)}(h_S) &gt; \epsilon\}) \leq |\mathcal{H}| \cdot e^{-\epsilon m}\]</span></p></li>
-<li><p>We established the sample complexity of learning: <span class="math display">\[m \geq \frac{\ln(|\mathcal{H}|/\delta)}{\epsilon}\]</span> This tells us exactly how many examples we need to ensure our learning algorithm succeeds with high probability.</p></li>
-</ol>
-<p>These results provide a solid mathematical foundation for understanding learning guarantees, but they rely on several assumptions that limit their direct application to many real-world scenarios. Most notably, we’ve worked under the realizability assumption (that a perfect hypothesis exists in our class), and we’ve assumed that our hypothesis class is finite.</p>
-<p>In the next chapter, we’ll formalize and extend these insights by developing the Probably Approximately Correct (PAC) learning model. This model provides a comprehensive framework for analyzing learnability across different problem domains and algorithm types. We’ll remove the restrictive assumptions of this chapter, explore how to handle infinite hypothesis classes, and investigate learning without the realizability assumption.</p>
-<p>By building on the mathematical foundations established here, we’ll develop a more complete understanding of what makes learning possible and what fundamental limitations exist in machine learning. This will ultimately help us answer one of the most profound questions in the field: What is learnable and what is not?</p>
 
 
-</section>
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
