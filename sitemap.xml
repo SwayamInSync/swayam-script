@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://SwayamInSync.github.io/swayam-script/index.html</loc>
-    <lastmod>2025-01-08T18:55:21.342Z</lastmod>
-  </url>
-  <url>
     <loc>https://SwayamInSync.github.io/swayam-script/posts/Information-Theory-In-ML/index.html</loc>
-    <lastmod>2025-01-08T18:55:21.342Z</lastmod>
+    <lastmod>2025-03-15T14:19:52.222Z</lastmod>
   </url>
   <url>
-    <loc>https://SwayamInSync.github.io/swayam-script/posts/Understanding Perplexity/index.html</loc>
-    <lastmod>2025-01-08T18:55:21.344Z</lastmod>
-  </url>
-  <url>
-    <loc>https://SwayamInSync.github.io/swayam-script/posts/Numpy QuadDtype/index.html</loc>
-    <lastmod>2025-01-08T18:55:21.343Z</lastmod>
+    <loc>https://SwayamInSync.github.io/swayam-script/posts/Concurrent C++, A Practical Guide/index.html</loc>
+    <lastmod>2025-03-15T14:19:52.221Z</lastmod>
   </url>
   <url>
     <loc>https://SwayamInSync.github.io/swayam-script/posts/Self-Attention Mimicking Gradient Descent/index.html</loc>
-    <lastmod>2025-01-08T18:55:21.343Z</lastmod>
+    <lastmod>2025-03-15T14:19:52.223Z</lastmod>
+  </url>
+  <url>
+    <loc>https://SwayamInSync.github.io/swayam-script/index.html</loc>
+    <lastmod>2025-03-15T14:19:52.221Z</lastmod>
+  </url>
+  <url>
+    <loc>https://SwayamInSync.github.io/swayam-script/posts/Numpy QuadDtype/index.html</loc>
+    <lastmod>2025-03-15T14:19:52.222Z</lastmod>
+  </url>
+  <url>
+    <loc>https://SwayamInSync.github.io/swayam-script/posts/Understanding Perplexity/index.html</loc>
+    <lastmod>2025-03-15T14:19:52.223Z</lastmod>
   </url>
 </urlset>

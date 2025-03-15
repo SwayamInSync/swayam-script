@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/Concurrent C++, A Practical Guide/index.html",
       "/posts/Information-Theory-In-ML/index.html",
       "/posts/Understanding Perplexity/index.html",
       "/posts/Numpy QuadDtype/index.html",
