@@ -1,0 +1,20 @@
+---
+title: "Concurrent C++ A Practical Guide"
+subtitle: "A concise and practical guide to mastering C++ concurrency, covering threads, synchronization, parallelism, and debugging—all in one place."
+author: "Swayam Singh"
+date: "2025-02-09"
+categories: [C++]
+format:
+  html:
+    code-fold: false
+toc: true
+highlight-style: pygments
+execute: 
+  freeze: auto
+image: img.jpeg
+social:
+  - image: img.jpeg
+    description: "Homepage"
+---
+
+<meta http-equiv="Refresh" content="0; url='https://swayam-singh.notion.site/Concurrent-C-A-Practical-Guide-14a41a61998f80b1b0d9f144fe107e4c?pvs=4'" />
