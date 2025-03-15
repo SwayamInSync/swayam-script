@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Swayam Singh">
-<meta name="dcterms.date" content="2023-10-14">
+<meta name="dcterms.date" content="2025-03-15">
 
-<title>Self-Attention Mimicking Gradient Descent – Swayam’s Scripts</title>
+<title>[WIP] The Transparent Algorithm – Swayam’s Scripts</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -72,46 +72,17 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Self-Attention Mimicking Gradient Descent – Swayam’s Scripts">
-<meta property="og:description" content="">
-<meta property="og:image" content="https://SwayamInSync.github.io/swayam-script/posts/Self-Attention Mimicking Gradient Descent/section-image.png">
+<meta property="og:title" content="[WIP] The Transparent Algorithm – Swayam’s Scripts">
+<meta property="og:description" content="A bridge between formal mathematical proofs and intuitive understanding, guiding readers through the theoretical foundations of machine learning with clarity and precision.">
+<meta property="og:image" content="https://SwayamInSync.github.io/swayam-script/posts/The Transparent Algorithm/images/cover.png">
 <meta property="og:site_name" content="Swayam's Scripts">
-<meta property="og:image:height" content="459">
-<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="525">
+<meta property="og:image:width" content="736">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
@@ -155,10 +126,12 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Self-Attention Mimicking Gradient Descent</h1>
+      <h1 class="title">[WIP] The Transparent Algorithm</h1>
+            <p class="subtitle lead">A bridge between formal mathematical proofs and intuitive understanding, guiding readers through the theoretical foundations of machine learning with clarity and precision.</p>
                                 <div class="quarto-categories">
-                <div class="quarto-category">NLP</div>
-                <div class="quarto-category">Transformers</div>
+                <div class="quarto-category">ML</div>
+                <div class="quarto-category">Theory</div>
+                <div class="quarto-category">Book</div>
               </div>
                   </div>
   </div>
@@ -176,7 +149,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">October 14, 2023</p>
+        <p class="date">March 15, 2025</p>
       </div>
     </div>
     
@@ -187,22 +160,7 @@ window.Quarto = {
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#self-attention-mimicking-gradient-descent" id="toc-self-attention-mimicking-gradient-descent" class="nav-link active" data-scroll-target="#self-attention-mimicking-gradient-descent">Self-Attention Mimicking Gradient Descent</a>
-  <ul class="collapse">
-  <li><a href="#token-construction-from-the-paper" id="toc-token-construction-from-the-paper" class="nav-link" data-scroll-target="#token-construction-from-the-paper">Token Construction (from the paper):</a></li>
-  <li><a href="#conditions-from-the-paper" id="toc-conditions-from-the-paper" class="nav-link" data-scroll-target="#conditions-from-the-paper">Conditions (from the paper):</a></li>
-  <li><a href="#gradient-descent-in-linear-regression" id="toc-gradient-descent-in-linear-regression" class="nav-link" data-scroll-target="#gradient-descent-in-linear-regression">Gradient Descent in Linear Regression:</a></li>
-  <li><a href="#linear-self-attention-layer" id="toc-linear-self-attention-layer" class="nav-link" data-scroll-target="#linear-self-attention-layer">Linear Self-Attention Layer:</a></li>
-  <li><a href="#approximation" id="toc-approximation" class="nav-link" data-scroll-target="#approximation">Approximation:</a></li>
-  </ul></li>
-  </ul>
-</nav>
-    </div>
+    
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -210,103 +168,31 @@ window.Quarto = {
 
 
 
-<section id="self-attention-mimicking-gradient-descent" class="level1">
-<h1>Self-Attention Mimicking Gradient Descent</h1>
-<hr>
-<img src="section-image.png" class="preview-image img-fluid">
-<hr>
-<p>This section of paper <strong><a href="https://arxiv.org/abs/2309.05858">Uncovering mesa-optimization algorithms in Transformers</a></strong> presents a theoretical construction where a linear self-attention layer in a Transformer architecture can mimic a single step of gradient descent for a linear regression task.</p>
-<section id="token-construction-from-the-paper" class="level3">
-<h3 class="anchored" data-anchor-id="token-construction-from-the-paper">Token Construction (from the paper):</h3>
-<hr>
-<ul>
-<li><strong>Tokens</strong>: A set of tokens <span class="math inline">\(E_T\)</span> is constructed with <span class="math inline">\(T = N\)</span> such that <span class="math inline">\(e_t = (y_{\tau,i}, x_{\tau,i})\)</span>, where <span class="math inline">\(y_{\tau,i}\)</span> and <span class="math inline">\(x_{\tau,i}\)</span> are concatenated.</li>
-<li><strong>Query Token</strong>: A query token <span class="math inline">\(e_{T+1}\)</span> is created as <span class="math inline">\(e_{T+1} = (-W_0 x_{\tau,\text{test}}, x_{\tau,\text{test}})\)</span> . This token represents the test input for which a prediction is to be made.</li>
-</ul>
-<blockquote class="blockquote">
-<p><strong>Why doing <span class="math inline">\(-W_0 x_{\tau,\text{test}}\)</span> ?</strong> <span class="math inline">\(W_o\)</span> represent the model’s initial weights, multiplying it with <span class="math inline">\(x_{\tau,\text{test}}\)</span> provides initial context for prediction (basically giving a perspective to start with). The <span class="math inline">\(-_(ve)\)</span> sign is to align with the GD update, where we move in the direction opposite to the gradient. So we can say that <strong><em>The initial negative prediction in the query token provides a starting point, and the self-attention mechanism’s update to this prediction results in a new prediction that mimics</em></strong></p>
-</blockquote>
-</section>
-<section id="conditions-from-the-paper" class="level3">
-<h3 class="anchored" data-anchor-id="conditions-from-the-paper">Conditions (from the paper):</h3>
-<hr>
-<ol type="1">
-<li><p>All bias terms are zero</p>
-<ol type="1">
-<li>basically only using the model weights without any bias term</li>
-</ol></li>
-<li><p><span class="math display">\[
-W^T_k W_q = \begin{bmatrix} 0 &amp; 0 \\ 0 &amp; I_x \end{bmatrix}
-\]</span></p>
-<ol type="1">
-<li>As per my understanding, the relevance of this condition depends is as following
-<ol type="1">
-<li><p>So, I’ll write the equations for calculating attention weights and they are self-explanatory to be honest (<strong>also this is my fav interpretation of this condition</strong>)</p>
-<p><span class="math display">\[
-e = \begin{bmatrix} y_1 \\ x_1 \\ x_2 \end{bmatrix} \\
-\text{ and }q = \begin{bmatrix} q_y \\ q_{x1} \\ q_{x2} \end{bmatrix}
-\]</span></p>
-<p><span class="math display">\[k = W_k e\]</span></p>
-<p><span class="math display">\[q' = W_q q\]</span></p>
-<p><span class="math display">\[\text{attention weight} \propto k^T q'\]</span></p>
-<p>Given the condition, this becomes: <span class="math display">\[\text{weight} \propto e^T W^T_k W_q q\]</span></p>
-<p>Now, plugging in the condition</p>
-<p><span class="math display">\[W^T_k W_q = \begin{bmatrix} 0 &amp; 0 \\ 0 &amp; I_x \end{bmatrix}\]</span></p>
-<p>the interaction simplifies to: <span class="math display">\[
-\text{weight} \propto \begin{bmatrix} y_1 &amp; x_1 &amp; x_2 \end{bmatrix} \begin{bmatrix} 0 &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; 0\\ 0 &amp; 0 &amp; 1 \end{bmatrix} \begin{bmatrix} q_y \\ q_{x1} \\ q_{x2} \end{bmatrix}
-\]</span> <span class="math display">\[
-\text{weight} \propto \begin{bmatrix} 0 &amp; x_1 &amp; x_2 \end{bmatrix} \begin{bmatrix} q_y \\ q_{x1} \\ q_{x2} \end{bmatrix}
-\]</span> <span class="math display">\[\text{weight} \propto x_1 q_{x1} + x_2 q_{x2}\]</span></p>
-<p>So what we can see here is that, the attention-weights are proportional to the dot-product of x-component of inputs and query (rejecting the influence of y-component)</p></li>
-</ol></li>
-<li><span class="math display">\[ P W_v = \begin{bmatrix} -\eta I_y &amp; \eta W_0 \\ 0 &amp; 0 \end{bmatrix}\]</span></li>
-</ol>
-<p>This is the another condition and lets try to understand what it means, here <span class="math inline">\(\eta\)</span> is the learning-rate, <span class="math inline">\(*P*\)</span> is a projection matrix, and <span class="math inline">\(*W_v*\)</span> is the weight matrix for the “values”.</p>
-<p>Before diving into the interpretation of this condition, we should know that the <strong>Linear Self Attention</strong> can be represented as <span class="math inline">\(P V_{t} K^T_{t} q_{t}\)</span> (considering 1 head for simplicity) here <span class="math inline">\(P\)</span> is just the <strong>Projection matrix</strong> and the rest of the term is exact same as calculating attention.</p>
-<p>The matrix product <span class="math inline">\(PW_v\)</span> determines how the values contribute to the updated query token. Now lets try to understand it</p>
-<p>In this interpretation, I’ll again try to resolve this by solving equations, since our new value_matrix is <span class="math inline">\(PW_v\)</span> i.e we can calculate values of input token as</p>
-<p><span class="math display">\[v = PW_ve\]</span></p>
-<p>where <span class="math inline">\(e = \begin{bmatrix} y_1 \\ x_1 \\ x_2 \end{bmatrix}\)</span> and <span class="math inline">\(P W_v = \begin{bmatrix} -\eta &amp; \eta W_{01} &amp; \eta W_{02} \\ 0 &amp; 0 &amp; 0\\ 0 &amp; 0 &amp; 0\end{bmatrix}\)</span></p>
-<p><span class="math display">\[v = -\eta y + \eta W_{01}x_1 +\eta W_{02}x_2\]</span></p>
-<p>Based on this equation we can interpret the condition as:</p>
-<ul>
-<li><strong>The Upper Left Block <span class="math inline">\((-\eta I_y)\)</span></strong>: This block scales the y-component of the values (the outputs) by −<em>η.</em> In the context of gradient descent, the update is proportional to the negative gradient. This block captures the idea that the update to our model’s prediction should be in the opposite direction of the error (difference between prediction and actual output). Multiplying by −<em>η</em> ensures that if our model’s prediction is too high, it gets adjusted downwards, and if it’s too low, it gets adjusted upwards.</li>
-<li><strong>The Upper Right Block (<span class="math inline">\(\eta W_0\)</span>)</strong>: This block scales the x-component of the values (the inputs) and then multiplies by the initial weight <span class="math inline">\(*W_0\)</span>.* This captures the contribution of the inputs to the gradient of the loss with respect to the model parameters. In other words, it represents how much each input feature contributes to the error. Multiplying by <span class="math inline">\(*W_0*\)</span> gives the model’s initial reliance on each feature, and the entire product indicates how the model should adjust its reliance on each feature to minimize the error.</li>
-<li><strong>The Lower Blocks (0 matrices)</strong>: These blocks ensure that the x-component of the updated query token remains unchanged. This is consistent with the idea that the input part of our test example doesn’t change; only our model’s prediction (or representation) of it does.</li>
-</ul></li>
-</ol>
-<p>That covers all the required conditions, now let’s see that satisfying these conditions, how the weights of the self-attention will contain the gradient of the loss of a Linear Regression objective.</p>
-</section>
-<section id="gradient-descent-in-linear-regression" class="level3">
-<h3 class="anchored" data-anchor-id="gradient-descent-in-linear-regression">Gradient Descent in Linear Regression:</h3>
-<hr>
-<p>For a linear regression task, the gradient descent update rule is: <span class="math display">\[\Delta W_0 = \eta \sum_{i=1}^{N} (y_{\tau,i} - W_0 x_{\tau,i}) x^T_{\tau,i}\]</span></p>
-</section>
-<section id="linear-self-attention-layer" class="level3">
-<h3 class="anchored" data-anchor-id="linear-self-attention-layer">Linear Self-Attention Layer:</h3>
-<hr>
-<p>Given the conditions, the self-attention mechanism computes the weighted sum of values based on the similarity (dot product) of the query with the keys.</p>
-<p><strong>To prove:</strong> The weights in the attention mechanism will effectively compute the gradient of the loss with respect to the model parameters.</p>
-<p>Let’s move to the final derivation:</p>
-<ol type="1">
-<li><strong>Attention Weights Calculation</strong>: Given the second condition, the attention weights are determined by the dot product of the query with the keys: <span class="math display">\[\alpha_t = q \cdot k_t\]</span> Where <span class="math inline">\(q\)</span> is the query, and <span class="math inline">\(k_t\)</span> is the key for the t-th token.</li>
-<li><strong>Value Update</strong>: The update to the query token using the attention mechanism is: <span class="math display">\[e_{T+1,\text{new}} = \sum_{t=1}^{T} \alpha_t v_t\]</span> Where <span class="math inline">\(v_t\)</span> is the value for the t-th token.</li>
-</ol>
-<p>Given the third condition, the value for each token is: <span class="math display">\[v_t = P W_v e_t\]</span> Substituting this in, we get: <span class="math display">\[e_{T+1,\text{new}} = \sum_{t=1}^{T} \alpha_t P W_v e_t\]</span></p>
-<p><strong>Matching with Gradient Descent</strong>: Given the attention weights <span class="math inline">\((\alpha_t)\)</span> and the gradient descent update rule, the y-component of the updated query token is: <span class="math display">\[
-e_{T+1,\text{new,y}} = \sum_{t=1}^{T} \alpha_t (-\eta y_{\tau,i} + \eta W_0 x_{\tau,i}) \\
-e_{T+1,\text{new,y}} = \sum_{t=1}^{T} \alpha_t \eta (W_0 x_{\tau,i} - y_{\tau,i})
-\]</span></p>
-<p>Now, comparing this with the gradient descent update rule, we can see that the term inside the summation <span class="math inline">\((W_0x_τ,_iy_τ,_i)\)</span> is essentially the error in prediction for the training data.</p>
-<p>Given that the attention weights <span class="math inline">\(α_t\)</span> effectively compute a weighted version of this error, the entire equation can be seen as a weighted sum of errors, which is analogous to the gradient in gradient descent.</p>
-</section>
-<section id="approximation" class="level3">
-<h3 class="anchored" data-anchor-id="approximation">Approximation:</h3>
-<hr>
-<p>Now, for the test input <span class="math inline">\(x_{\tau,\text{test}}\)</span>, the prediction using the initial weights <span class="math inline">\(W_0\)</span> is <span class="math inline">\(W_0 x_{\tau,\text{test}}\)</span>. After one step of gradient descent, the prediction becomes: <span class="math display">\[(W_0 - \Delta W_0) x_{\tau,\text{test}}\]</span></p>
-<p>Given that the self-attention mechanism’s update to the query token is designed to mimic one step of gradient descent, we can approximate: <span class="math display">\[e_{T+1,\text{new,y}} \approx (W_0 - \Delta W_0) x_{\tau,\text{test}}\]</span></p>
-<p>This approximation captures the essence of the theoretical construction: the self-attention mechanism updates the query token in a way that mimics the behavior of gradient descent</p>
-<p>Also the rearrangement and approximation are based on the insight that the self-attention mechanism’s update to the query token aligns with the gradient descent update rule for linear regression, allowing the mechanism to make predictions consistent with gradient descent optimization.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/cover.png" class="preview-image img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="Cover Image"></p>
+</figure>
+</div>
+<section id="the-transparent-algorithm" class="level1">
+<h1>The Transparent Algorithm</h1>
+<section id="table-of-content" class="level2">
+<h2 class="anchored" data-anchor-id="table-of-content">Table of Content</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>#</th>
+<th>Title</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><a href="../../pages/The Transparent Algorithm/chapter-1.html">The Mathematics of Learning Guarantees</a></td>
+<td>Foundations of learning theory, error bounds, and the concept of misleading samples</td>
+</tr>
+</tbody>
+</table>
 
 
 </section>

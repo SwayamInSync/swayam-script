@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Swayam Singh">
-<meta name="dcterms.date" content="2023-10-14">
 
-<title>Self-Attention Mimicking Gradient Descent – Swayam’s Scripts</title>
+<title>chapter-1 – Swayam's Scripts</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -38,12 +36,12 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-a185852c63625fd9ffbdc57047c9a77e.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-a185852c63625fd9ffbdc57047c9a77e.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b53751a350365c71b6c909e95f209ed1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-a1f479b85675719de3601c97caf9a7cb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-be1b8be0d95fba76da953258152e75d9.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-8647a4a42273f773479d27c00df3f9ed.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-449fe9d2e8b55805e22d9263c3f70d3c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -103,18 +101,14 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Self-Attention Mimicking Gradient Descent – Swayam’s Scripts">
-<meta property="og:description" content="">
-<meta property="og:image" content="https://SwayamInSync.github.io/swayam-script/posts/Self-Attention Mimicking Gradient Descent/section-image.png">
+<meta property="og:title" content="Swayam’s Scripts">
 <meta property="og:site_name" content="Swayam's Scripts">
-<meta property="og:image:height" content="459">
-<meta property="og:image:width" content="1200">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+  <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
@@ -152,161 +146,107 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
-      <h1 class="title">Self-Attention Mimicking Gradient Descent</h1>
-                                <div class="quarto-categories">
-                <div class="quarto-category">NLP</div>
-                <div class="quarto-category">Transformers</div>
-              </div>
-                  </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta">
-
-      <div>
-      <div class="quarto-title-meta-heading">Author</div>
-      <div class="quarto-title-meta-contents">
-               <p>Swayam Singh </p>
-            </div>
-    </div>
-      
-      <div>
-      <div class="quarto-title-meta-heading">Published</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date">October 14, 2023</p>
-      </div>
-    </div>
-    
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#self-attention-mimicking-gradient-descent" id="toc-self-attention-mimicking-gradient-descent" class="nav-link active" data-scroll-target="#self-attention-mimicking-gradient-descent">Self-Attention Mimicking Gradient Descent</a>
-  <ul class="collapse">
-  <li><a href="#token-construction-from-the-paper" id="toc-token-construction-from-the-paper" class="nav-link" data-scroll-target="#token-construction-from-the-paper">Token Construction (from the paper):</a></li>
-  <li><a href="#conditions-from-the-paper" id="toc-conditions-from-the-paper" class="nav-link" data-scroll-target="#conditions-from-the-paper">Conditions (from the paper):</a></li>
-  <li><a href="#gradient-descent-in-linear-regression" id="toc-gradient-descent-in-linear-regression" class="nav-link" data-scroll-target="#gradient-descent-in-linear-regression">Gradient Descent in Linear Regression:</a></li>
-  <li><a href="#linear-self-attention-layer" id="toc-linear-self-attention-layer" class="nav-link" data-scroll-target="#linear-self-attention-layer">Linear Self-Attention Layer:</a></li>
-  <li><a href="#approximation" id="toc-approximation" class="nav-link" data-scroll-target="#approximation">Approximation:</a></li>
-  </ul></li>
-  </ul>
-</nav>
-    </div>
+    
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
 
-
-<section id="self-attention-mimicking-gradient-descent" class="level1">
-<h1>Self-Attention Mimicking Gradient Descent</h1>
-<hr>
-<img src="section-image.png" class="preview-image img-fluid">
-<hr>
-<p>This section of paper <strong><a href="https://arxiv.org/abs/2309.05858">Uncovering mesa-optimization algorithms in Transformers</a></strong> presents a theoretical construction where a linear self-attention layer in a Transformer architecture can mimic a single step of gradient descent for a linear regression task.</p>
-<section id="token-construction-from-the-paper" class="level3">
-<h3 class="anchored" data-anchor-id="token-construction-from-the-paper">Token Construction (from the paper):</h3>
-<hr>
+<section id="chapter-1-the-mathematics-of-learning-guarantees" class="level1">
+<h1>Chapter 1: The Mathematics of Learning Guarantees</h1>
+<section id="introduction-to-learning-theory" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-to-learning-theory">1.1 Introduction to Learning Theory</h2>
+<p>When a machine learning algorithm examines data and produces a model, how can we be confident that this model will perform well on new, unseen examples? This fundamental question lies at the heart of learning theory. Rather than focusing on specific algorithms like neural networks or decision trees, learning theory provides a mathematical framework to understand when and why learning works.</p>
+<p>Consider a simple problem: we want to determine if an email is spam based on its content. We might train a classifier on thousands of labeled examples, but how do we know if it will work well on future emails? Intuitively, we expect that with enough diverse training examples, our classifier should generalize well to new data. But how many examples are “enough”? And how can we formally prove this intuition?</p>
+<p>Learning theory gives us tools to answer these questions with mathematical precision. Instead of vague assurances, we can derive exact bounds on how likely our algorithm is to succeed and how much data it needs. This chapter introduces the fundamental concepts needed to build such guarantees.</p>
+</section>
+<section id="key-notation-and-definitions" class="level2">
+<h2 class="anchored" data-anchor-id="key-notation-and-definitions">1.2 Key Notation and Definitions</h2>
+<p>To reason precisely about learning, we need formal definitions. Let’s establish our notation:</p>
 <ul>
-<li><strong>Tokens</strong>: A set of tokens <span class="math inline">\(E_T\)</span> is constructed with <span class="math inline">\(T = N\)</span> such that <span class="math inline">\(e_t = (y_{\tau,i}, x_{\tau,i})\)</span>, where <span class="math inline">\(y_{\tau,i}\)</span> and <span class="math inline">\(x_{\tau,i}\)</span> are concatenated.</li>
-<li><strong>Query Token</strong>: A query token <span class="math inline">\(e_{T+1}\)</span> is created as <span class="math inline">\(e_{T+1} = (-W_0 x_{\tau,\text{test}}, x_{\tau,\text{test}})\)</span> . This token represents the test input for which a prediction is to be made.</li>
+<li><strong>Input space</strong> <span class="math inline">\(\mathcal{X}\)</span>: The set of all possible inputs (e.g., all possible emails)</li>
+<li><strong>Output space</strong> <span class="math inline">\(\mathcal{Y}\)</span>: The set of all possible outputs (e.g., “spam” or “not spam”)</li>
+<li><strong>Training sample</strong> <span class="math inline">\(S = ((x_1, y_1), (x_2, y_2), ..., (x_m, y_m))\)</span>: A set of m labeled examples</li>
+<li><span class="math inline">\(S|_x = (x_1, x_2, ..., x_m)\)</span>: Just the inputs from the training sample</li>
+<li><strong>Distribution</strong> <span class="math inline">\(\mathcal{D}\)</span>: The probability distribution from which examples are drawn</li>
+<li><strong>Labeling function</strong> <span class="math inline">\(f: \mathcal{X} \rightarrow \mathcal{Y}\)</span>: The true, underlying function we’re trying to learn</li>
+<li><strong>Hypothesis class</strong> <span class="math inline">\(\mathcal{H}\)</span>: The set of possible prediction rules our algorithm can output</li>
+<li><strong>Hypothesis</strong> <span class="math inline">\(h \in \mathcal{H}\)</span>: A specific prediction rule (e.g., a specific classifier)</li>
 </ul>
-<blockquote class="blockquote">
-<p><strong>Why doing <span class="math inline">\(-W_0 x_{\tau,\text{test}}\)</span> ?</strong> <span class="math inline">\(W_o\)</span> represent the model’s initial weights, multiplying it with <span class="math inline">\(x_{\tau,\text{test}}\)</span> provides initial context for prediction (basically giving a perspective to start with). The <span class="math inline">\(-_(ve)\)</span> sign is to align with the GD update, where we move in the direction opposite to the gradient. So we can say that <strong><em>The initial negative prediction in the query token provides a starting point, and the self-attention mechanism’s update to this prediction results in a new prediction that mimics</em></strong></p>
-</blockquote>
-</section>
-<section id="conditions-from-the-paper" class="level3">
-<h3 class="anchored" data-anchor-id="conditions-from-the-paper">Conditions (from the paper):</h3>
-<hr>
+<p>Given these definitions, we can formalize two crucial concepts:</p>
 <ol type="1">
-<li><p>All bias terms are zero</p>
-<ol type="1">
-<li>basically only using the model weights without any bias term</li>
-</ol></li>
-<li><p><span class="math display">\[
-W^T_k W_q = \begin{bmatrix} 0 &amp; 0 \\ 0 &amp; I_x \end{bmatrix}
-\]</span></p>
-<ol type="1">
-<li>As per my understanding, the relevance of this condition depends is as following
-<ol type="1">
-<li><p>So, I’ll write the equations for calculating attention weights and they are self-explanatory to be honest (<strong>also this is my fav interpretation of this condition</strong>)</p>
-<p><span class="math display">\[
-e = \begin{bmatrix} y_1 \\ x_1 \\ x_2 \end{bmatrix} \\
-\text{ and }q = \begin{bmatrix} q_y \\ q_{x1} \\ q_{x2} \end{bmatrix}
-\]</span></p>
-<p><span class="math display">\[k = W_k e\]</span></p>
-<p><span class="math display">\[q' = W_q q\]</span></p>
-<p><span class="math display">\[\text{attention weight} \propto k^T q'\]</span></p>
-<p>Given the condition, this becomes: <span class="math display">\[\text{weight} \propto e^T W^T_k W_q q\]</span></p>
-<p>Now, plugging in the condition</p>
-<p><span class="math display">\[W^T_k W_q = \begin{bmatrix} 0 &amp; 0 \\ 0 &amp; I_x \end{bmatrix}\]</span></p>
-<p>the interaction simplifies to: <span class="math display">\[
-\text{weight} \propto \begin{bmatrix} y_1 &amp; x_1 &amp; x_2 \end{bmatrix} \begin{bmatrix} 0 &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; 0\\ 0 &amp; 0 &amp; 1 \end{bmatrix} \begin{bmatrix} q_y \\ q_{x1} \\ q_{x2} \end{bmatrix}
-\]</span> <span class="math display">\[
-\text{weight} \propto \begin{bmatrix} 0 &amp; x_1 &amp; x_2 \end{bmatrix} \begin{bmatrix} q_y \\ q_{x1} \\ q_{x2} \end{bmatrix}
-\]</span> <span class="math display">\[\text{weight} \propto x_1 q_{x1} + x_2 q_{x2}\]</span></p>
-<p>So what we can see here is that, the attention-weights are proportional to the dot-product of x-component of inputs and query (rejecting the influence of y-component)</p></li>
-</ol></li>
-<li><span class="math display">\[ P W_v = \begin{bmatrix} -\eta I_y &amp; \eta W_0 \\ 0 &amp; 0 \end{bmatrix}\]</span></li>
+<li><p><strong>True error</strong>: The probability that a hypothesis makes an incorrect prediction on an example drawn from the true distribution: <span class="math display">\[L_{(D,f)}(h) = \mathbb{P}_{x \sim D}[h(x) \neq f(x)]\]</span></p></li>
+<li><p><strong>Training error</strong>: The fraction of mistakes a hypothesis makes on the training sample: <span class="math display">\[L_S(h) = \frac{1}{m}\sum_{i=1}^{m} \mathbb{1}_{[h(x_i) \neq y_i]}\]</span> where <span class="math inline">\(\mathbb{1}\)</span> is the indicator function that equals 1 when <span class="math inline">\(h(x_i) \neq y_i\)</span> and 0 otherwise.</p></li>
 </ol>
-<p>This is the another condition and lets try to understand what it means, here <span class="math inline">\(\eta\)</span> is the learning-rate, <span class="math inline">\(*P*\)</span> is a projection matrix, and <span class="math inline">\(*W_v*\)</span> is the weight matrix for the “values”.</p>
-<p>Before diving into the interpretation of this condition, we should know that the <strong>Linear Self Attention</strong> can be represented as <span class="math inline">\(P V_{t} K^T_{t} q_{t}\)</span> (considering 1 head for simplicity) here <span class="math inline">\(P\)</span> is just the <strong>Projection matrix</strong> and the rest of the term is exact same as calculating attention.</p>
-<p>The matrix product <span class="math inline">\(PW_v\)</span> determines how the values contribute to the updated query token. Now lets try to understand it</p>
-<p>In this interpretation, I’ll again try to resolve this by solving equations, since our new value_matrix is <span class="math inline">\(PW_v\)</span> i.e we can calculate values of input token as</p>
-<p><span class="math display">\[v = PW_ve\]</span></p>
-<p>where <span class="math inline">\(e = \begin{bmatrix} y_1 \\ x_1 \\ x_2 \end{bmatrix}\)</span> and <span class="math inline">\(P W_v = \begin{bmatrix} -\eta &amp; \eta W_{01} &amp; \eta W_{02} \\ 0 &amp; 0 &amp; 0\\ 0 &amp; 0 &amp; 0\end{bmatrix}\)</span></p>
-<p><span class="math display">\[v = -\eta y + \eta W_{01}x_1 +\eta W_{02}x_2\]</span></p>
-<p>Based on this equation we can interpret the condition as:</p>
-<ul>
-<li><strong>The Upper Left Block <span class="math inline">\((-\eta I_y)\)</span></strong>: This block scales the y-component of the values (the outputs) by −<em>η.</em> In the context of gradient descent, the update is proportional to the negative gradient. This block captures the idea that the update to our model’s prediction should be in the opposite direction of the error (difference between prediction and actual output). Multiplying by −<em>η</em> ensures that if our model’s prediction is too high, it gets adjusted downwards, and if it’s too low, it gets adjusted upwards.</li>
-<li><strong>The Upper Right Block (<span class="math inline">\(\eta W_0\)</span>)</strong>: This block scales the x-component of the values (the inputs) and then multiplies by the initial weight <span class="math inline">\(*W_0\)</span>.* This captures the contribution of the inputs to the gradient of the loss with respect to the model parameters. In other words, it represents how much each input feature contributes to the error. Multiplying by <span class="math inline">\(*W_0*\)</span> gives the model’s initial reliance on each feature, and the entire product indicates how the model should adjust its reliance on each feature to minimize the error.</li>
-<li><strong>The Lower Blocks (0 matrices)</strong>: These blocks ensure that the x-component of the updated query token remains unchanged. This is consistent with the idea that the input part of our test example doesn’t change; only our model’s prediction (or representation) of it does.</li>
-</ul></li>
-</ol>
-<p>That covers all the required conditions, now let’s see that satisfying these conditions, how the weights of the self-attention will contain the gradient of the loss of a Linear Regression objective.</p>
+<p>Our learning algorithm examines the training data <span class="math inline">\(S\)</span> and outputs a hypothesis <span class="math inline">\(h_S\)</span>. We want <span class="math inline">\(h_S\)</span> to have low true error, but we can only measure its training error. The key challenge in learning theory is understanding the relationship between these two errors.</p>
+<p>For simplicity, we’ll initially work under the <strong>realizability assumption</strong>: there exists at least one hypothesis <span class="math inline">\(h^* \in \mathcal{H}\)</span> with zero true error (<span class="math inline">\(L_{(D,f)}(h^*) = 0\)</span>). This means our hypothesis class contains at least one perfect predictor.</p>
 </section>
-<section id="gradient-descent-in-linear-regression" class="level3">
-<h3 class="anchored" data-anchor-id="gradient-descent-in-linear-regression">Gradient Descent in Linear Regression:</h3>
-<hr>
-<p>For a linear regression task, the gradient descent update rule is: <span class="math display">\[\Delta W_0 = \eta \sum_{i=1}^{N} (y_{\tau,i} - W_0 x_{\tau,i}) x^T_{\tau,i}\]</span></p>
+<section id="understanding-failure-events" class="level2">
+<h2 class="anchored" data-anchor-id="understanding-failure-events">1.3 Understanding Failure Events</h2>
+<p>When does a learning algorithm fail? We define failure as producing a hypothesis with true error exceeding some acceptable threshold <span class="math inline">\(\epsilon\)</span>:</p>
+<p><span class="math display">\[L_{(D,f)}(h_S) &gt; \epsilon\]</span></p>
+<p>Our goal is to understand how likely this failure is when we train on <span class="math inline">\(m\)</span> randomly drawn examples.</p>
+<p>To approach this systematically, let’s define the set of “bad” hypotheses:</p>
+<p><span class="math display">\[\mathcal{H}_B = \{h \in \mathcal{H} : L_{(D,f)}(h) &gt; \epsilon\}\]</span></p>
+<p>These are hypotheses that perform poorly on the true distribution. If our algorithm outputs such a hypothesis, it fails.</p>
+<p>But here’s the key insight: under the realizability assumption, our algorithm will always output a hypothesis with zero training error. So failure can only happen if some “bad” hypothesis also happens to have zero training error on our sample.</p>
+<p>This leads us to define the set of “misleading samples”:</p>
+<p><span class="math display">\[M = \{S|_x : \exists h \in \mathcal{H}_B, L_S(h) = 0\}\]</span></p>
+<p>These are training sets where at least one bad hypothesis looks perfect (has zero training error). Since our algorithm chooses a hypothesis with zero training error, if a bad hypothesis has zero training error, our algorithm might select it and fail.</p>
+<p>The crucial relationship is: <span class="math display">\[\{S|_x : L_{(D,f)}(h_S) &gt; \epsilon\} \subseteq M\]</span></p>
+<p>Every sample that leads to algorithm failure must be a misleading sample. This insight allows us to bound the probability of failure by analyzing the probability of drawing a misleading sample.</p>
 </section>
-<section id="linear-self-attention-layer" class="level3">
-<h3 class="anchored" data-anchor-id="linear-self-attention-layer">Linear Self-Attention Layer:</h3>
-<hr>
-<p>Given the conditions, the self-attention mechanism computes the weighted sum of values based on the similarity (dot product) of the query with the keys.</p>
-<p><strong>To prove:</strong> The weights in the attention mechanism will effectively compute the gradient of the loss with respect to the model parameters.</p>
-<p>Let’s move to the final derivation:</p>
+<section id="probabilistic-error-bounds" class="level2">
+<h2 class="anchored" data-anchor-id="probabilistic-error-bounds">1.4 Probabilistic Error Bounds</h2>
+<p>Now we can calculate the probability of drawing a misleading sample. First, we express <span class="math inline">\(M\)</span> as a union:</p>
+<p><span class="math display">\[M = \bigcup_{h \in \mathcal{H}_B} \{S|_x : L_S(h) = 0\}\]</span></p>
+<p>This allows us to apply the union bound:</p>
+<p><span class="math display">\[\mathcal{D}^m(\{S|_x : L_{(D,f)}(h_S) &gt; \epsilon\}) \leq \mathcal{D}^m(M) \leq \sum_{h \in \mathcal{H}_B} \mathcal{D}^m(\{S|_x : L_S(h) = 0\})\]</span></p>
+<p>Next, we calculate the probability that a specific bad hypothesis <span class="math inline">\(h\)</span> has zero training error. Since the true error of <span class="math inline">\(h\)</span> is greater than <span class="math inline">\(\epsilon\)</span>, and our samples are drawn independently:</p>
+<p><span class="math display">\[\mathcal{D}^m(\{S|_x : L_S(h) = 0\}) = \mathcal{D}^m(\{S|_x : \forall i, h(x_i) = f(x_i)\}) = \prod_{i=1}^m \mathcal{D}(\{x_i : h(x_i) = f(x_i)\})\]</span></p>
+<p>For each individual sample, the probability of correct classification is:</p>
+<p><span class="math display">\[\mathcal{D}(\{x_i : h(x_i) = f(x_i)\}) = 1 - L_{(D,f)}(h) \leq 1 - \epsilon\]</span></p>
+<p>Therefore: <span class="math display">\[\mathcal{D}^m(\{S|_x : L_S(h) = 0\}) \leq (1 - \epsilon)^m\]</span></p>
+<p>To simplify our expressions, we use the standard inequality <span class="math inline">\(1 - \epsilon \leq e^{-\epsilon}\)</span>, which gives us:</p>
+<p><span class="math display">\[\mathcal{D}^m(\{S|_x : L_S(h) = 0\}) \leq (1 - \epsilon)^m \leq e^{-\epsilon m}\]</span></p>
+<p>Combining this with our union bound:</p>
+<p><span class="math display">\[\mathcal{D}^m(\{S|_x : L_{(D,f)}(h_S) &gt; \epsilon\}) \leq \sum_{h \in \mathcal{H}_B} e^{-\epsilon m} = |\mathcal{H}_B| \cdot e^{-\epsilon m} \leq |\mathcal{H}| \cdot e^{-\epsilon m}\]</span></p>
+<p>This gives us our fundamental bound: the probability of failure is at most <span class="math inline">\(|\mathcal{H}| \cdot e^{-\epsilon m}\)</span>.</p>
+</section>
+<section id="the-probably-approximately-correct-framework" class="level2">
+<h2 class="anchored" data-anchor-id="the-probably-approximately-correct-framework">1.5 The Probably Approximately Correct Framework</h2>
+<p>The bound we’ve derived forms the foundation of Probably Approximately Correct (PAC) learning. Let’s understand what it means in practical terms.</p>
+<p>If we want to ensure that our algorithm fails with probability at most <span class="math inline">\(\delta\)</span> (a confidence parameter), we need:</p>
+<p><span class="math display">\[|\mathcal{H}| \cdot e^{-\epsilon m} \leq \delta\]</span></p>
+<p>Solving for the required sample size <span class="math inline">\(m\)</span>:</p>
+<p><span class="math display">\[e^{-\epsilon m} \leq \frac{\delta}{|\mathcal{H}|}\]</span></p>
+<p>Taking logarithms:</p>
+<p><span class="math display">\[-\epsilon m \leq \ln\left(\frac{\delta}{|\mathcal{H}|}\right) = \ln(\delta) - \ln(|\mathcal{H}|)\]</span></p>
+<p>Dividing by <span class="math inline">\(-\epsilon\)</span> and flipping the inequality:</p>
+<p><span class="math display">\[m \geq \frac{\ln(|\mathcal{H}|) - \ln(\delta)}{\epsilon} = \frac{\ln(|\mathcal{H}|/\delta)}{\epsilon}\]</span></p>
+<p>This gives us the PAC learning guarantee: With probability at least <span class="math inline">\(1-\delta\)</span>, a learning algorithm that outputs a hypothesis with zero training error will have true error at most <span class="math inline">\(\epsilon\)</span>, provided the training sample size is at least:</p>
+<p><span class="math display">\[m \geq \frac{\ln(|\mathcal{H}|/\delta)}{\epsilon}\]</span></p>
+<p>This is a fundamental result that tells us exactly how much data we need to learn effectively. It shows that the sample complexity: - Scales logarithmically with the size of the hypothesis class (<span class="math inline">\(|\mathcal{H}|\)</span>) - Scales logarithmically with the inverse of the confidence parameter (<span class="math inline">\(1/\delta\)</span>) - Scales linearly with the inverse of the error threshold (<span class="math inline">\(1/\epsilon\)</span>)</p>
+<p>This means that we can learn even from very large hypothesis classes with a reasonable amount of data, as long as we’re willing to accept a small probability of failure and a small error threshold.</p>
+</section>
+<section id="summary-and-looking-ahead" class="level2">
+<h2 class="anchored" data-anchor-id="summary-and-looking-ahead">1.7 Summary and Looking Ahead</h2>
+<p>In this chapter, we developed the fundamental mathematics that allow us to provide guarantees about learning algorithms. Rather than relying on intuition or empirical evidence alone, we now have precise tools to analyze when and why learning succeeds.</p>
+<p>Let’s review the key insights we’ve gained:</p>
 <ol type="1">
-<li><strong>Attention Weights Calculation</strong>: Given the second condition, the attention weights are determined by the dot product of the query with the keys: <span class="math display">\[\alpha_t = q \cdot k_t\]</span> Where <span class="math inline">\(q\)</span> is the query, and <span class="math inline">\(k_t\)</span> is the key for the t-th token.</li>
-<li><strong>Value Update</strong>: The update to the query token using the attention mechanism is: <span class="math display">\[e_{T+1,\text{new}} = \sum_{t=1}^{T} \alpha_t v_t\]</span> Where <span class="math inline">\(v_t\)</span> is the value for the t-th token.</li>
+<li><p>We formalized the learning problem through precise definitions of hypotheses, errors, and learning algorithms.</p></li>
+<li><p>We identified that learning failure occurs when our algorithm outputs a hypothesis with high true error.</p></li>
+<li><p>We discovered that such failure can only happen when our training sample is “misleading” - making a bad hypothesis look perfect.</p></li>
+<li><p>We derived tight bounds on the probability of drawing misleading samples, leading to our fundamental inequality: <span class="math display">\[\mathcal{D}^m(\{S|_x : L_{(D,f)}(h_S) &gt; \epsilon\}) \leq |\mathcal{H}| \cdot e^{-\epsilon m}\]</span></p></li>
+<li><p>We established the sample complexity of learning: <span class="math display">\[m \geq \frac{\ln(|\mathcal{H}|/\delta)}{\epsilon}\]</span> This tells us exactly how many examples we need to ensure our learning algorithm succeeds with high probability.</p></li>
 </ol>
-<p>Given the third condition, the value for each token is: <span class="math display">\[v_t = P W_v e_t\]</span> Substituting this in, we get: <span class="math display">\[e_{T+1,\text{new}} = \sum_{t=1}^{T} \alpha_t P W_v e_t\]</span></p>
-<p><strong>Matching with Gradient Descent</strong>: Given the attention weights <span class="math inline">\((\alpha_t)\)</span> and the gradient descent update rule, the y-component of the updated query token is: <span class="math display">\[
-e_{T+1,\text{new,y}} = \sum_{t=1}^{T} \alpha_t (-\eta y_{\tau,i} + \eta W_0 x_{\tau,i}) \\
-e_{T+1,\text{new,y}} = \sum_{t=1}^{T} \alpha_t \eta (W_0 x_{\tau,i} - y_{\tau,i})
-\]</span></p>
-<p>Now, comparing this with the gradient descent update rule, we can see that the term inside the summation <span class="math inline">\((W_0x_τ,_iy_τ,_i)\)</span> is essentially the error in prediction for the training data.</p>
-<p>Given that the attention weights <span class="math inline">\(α_t\)</span> effectively compute a weighted version of this error, the entire equation can be seen as a weighted sum of errors, which is analogous to the gradient in gradient descent.</p>
-</section>
-<section id="approximation" class="level3">
-<h3 class="anchored" data-anchor-id="approximation">Approximation:</h3>
-<hr>
-<p>Now, for the test input <span class="math inline">\(x_{\tau,\text{test}}\)</span>, the prediction using the initial weights <span class="math inline">\(W_0\)</span> is <span class="math inline">\(W_0 x_{\tau,\text{test}}\)</span>. After one step of gradient descent, the prediction becomes: <span class="math display">\[(W_0 - \Delta W_0) x_{\tau,\text{test}}\]</span></p>
-<p>Given that the self-attention mechanism’s update to the query token is designed to mimic one step of gradient descent, we can approximate: <span class="math display">\[e_{T+1,\text{new,y}} \approx (W_0 - \Delta W_0) x_{\tau,\text{test}}\]</span></p>
-<p>This approximation captures the essence of the theoretical construction: the self-attention mechanism updates the query token in a way that mimics the behavior of gradient descent</p>
-<p>Also the rearrangement and approximation are based on the insight that the self-attention mechanism’s update to the query token aligns with the gradient descent update rule for linear regression, allowing the mechanism to make predictions consistent with gradient descent optimization.</p>
+<p>These results provide a solid mathematical foundation for understanding learning guarantees, but they rely on several assumptions that limit their direct application to many real-world scenarios. Most notably, we’ve worked under the realizability assumption (that a perfect hypothesis exists in our class), and we’ve assumed that our hypothesis class is finite.</p>
+<p>In the next chapter, we’ll formalize and extend these insights by developing the Probably Approximately Correct (PAC) learning model. This model provides a comprehensive framework for analyzing learnability across different problem domains and algorithm types. We’ll remove the restrictive assumptions of this chapter, explore how to handle infinite hypothesis classes, and investigate learning without the realizability assumption.</p>
+<p>By building on the mathematical foundations established here, we’ll develop a more complete understanding of what makes learning possible and what fundamental limitations exist in machine learning. This will ultimately help us answer one of the most profound questions in the field: What is learnable and what is not?</p>
 
 
 </section>
@@ -874,10 +814,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<script src="https://giscus.app/client.js" data-repo="SwayamInSync/swayam-script" data-repo-id="R_kgDOM9t4DA" data-category="General" data-category-id="DIC_kwDOM9t4DM4CjN7v" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="dark_dimmed" data-lang="en" crossorigin="anonymous" async="">
-</script>
-<input type="hidden" id="giscus-base-theme" value="dark_dimmed">
-<input type="hidden" id="giscus-alt-theme" value="light">
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
