@@ -280,7 +280,12 @@ z_\ell = \text{DyT}_1(x_\ell), \quad x'_\ell = x_\ell + \text{Attn}(z_\ell), \qu
 </section>
 <section id="variance-propagation-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="variance-propagation-analysis">3. Variance Propagation Analysis</h2>
-<p>To assess the Curse of Depth, we first examine how the variance of activations <span class="math inline">\(\sigma_\ell^2 = \text{Var}(x_\ell)\)</span> evolves across layers. We assume: - Element-wise independence within <span class="math inline">\(x_\ell\)</span> (a standard simplification in initialization studies), - Zero-mean inputs per dimension at initialization (e.g., <span class="math inline">\(x_1 \sim \mathcal{N}(0, \sigma_1^2 I_C)\)</span>), - Attention and FFN sub-layers are initialized to approximately preserve variance (e.g., via Xavier initialization).</p>
+<p>To assess the Curse of Depth, we first examine how the variance of activations <span class="math inline">\(\sigma_\ell^2 = \text{Var}(x_\ell)\)</span> evolves across layers. We assume:</p>
+<ul>
+<li>Element-wise independence within <span class="math inline">\(x_\ell\)</span> (a standard simplification in initialization studies),</li>
+<li>Zero-mean inputs per dimension at initialization (e.g., <span class="math inline">\(x_1 \sim \mathcal{N}(0, \sigma_1^2 I_C)\)</span>),</li>
+<li>Attention and FFN sub-layers are initialized to approximately preserve variance (e.g., via Xavier initialization).</li>
+</ul>
 <section id="variance-of-dyt-output" class="level3">
 <h3 class="anchored" data-anchor-id="variance-of-dyt-output">3.1. Variance of DyT Output</h3>
 <p>Consider a single dimension <span class="math inline">\(x \sim \mathcal{N}(0, \sigma^2)\)</span>. The DyT output is:</p>
@@ -356,7 +361,11 @@ Proof of <span class="math inline">\(\mathbb{E}[\tanh(\alpha x)] = 0\)</span>
 </section>
 <section id="variance-across-a-transformer-layer" class="level3">
 <h3 class="anchored" data-anchor-id="variance-across-a-transformer-layer">3.2. Variance Across a Transformer Layer</h3>
-<p>Now, propagate variance through one layer: - <strong>Input</strong>: <span class="math inline">\(\text{Var}(x_\ell) = \sigma_\ell^2\)</span>. - <strong>DyT_1</strong>: <span class="math inline">\(z_\ell = \text{DyT}_1(x_\ell)\)</span>, so:</p>
+<p>Now, propagate variance through one layer:</p>
+<ul>
+<li><strong>Input</strong>: <span class="math inline">\(\text{Var}(x_\ell) = \sigma_\ell^2\)</span>.</li>
+<li><strong><span class="math inline">\(DyT_1\)</span></strong>: <span class="math inline">\(z_\ell = \text{DyT}_1(x_\ell)\)</span>, so:</li>
+</ul>
 <p><span class="math display">\[
 \text{Var}(z_\ell) = \mathbb{E}[\tanh(\alpha_{1,\ell} x_\ell)^2] \leq 1.
 \]</span></p>
@@ -371,7 +380,7 @@ Proof of <span class="math inline">\(\mathbb{E}[\tanh(\alpha x)] = 0\)</span>
 \text{Var}(x'_\ell) = \sigma_\ell^2 + \text{Var}(\text{Attn}(z_\ell)) \leq \sigma_\ell^2 + 1.
 \]</span></p>
 <ul>
-<li><strong>DyT_2</strong>: <span class="math inline">\(w_\ell = \text{DyT}_2(x'_\ell)\)</span>, so:</li>
+<li><strong><span class="math inline">\(DyT_2\)</span></strong>: <span class="math inline">\(w_\ell = \text{DyT}_2(x'_\ell)\)</span>, so:</li>
 </ul>
 <p><span class="math display">\[
 \text{Var}(w_\ell) = \mathbb{E}[\tanh(\alpha_{2,\ell} x'_\ell)^2] \leq 1.
