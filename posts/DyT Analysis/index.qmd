@@ -1,0 +1,398 @@
+---
+title: "Gradient Flow and Variance Propogation Analysis of Dynamic Tanh Layer"
+subtitle: "A Mathematical Investigation into DyT's Potential to Mitigate the Curse of Depth in Pre-LN Transformers"
+author: "Swayam Singh"
+date: "2025-03-21"
+categories: [ML-Theory, Transformers]
+format:
+  html:
+    code-fold: false
+toc: true
+highlight-style: pygments
+execute: 
+  freeze: auto
+image: header.jpg
+social:
+  - image: header.jpg
+    description: "Intro Meme"
+---
+## Introduction
+
+The "Curse of Depth" in Pre-LN transformers, identified by Sun et al. (2025), reveals that deeper layers often function as near-identity mappings, contributing minimally to the model's performance. Their analysis found two key issues:
+
+1. Variance growth: In Pre-LN transformers, activation variance grows exponentially with depth, bounded by
+   $\Theta(L) \leq \sigma^2_{x_L} \leq \Theta(\exp(L))$
+
+2. Gradient flow limitation: The gradient norm converges to a constant
+   $\left\|\frac{\partial y_L}{\partial x_1}\right\|_2 \leq M$
+   rather than growing with depth, causing deeper layers to behave like identity functions.
+
+Sun et al. proposed LayerNorm Scaling to address this issue. Meanwhile, Zhu et al. (2025) introduced Dynamic Tanh (DyT) as a complete replacement for normalization layers in transformers.
+
+This article analyzes whether DyT can effectively mitigate the Curse of Depth by examining its effect on variance propagation and gradient flow in deep transformer networks.
+
+> I'll recommend to checkout both the original papers "[The Curse of Depth in Large Language Models](https://arxiv.org/abs/2502.05795)" and "[Transformers without Normalization
+](https://arxiv.org/abs/2503.10622)".
+
+## 1. Definition of the DyT Layer
+
+The DyT layer is a parameterized nonlinearity defined as:
+
+$$
+\text{DyT}(x) = \gamma \odot \tanh(\alpha \cdot x) + \beta,
+$$
+
+where:
+
+- $x \in \mathbb{R}^{B \times T \times C}$ is the input tensor, with $B$ as batch size, $T$ as sequence length, and $C$ as embedding dimension,
+- $\alpha \in \mathbb{R}$ is a learnable scalar parameter shared across all dimensions,
+- $\gamma \in \mathbb{R}^C$ and $\beta \in \mathbb{R}^C$ are learnable per-dimension scaling and shift parameters,
+- $\odot$ denotes element-wise multiplication,
+- $\tanh$ is applied element-wise.
+
+At initialization:
+
+- $\alpha = \text{init}_\alpha$ (a positive scalar, e.g., $\text{init}_\alpha = 1$),
+- $\gamma = \mathbf{1}_C$ (a vector of ones),
+- $\beta = \mathbf{0}_C$ (a vector of zeros).
+
+Thus, the initial behavior is:
+
+$$
+\text{DyT}(x) = \tanh(\text{init}_\alpha \cdot x),
+$$
+
+with $\alpha$, $\gamma$, and $\beta$ adapting during training via gradient descent.
+
+## 2. Pre-LN Transformer Architecture with DyT
+
+In a standard Pre-LN Transformer, each layer \(\ell\) processes the input $x_\ell$ as follows:
+
+$$
+z_\ell = \text{LN}(x_\ell), \quad x'_\ell = x_\ell + \text{Attn}(z_\ell), \quad w_\ell = \text{LN}(x'_\ell), \quad x_{\ell+1} = x'_\ell + \text{FFN}(w_\ell),
+$$
+
+where $\text{Attn}$ is the multi-head self-attention mechanism, and \(\text{FFN}\) is the feed-forward network.
+
+Replacing LN with DyT, the layer becomes:
+
+$$
+z_\ell = \text{DyT}_1(x_\ell), \quad x'_\ell = x_\ell + \text{Attn}(z_\ell), \quad w_\ell = \text{DyT}_2(x'_\ell), \quad x_{\ell+1} = x'_\ell + \text{FFN}(w_\ell),
+$$
+
+where:
+
+- $\text{DyT}_1$ has parameters $(\alpha_{1,\ell}, \gamma_{1,\ell}, \beta_{1,\ell})$,
+- $\text{DyT}_2$ has parameters $(\alpha_{2,\ell}, \gamma_{2,\ell}, \beta_{2,\ell})$,
+- Each DyT instance is independent per layer and per normalization step.
+
+We assume a depth of $L$ layers, with $x_1$ as the initial embedding input, and analyze the dynamics from $x_1$ to $x_{L+1}$.
+
+<hr>
+## 3. Variance Propagation Analysis
+
+To assess the Curse of Depth, we first examine how the variance of activations $\sigma_\ell^2 = \text{Var}(x_\ell)$ evolves across layers. We assume:
+- Element-wise independence within $x_\ell$ (a standard simplification in initialization studies),
+- Zero-mean inputs per dimension at initialization (e.g., $x_1 \sim \mathcal{N}(0, \sigma_1^2 I_C)$),
+- Attention and FFN sub-layers are initialized to approximately preserve variance (e.g., via Xavier initialization).
+
+### 3.1. Variance of DyT Output
+
+Consider a single dimension $x \sim \mathcal{N}(0, \sigma^2)$. The DyT output is:
+
+$$
+y = \gamma \cdot \tanh(\alpha x) + \beta.
+$$
+
+Since $\beta$ is a constant shift, it does not affect variance:
+
+$$
+\text{Var}(y) = \gamma^2 \cdot \text{Var}(\tanh(\alpha x)).
+$$
+
+We need to compute $\text{Var}(\tanh(\alpha x))$:
+
+$$
+\text{Var}(\tanh(\alpha x)) = \mathbb{E}[\tanh(\alpha x)^2] - \mathbb{E}[\tanh(\alpha x)]^2.
+$$
+
+Since $\tanh$ is an odd function and $x$ is symmetric around zero:
+
+$$
+\mathbb{E}[\tanh(\alpha x)] = 0,
+$$
+
+::: {.callout-note collapse="true"}
+## Proof of $\mathbb{E}[\tanh(\alpha x)] = 0$
+
+For $x \sim \mathcal{N}(0, \sigma^2)$, the expectation of $\tanh(\alpha x)$ is:
+
+$$
+\mathbb{E}[\tanh(\alpha x)] = \int_{-\infty}^{\infty} \tanh(\alpha x) \cdot \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{x^2}{2\sigma^2}} dx
+$$
+
+Since $\tanh(-z) = -\tanh(z)$ (odd function) and the normal distribution is symmetric around 0:
+
+$$
+\int_{-\infty}^{0} \tanh(\alpha x) \cdot \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{x^2}{2\sigma^2}} dx + \int_{0}^{\infty} \tanh(\alpha x) \cdot \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{x^2}{2\sigma^2}} dx = 0
+$$
+
+The first integral equals the negative of the second integral, so they sum to zero.
+:::
+
+thus:
+
+$$
+\text{Var}(\tanh(\alpha x)) = \mathbb{E}[\tanh(\alpha x)^2].
+$$
+
+For $x \sim \mathcal{N}(0, \sigma^2)$, let $u = \frac{x}{\sigma} \sim \mathcal{N}(0, 1)$, so $\alpha x = \alpha \sigma u$, and:
+
+$$
+\mathbb{E}[\tanh(\alpha x)^2] = \mathbb{E}[\tanh(\alpha \sigma u)^2] = \frac{1}{\sqrt{2\pi}} \int_{-\infty}^\infty \tanh(\alpha \sigma u)^2 e^{-u^2/2} du.
+$$
+
+This integral lacks a closed form but can be bounded:
+- **Small $\alpha \sigma$**: Using the approximation $\tanh(z) \approx z$ for small $z$:
+
+$$
+\tanh(\alpha x) \approx \alpha x, \quad \mathbb{E}[\tanh(\alpha x)^2] \approx \mathbb{E}[(\alpha x)^2] = \alpha^2 \sigma^2.
+$$
+
+- **Large $\alpha \sigma$**: As $|\alpha x| \to \infty$, $\tanh(\alpha x) \to \text{sign}(x)$, so $\tanh(\alpha x)^2 \to 1$, and:
+
+$$
+\mathbb{E}[\tanh(\alpha x)^2] \to 1.
+$$
+
+More precisely, using the identity $\tanh(z)^2 = 1 - \text{sech}(z)^2$, and symmetry:
+
+$$
+\mathbb{E}[\tanh(\alpha x)^2] = 1 - 2 \cdot \frac{1}{\sqrt{2\pi}} \int_0^\infty \text{sech}(\alpha \sigma u)^2 e^{-u^2/2} du.
+$$
+
+Since $0 \leq \text{sech}(z)^2 \leq 1$, we have:
+
+$$
+0 \leq \mathbb{E}[\tanh(\alpha x)^2] \leq 1,
+$$
+
+with the value increasing monotonically from $\alpha^2 \sigma^2$ (when $\alpha \sigma \ll 1$) to 1 (when $\alpha \sigma \gg 1$). At initialization, $\gamma = 1$, so:
+
+$$
+\text{Var}(\text{DyT}(x)) \leq 1.
+$$
+
+### 3.2. Variance Across a Transformer Layer
+
+Now, propagate variance through one layer:
+- **Input**: $\text{Var}(x_\ell) = \sigma_\ell^2$.
+- **DyT_1**: $z_\ell = \text{DyT}_1(x_\ell)$, so:
+
+$$
+\text{Var}(z_\ell) = \mathbb{E}[\tanh(\alpha_{1,\ell} x_\ell)^2] \leq 1.
+$$
+
+- **Attention Step**: $x'_\ell = x_\ell + \text{Attn}(z_\ell)$.
+  - Assume $\text{Attn}$ preserves variance: $\text{Var}(\text{Attn}(z_\ell)) = \text{Var}(z_\ell) \leq 1$.
+  - Assuming independence between $x_\ell$ and $\text{Attn}(z_\ell)$ (an approximation):
+
+$$
+\text{Var}(x'_\ell) = \sigma_\ell^2 + \text{Var}(\text{Attn}(z_\ell)) \leq \sigma_\ell^2 + 1.
+$$
+
+- **DyT_2**: $w_\ell = \text{DyT}_2(x'_\ell)$, so:
+
+$$
+\text{Var}(w_\ell) = \mathbb{E}[\tanh(\alpha_{2,\ell} x'_\ell)^2] \leq 1.
+$$
+
+- **FFN Step**: $x_{\ell+1} = x'_\ell + \text{FFN}(w_\ell)$.
+  - Assume $\text{FFN}$ preserves variance: $\text{Var}(\text{FFN}(w_\ell)) = \text{Var}(w_\ell) \leq 1$.
+  - Thus:
+
+$$
+\text{Var}(x_{\ell+1}) = \text{Var}(x'_\ell) + \text{Var}(\text{FFN}(w_\ell)) \leq (\sigma_\ell^2 + 1) + 1 = \sigma_\ell^2 + 2.
+$$
+
+### 3.3. Recurrence and Total Variance Growth
+
+The recurrence relation is:
+
+$$
+\sigma_{\ell+1}^2 \leq \sigma_\ell^2 + 2.
+$$
+
+Solving with initial condition $\sigma_1^2$:
+
+$$
+\sigma_2^2 \leq \sigma_1^2 + 2,
+$$
+
+$$
+\sigma_3^2 \leq \sigma_2^2 + 2 \leq \sigma_1^2 + 4,
+$$
+
+$$
+\sigma_{\ell+1}^2 \leq \sigma_1^2 + 2\ell.
+$$
+
+For the final layer $x_{L+1}$:
+
+$$
+\sigma_{L+1}^2 \leq \sigma_1^2 + 2L.
+$$
+
+Thus, the variance grows at most linearly with depth:
+
+$$
+\sigma_{L+1}^2 = O(L).
+$$
+
+This is a significant improvement over Pre-LN Transformers without normalization scaling, where variance can grow exponentially ($\Theta(\exp(L))$) in pathological cases, though empirical growth is often sub-exponential.
+
+## 4. Gradient Flow Analysis
+
+Next, we analyze gradient propagation to determine if DyT prevents deeper layers from becoming identity-like. We compute the Jacobian $\frac{\partial x_{L+1}}{\partial x_1}$ and its norm.
+
+### 4.1. Derivative of DyT
+
+For $y = \text{DyT}(x)$, per dimension:
+
+$$
+\frac{\partial y_c}{\partial x_c} = \gamma_c \cdot \alpha \cdot \frac{\partial \tanh(\alpha x_c)}{\partial (\alpha x_c)} = \gamma_c \cdot \alpha \cdot (1 - \tanh(\alpha x_c)^2).
+$$
+
+Using $1 - \tanh(z)^2 = \text{sech}(z)^2$:
+
+$$
+\left| \frac{\partial y_c}{\partial x_c} \right| = |\gamma_c| \cdot |\alpha| \cdot \text{sech}(\alpha x_c)^2,
+$$
+
+where $0 < \text{sech}(z)^2 \leq 1$. The Jacobian is diagonal:
+
+$$
+\frac{\partial y}{\partial x} = \text{diag}(\gamma_c \cdot \alpha \cdot (1 - \tanh(\alpha x_c)^2)),
+$$
+
+$$
+\left\| \frac{\partial y}{\partial x} \right\|_2 = \max_c |\gamma_c \cdot \alpha \cdot (1 - \tanh(\alpha x_c)^2)| \leq |\alpha| \cdot \max_c |\gamma_c|.
+$$
+
+- **Small $|x_c|$**: $\tanh(\alpha x_c) \approx 0$, so $\frac{\partial y_c}{\partial x_c} \approx \gamma_c \cdot \alpha$.
+- **Large $|x_c|$**: $\tanh(\alpha x_c) \to \pm 1$, so $\frac{\partial y_c}{\partial x_c} \to 0$.
+
+::: {.callout-note collapse="true"}
+## Why is the Jacobian diagonal?
+
+The Jacobian matrix of DyT is diagonal because the tanh operation is applied element-wise. Mathematically, for an input vector $x \in \mathbb{R}^d$ and output vector $y = \text{DyT}(x) \in \mathbb{R}^d$:
+
+$$\text{DyT}(x)_i = \gamma_i \tanh(\alpha x_i) + \beta_i$$
+
+The partial derivative of the $i$-th output with respect to the $j$-th input is:
+
+$$\frac{\partial y_i}{\partial x_j} = \begin{cases}
+\gamma_i \cdot \alpha \cdot (1 - \tanh^2(\alpha x_i)) & \text{if } i = j \\
+0 & \text{if } i \neq j
+\end{cases}$$
+
+This creates a diagonal Jacobian matrix where only the entries along the main diagonal are non-zero:
+
+$$J = \begin{bmatrix}
+\frac{\partial y_1}{\partial x_1} & 0 & \cdots & 0 \\
+0 & \frac{\partial y_2}{\partial x_2} & \cdots & 0 \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & 0 & \cdots & \frac{\partial y_d}{\partial x_d}
+\end{bmatrix}$$
+
+The diagonal nature of this Jacobian significantly simplifies our analysis of gradient flow through the network.
+:::
+
+### 4.2. Jacobian of a Transformer Layer
+
+For $x_{\ell+1} = x'_\ell + \text{FFN}(\text{DyT}_2(x'_\ell))$, where $x'_\ell = x_\ell + \text{Attn}(\text{DyT}_1(x_\ell))$:
+
+$$
+\frac{\partial x_{\ell+1}}{\partial x_\ell} = \frac{\partial x_{\ell+1}}{\partial x'_\ell} \cdot \frac{\partial x'_\ell}{\partial x_\ell}.
+$$
+
+- **Attention Step**:
+
+$$
+\frac{\partial x'_\ell}{\partial x_\ell} = I + \frac{\partial \text{Attn}}{\partial z_\ell} \cdot \frac{\partial z_\ell}{\partial x_\ell},
+$$
+
+where $\frac{\partial z_\ell}{\partial x_\ell} = \text{diag}(\gamma_{1,\ell,c} \cdot \alpha_{1,\ell} \cdot (1 - \tanh(\alpha_{1,\ell} x_{\ell,c})^2))$, and:
+
+$$
+\left\| \frac{\partial z_\ell}{\partial x_\ell} \right\|_2 \leq |\alpha_{1,\ell}| \cdot \max_c |\gamma_{1,\ell,c}| \cdot \max_z (1 - \tanh(z)^2) = |\alpha_{1,\ell}| \cdot \max_c |\gamma_{1,\ell,c}|.
+$$
+
+Assume $\left\| \frac{\partial \text{Attn}}{\partial z_\ell} \right\|_2 \leq A$ (via initialization):
+
+$$
+\left\| \frac{\partial x'_\ell}{\partial x_\ell} \right\|_2 \leq 1 + A \cdot |\alpha_{1,\ell}| \cdot \max_c |\gamma_{1,\ell,c}|.
+$$
+
+- **FFN Step**:
+
+$$
+\frac{\partial x_{\ell+1}}{\partial x'_\ell} = I + \frac{\partial \text{FFN}}{\partial w_\ell} \cdot \frac{\partial w_\ell}{\partial x'_\ell},
+$$
+
+$$
+\left\| \frac{\partial w_\ell}{\partial x'_\ell} \right\|_2 \leq |\alpha_{2,\ell}| \cdot \max_c |\gamma_{2,\ell,c}|,
+$$
+
+$$
+\left\| \frac{\partial x_{\ell+1}}{\partial x'_\ell} \right\|_2 \leq 1 + B \cdot |\alpha_{2,\ell}| \cdot \max_c |\gamma_{2,\ell,c}|,
+$$
+
+where $\left\| \frac{\partial \text{FFN}}{\partial w_\ell} \right\|_2 \leq B$.
+
+- **Total Layer Jacobian**:
+
+$$
+\left\| \frac{\partial x_{\ell+1}}{\partial x_\ell} \right\|_2 \leq \left(1 + A \cdot |\alpha_{1,\ell}| \cdot \max_c |\gamma_{1,\ell,c}|\right) \left(1 + B \cdot |\alpha_{2,\ell}| \cdot \max_c |\gamma_{2,\ell,c}|\right).
+$$
+
+### 4.3. Effect of Saturation
+
+As $\sigma_\ell^2$ grows linearly ($\sigma_\ell^2 \leq \sigma_1^2 + 2(\ell-1)$), $|x_{\ell,c}|$ becomes large with high probability. For large $z$:
+
+$$
+1 - \tanh(z)^2 \approx 4 e^{-2|z|},
+$$
+
+so $\frac{\partial z_\ell}{\partial x_\ell} \to 0$, and:
+
+$$
+\left\| \frac{\partial x'_\ell}{\partial x_\ell} \right\|_2 \to 1, \quad \left\| \frac{\partial x_{\ell+1}}{\partial x'_\ell} \right\|_2 \to 1,
+$$
+
+$$
+\left\| \frac{\partial x_{\ell+1}}{\partial x_\ell} \right\|_2 \to 1.
+$$
+
+### 4.4. Total Gradient Norm
+
+$$
+\left\| \frac{\partial x_{L+1}}{\partial x_1} \right\|_2 \leq \prod_{\ell=1}^L \left\| \frac{\partial x_{\ell+1}}{\partial x_\ell} \right\|_2.
+$$
+
+In shallow layers ($\sigma_\ell^2$ small), the norm may exceed 1, but in deeper layers ($\sigma_\ell^2$ large), it approaches 1 due to saturation. Assuming a transition depth $\ell_0$ where saturation dominates:
+
+$$
+\left\| \frac{\partial x_{L+1}}{\partial x_1} \right\|_2 \approx \left( \prod_{\ell=1}^{\ell_0} \left(1 + O(\alpha_\ell)\right) \right) \cdot 1^{L - \ell_0} = O(1),
+$$
+
+indicating a bounded gradient norm.
+
+## 5. Comparison to LayerNorm and LayerNorm Scaling
+
+- **Pre-LN with LN**: Variance grows sub-exponentially, and $\left\| \frac{\partial x_L}{\partial x_1} \right\|_2 \to O(1)$, causing identity-like behavior.
+- **LayerNorm Scaling**: Scales LN by $\frac{1}{\sqrt{\ell}}$, reducing variance growth and allowing $\left\| \frac{\partial x_L}{\partial x_1} \right\|_2 = \Theta(L)$, enhancing expressivity.
+- **DyT**: Variance grows linearly ($O(L)$), but gradient norms stabilize at $O(1)$ due to tanh saturation.
+
+## 6. Conclusion
+DyT bounds variance growth to $O(L)$, better than Pre-LN’s potential exponential upper bound, due to tanh’s saturation. However, this same saturation causes $\frac{\partial D_y T}{\partial x} \to 0$ for large inputs, making layer derivatives approach identity in deep layers, akin to Pre-LN’s Curse of Depth. Unlike LayerNorm Scaling, DyT lacks a depth-dependent mechanism to sustain gradient growth, so it doesn’t fully resolve the issue, though it mitigates variance explosion to some extent.
