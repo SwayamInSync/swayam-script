@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/A Hitchhiker's Guide to LLVM/index.html",
       "/posts/DyT Analysis/index.html",
       "/posts/The Transparent Algorithm/index.html",
       "/posts/Concurrent C++, A Practical Guide/index.html",

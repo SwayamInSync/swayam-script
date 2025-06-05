@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Swayam Singh">
-<meta name="dcterms.date" content="2024-10-10">
 
-<title>Understanding Perplexity – Swayam’s Scripts</title>
+<title>chapter-1 – Swayam's Scripts</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -39,12 +37,12 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ae0b5334a1ec0bf99af3d0c304a697d2.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-ae0b5334a1ec0bf99af3d0c304a697d2.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-8ef56b68f8fa1e9d2ba328e99e439f80.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-f83cbd1fc20dddf7f9024e6e18d5aa4c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-afa7946942467265bb6488a01c15a292.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-dde8d7229bfee0f8bb5efd37f0f9ae1e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-8b239dc32722574ebb22541628e3f914.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -73,44 +71,13 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Understanding Perplexity – Swayam’s Scripts">
-<meta property="og:description" content="A New Perspective on Model Uncertainty">
-<meta property="og:image" content="https://SwayamInSync.github.io/swayam-script/posts/Understanding Perplexity/meme.jpg">
+<meta property="og:title" content="Swayam’s Scripts">
 <meta property="og:site_name" content="Swayam's Scripts">
 </head>
 
-<body class="nav-fixed quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-fixed fullcontent quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -273,7 +240,7 @@ window.Quarto = {
   </script>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+  <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
@@ -311,148 +278,19 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
-      <h1 class="title">Understanding Perplexity</h1>
-            <p class="subtitle lead">A New Perspective on Model Uncertainty</p>
-                                <div class="quarto-categories">
-                <div class="quarto-category">LLM</div>
-              </div>
-                  </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta">
-
-      <div>
-      <div class="quarto-title-meta-heading">Author</div>
-      <div class="quarto-title-meta-contents">
-               <p>Swayam Singh </p>
-            </div>
-    </div>
-      
-      <div>
-      <div class="quarto-title-meta-heading">Published</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date">October 10, 2024</p>
-      </div>
-    </div>
-    
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#understanding-perplexity-a-new-perspective-on-model-uncertainty" id="toc-understanding-perplexity-a-new-perspective-on-model-uncertainty" class="nav-link active" data-scroll-target="#understanding-perplexity-a-new-perspective-on-model-uncertainty">Understanding Perplexity: A New Perspective on Model Uncertainty</a>
-  <ul class="collapse">
-  <li><a href="#cross-entropy-loss-a-quick-recap" id="toc-cross-entropy-loss-a-quick-recap" class="nav-link" data-scroll-target="#cross-entropy-loss-a-quick-recap">Cross-Entropy Loss: A Quick Recap</a></li>
-  <li><a href="#defining-perplexity" id="toc-defining-perplexity" class="nav-link" data-scroll-target="#defining-perplexity">Defining Perplexity</a></li>
-  <li><a href="#analyzing-the-uniform-distribution-case" id="toc-analyzing-the-uniform-distribution-case" class="nav-link" data-scroll-target="#analyzing-the-uniform-distribution-case">Analyzing the Uniform Distribution Case</a></li>
-  <li><a href="#connecting-loss-and-perplexity" id="toc-connecting-loss-and-perplexity" class="nav-link" data-scroll-target="#connecting-loss-and-perplexity">Connecting Loss and Perplexity</a>
-  <ul class="collapse">
-  <li><a href="#effective-vocabulary-size" id="toc-effective-vocabulary-size" class="nav-link" data-scroll-target="#effective-vocabulary-size">Effective Vocabulary Size</a></li>
-  </ul></li>
-  </ul></li>
-  </ul>
-</nav>
-    </div>
+    
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
 
 
 
-<section id="understanding-perplexity-a-new-perspective-on-model-uncertainty" class="level1">
-<h1>Understanding Perplexity: A New Perspective on Model Uncertainty</h1>
-<hr>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="meme.jpg" class="preview-image img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="Meme representing perplexity"></p>
-</figure>
-</div>
-<hr>
-<p>Recently, I was reading the Chapter 5 (Pretraining) of the book <em>“<a href="https://www.manning.com/books/build-a-large-language-model-from-scratch">Build a Large Language Model (From Scratch)</a>”</em> by <a href="https://x.com/rasbt?lang=en">Sebastian Raschka</a>. I stumbled upon an intriguing interpretation of <strong>perplexity</strong>. The author noted:</p>
-<blockquote class="blockquote">
-<p>“Perplexity is often considered more interpretable than the raw loss value because it signifies the effective vocabulary size about which the model is uncertain at each step.”</p>
-</blockquote>
-<p><em>In simple words</em>, If for some model the perplexity comes out to be <span class="math inline">\(N\)</span> then it means that the model is <span class="math inline">\(N\)</span> tokens uncertain about the correct next-token, it is considering all the <span class="math inline">\(N\)</span> tokens as the potential candidate for the output token.</p>
-<p>This statement resonated with me, as I had always viewed perplexity as just a performance metric. I began to wonder: <strong><i><u>can we mathematically derive this interpretation? Does the underlying math support this idea?</u></i></strong></p>
-<p>Let’s delve into the equations and explore how perplexity relates to the model’s uncertainty about the next token in a sequence.</p>
-<section id="cross-entropy-loss-a-quick-recap" class="level2">
-<h2 class="anchored" data-anchor-id="cross-entropy-loss-a-quick-recap">Cross-Entropy Loss: A Quick Recap</h2>
-<p>In language modeling, <strong>cross-entropy loss</strong> is a critical metric that helps us evaluate how well a model predicts the next token in a sequence. For a sequence of tokens <span class="math inline">\(x = (x_1, x_2, ..., x_T)\)</span>, the cross-entropy loss is calculated as:</p>
-<p><span class="math display">\[
-\mathcal{L} = - \frac{1}{T} \sum_{t=1}^{T} \log P(x_t | \mathbf{x}_{&lt;t})
-\]</span></p>
-where:
-<li>
-<span class="math inline">\(T\)</span> is the total number of tokens in the sequence.
-</li>
-<li>
-<span class="math inline">\(P(x_t | \mathbf{x}_{&lt;t})\)</span> is the predicted probability of the actual token <span class="math inline">\(x_t\)</span> given the preceding context <span class="math inline">\(\mathbf{x}_{&lt;t}\)</span>.
-</li>
-<p><br> This formulation averages the negative log-likelihood across all tokens, providing a measure of how well the model’s predictions align with the true tokens.</p>
-</section>
-<section id="defining-perplexity" class="level2">
-<h2 class="anchored" data-anchor-id="defining-perplexity">Defining Perplexity</h2>
-<p><strong>Perplexity</strong> serves as a complementary metric to cross-entropy loss and is defined as the exponentiation of the loss:</p>
-<p><span class="math display">\[
-\text{Perplexity} = \exp(\mathcal{L})
-\]</span></p>
-<p>This formulation provides a more interpretable value, as it represents the effective number of choices the model considers when predicting the next token. A lower perplexity indicates higher confidence in predictions, while a higher perplexity signifies greater uncertainty.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Before going into maths, lets understand one thing</p>
-<p>Intuitively, for a completely uncertain model, selection for some next-token can be any from the whole vocabulary with each token having same probability of being the next token</p>
-</div>
-</div>
-</section>
-<section id="analyzing-the-uniform-distribution-case" class="level2">
-<h2 class="anchored" data-anchor-id="analyzing-the-uniform-distribution-case">Analyzing the Uniform Distribution Case</h2>
-<p>To understand the interpretation of perplexity in terms of effective vocabulary size, let’s consider an extreme case where the model is <strong>completely uncertain</strong> about the next token. In this scenario, the model assigns equal probability to every token in the vocabulary of size <span class="math inline">\(V\)</span>. Thus, the probability of each token can be expressed as:</p>
-<p><span class="math display">\[
-P(x_t | \mathbf{x}_{&lt;t}) = \frac{1}{V}
-\]</span></p>
-<p>Now, substituting this uniform probability into the cross-entropy loss equation, we get:</p>
-<p><span class="math display">\[
-\mathcal{L} = - \frac{1}{T} \sum_{t=1}^{T} \log P(x_t | \mathbf{x}_{&lt;t}) = - \log \frac{1}{V} = \log V
-\]</span></p>
-<p>Here, <span class="math inline">\(-\log P(x_t | \mathbf{x}_{&lt;t})\)</span> reflects the loss incurred for each token when the model is entirely uncertain.</p>
-</section>
-<section id="connecting-loss-and-perplexity" class="level2">
-<h2 class="anchored" data-anchor-id="connecting-loss-and-perplexity">Connecting Loss and Perplexity</h2>
-<p>Next, we can use the <strong>perplexity</strong> formula to analyze this situation:</p>
-<p><span class="math display">\[
-\text{Perplexity} = \exp(\mathcal{L}) = \exp(\log V) = V
-\]</span></p>
-<p>This result reveals a fascinating insight: when the model is completely uncertain, the perplexity is exactly equal to the size of the vocabulary <span class="math inline">\(V\)</span>.</p>
-<section id="effective-vocabulary-size" class="level3">
-<h3 class="anchored" data-anchor-id="effective-vocabulary-size">Effective Vocabulary Size</h3>
-<p>Now, what does this mean in terms of interpretation? When the perplexity equals <span class="math inline">\(V\)</span>, it indicates that the model is effectively considering all <span class="math inline">\(V\)</span> tokens as potential candidates for the next token, reflecting a state of maximum uncertainty.</p>
-<p>On the other hand, if the model has a lower perplexity, say 100, it means that the model behaves as if it is uncertain only among 100 tokens. This aligns perfectly with the statement from Raschka’s book: <strong><em>perplexity signifies the effective vocabulary size about which the model is uncertain at each step.</em></strong></p>
 
-
-</section>
-</section>
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -867,38 +705,6 @@ P(x_t | \mathbf{x}_{&lt;t}) = \frac{1}{V}
     }
   });
   </script>
-<input type="hidden" id="giscus-base-theme" value="dark_dimmed">
-<input type="hidden" id="giscus-alt-theme" value="light">
-<script>
-  function loadGiscus() {
-    // Function to get the theme based on body class
-    const getTheme = () => {
-      let baseTheme = document.getElementById('giscus-base-theme').value;
-      let altTheme = document.getElementById('giscus-alt-theme').value;
-      if (authorPrefersDark) {
-          [baseTheme, altTheme] = [altTheme, baseTheme];
-      }
-      return document.body.classList.contains('quarto-dark') ? altTheme : baseTheme;
-    };
-    const script = document.createElement("script");
-    script.src = "https://giscus.app/client.js";
-    script.async = true;
-    script.dataset.repo = "SwayamInSync/swayam-script";
-    script.dataset.repoId = "R_kgDOM9t4DA";
-    script.dataset.category = "General";
-    script.dataset.categoryId = "DIC_kwDOM9t4DM4CjN7v";
-    script.dataset.mapping = "title";
-    script.dataset.reactionsEnabled = "1";
-    script.dataset.emitMetadata = "0";
-    script.dataset.inputPosition = "top";
-    script.dataset.theme = getTheme();
-    script.dataset.lang = "en";
-    script.crossOrigin = "anonymous";
-    // Append the script to the desired div instead of at the end of the body
-    document.getElementById("quarto-content").appendChild(script);
-  }
-  loadGiscus();
-</script>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
