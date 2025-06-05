@@ -1,0 +1,29 @@
+---
+title: "[WIP] A Hitchhiker's Guide to LLVM"
+subtitle: "Just Another Day in the Life of a SSA Var"
+author: "Swayam Singh"
+date: "2025-06-03"
+categories: [Compilers, LLVM, Book]
+format:
+  html:
+    code-fold: false
+toc: false
+highlight-style: pygments
+execute: 
+  freeze: auto
+image: images/cover.png
+social:
+  - image: images/cover.png
+    description: "Homepage"
+comments: false
+---
+![](images/cover.png){fig-alt="Cover Image" fig-align="center" width=70% .preview-image}
+
+# A Hitchhiker's Guide to LLVM
+
+## Table of Content
+
+| # | Title |
+|---------|-------|
+| 1 | [Introduction to LLVM](../../pages/A%20Hitchhiker's%20Guide%20to%20LLVM/chapter-1.qmd) |
+
