@@ -3,7 +3,7 @@ title: "[WIP] A Hitchhiker's Guide to LLVM"
 subtitle: "Just Another Day in the Life of a SSA Var"
 author: "Swayam Singh"
 date: "2025-06-03"
-categories: [Compilers, LLVM, Book]
+categories: [Compilers, LLVM]
 format:
   html:
     code-fold: false
@@ -21,9 +21,173 @@ comments: false
 
 # A Hitchhiker's Guide to LLVM
 
-## Table of Content
+<!-- ## Table of Content
 
 | # | Title |
 |---------|-------|
-| 1 | [Introduction to LLVM](../../pages/A%20Hitchhiker's%20Guide%20to%20LLVM/chapter-1.qmd) |
+| 1 | [Introduction to LLVM](../../pages/A%20Hitchhiker's%20Guide%20to%20LLVM/chapter-1.qmd) | -->
 
+:::{.callout-note}
+This guide is written during the release of LLVM version 21.0.0
+:::
+
+## Building clang and LLVM
+
+Dependencies (because why not?)
+
+| Package | Version | Notes |
+|---------|---------|-------|
+| CMake | >=3.20.0 | Makefile/workspace generator |
+| python | >=3.8 | Automated test suite |
+| Zlib | >=1.2.3.4 | Compression library |
+| GNU Make | 3.79, 3.79.1 | Makefile/build processor |
+| PyYAML | >=5.1 | Header generator |
+
+### Building clang (trust me you'll need it)
+Clang is a llvm based compiler driver which provide frontend and invokes right tools for the llvm backend to compile the C-like languages.
+
+```bash
+git clone https://github.com/llvm/llvm-project.git
+cmake -DLLVM_ENABLE_PROJECTS=clang -GNinja -DCMAKE_BUILD_TYPE=Release llvm
+ninja clang 
+```
+:::{.callout-tip}
+How I know the tags you may ask? checkout the `llvm-project/llvm/CMakeLists.txt` file and search for `LLVM_ALL_PROJECTS` and read the comments above it.
+
+OR the instructions are also available here: [https://clang.llvm.org/get_started.html](https://clang.llvm.org/get_started.html)
+:::
+
+### Building LLVM (yeah the dragon itself)
+
+```bash
+mkdir build
+cd build
+cmake -G Ninja \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -DLLVM_ENABLE_PROJECTS="all" \
+  -DLLVM_OPTIMIZED_TABLEGEN=1 \
+  ../llvm
+```
+
+```bash
+ninja # this will build all the targets
+```
+
+Notably some major targets generated inside you'll find inside `build/bin` are:
+
+- `opt`: Driver for performing optimizations on LLVM IR i.e. LLVM IR => Optimized LLVM IR
+- `llc`: Driver for transforming LLVM IR to assembly or object file
+- `llvm-mc` Driver to interact with assembled and disassembled object
+- `check` Driver to run test
+
+Let's quickly run the `check` target with ninja and it'll automatically run the test suite
+
+```bash
+ninja check
+
+# or specific target
+ninja check-<target-name>
+
+# can print all the targets available by
+ninja help
+```
+LLVM also has `llvm-lit` tool that runs the specified tests
+
+```bash
+./bin/llvm-lit test/CodeGen/RISCV/GlobalISel
+
+# Output
+-- Testing: 403 tests, 96 workers --
+PASS: LLVM :: CodeGen/RISCV/GlobalISel/regbankselect/fp-arith-f16.mir (1 of 403)
+PASS: LLVM :: CodeGen/RISCV/GlobalISel/legalizer/legalize-bswap-rv64.mir (2 of 403)
+PASS: LLVM :: CodeGen/RISCV/GlobalISel/irtranslator/calls.ll (3 of 403)
+[...]
+```
+
+There is also a tool inside LLVM known as `FileCheck` this basically governs the verification of test outputs. I won't be going in depth but take it as you can write the expected outputs within comments inside the IR or any file and the `lit` when running test invoke `FileCheck` for verification, here is a small example
+
+```llvm
+; RUN: opt < %s -passes=mem2reg | FileCheck %s
+
+define i32 @example() {
+  ; CHECK-LABEL: @example(
+  ; CHECK-NOT: alloca
+  ; CHECK: ret i32 42
+
+  %x = alloca i32
+  store i32 42, ptr %x
+  %result = load i32, ptr %x
+  ret i32 %result
+}
+```
+
+In this case `FileCheck` will verify that the optimized IR has a label "`@example`" and optimize the current IR by removing the "`alloca`" instruction and directly returning 42 as int32. 
+
+We can also verify this by on our own quickly. Create a `test.ll` file with the exact same content as shown above and since we already build the LLVM so we have the required tools to test this, run the following commands:
+
+```bash
+# This will output the optimized IR (you can verify the pattern by yourself)
+./bin/opt -S < ../../tweaks/test.ll -passes=mem2reg
+```
+
+```bash
+# Here we are using the generated optimized IR as stdin to the FileCheck
+./bin/opt -S < ../../tweaks/test.ll -passes=mem2reg | ./bin/FileCheck ../../tweaks/test.ll  # no output mean success
+```
+
+:::{.callout-note}
+- `./bin/opt < ../../tweaks/test.ll -passes=mem2reg`: will generate the bytecode by default, use `-S` to get the textual representation
+- `passes=mem2reg` is just telling `opt` driver what optimization pass to apply
+:::
+
+:::{.callout-tip}
+Tools like `lit` and `FileCheck` are build by LLVM folks but they are very general to use for other projects and langauge as well, semi-colon `;` comments are specific to LLVM but these tools can work with any language and its comment styles
+
+Read more about them and usage:
+
+- `lit`: [https://llvm.org/docs/CommandGuide/lit.html](https://llvm.org/docs/CommandGuide/lit.html)
+- `FileCheck`: [https://llvm.org/docs/CommandGuide/FileCheck.html](https://llvm.org/docs/CommandGuide/FileCheck.html)
+:::
+
+:::{.callout-warning}
+You should be thinking of a question at the moment (atleast I had):
+
+The optimization can reorder the instruction, how these checks would be valid in that case? well short answer, go to the docs and read about `CHECK-DAG`
+:::
+
+LLVM tests are located inside the `build` directory as:
+- `unittests`: typical test written using gtest suite
+- `tests`: they are the `lit` tests, we already saw the example of a typical lit test in llvm above
+
+### LLVM-Project directory tree
+
+- The high level codebase division is organized among projects: mlir, clang, lldb, openmp, etc. *which we also pass inside the `-DLLVM_ENABLE_PROJECTS` to specify the targets during build*
+- Each of the project is further organized as:
+  - `lib`: Contain all the libraries like for llvm-project: CodeGen, Analysis, Linker, etc 
+  - `include/<project>`: These are the exposed public headers
+    - Here the structure is as, you can see a folder for each project as in `lib`
+  - `tools`:  Contains specific tools for llvm: like xcode-toolchain, llc, etc
+  - `unittests`: Gtests
+  - `tests`: llvm-it tests
+  - `utils`: Utility tools like `FileCheck` and `llvm-lit`
+  
+  ::: {.callout-note}
+  For any library inside the `lib` folder, you can find corresponding
+
+  - `include/<project>/<lib>`
+  - `unittests/<lib>`
+  - `test/<lib>`
+  :::
+- To gather the public and private headers for some `<project>/<lib>` 
+  - Public headers: `<project>/include/<project>/<lib>/<file>`
+  - Private headers: `<project>/lib/<file>`
+  * The paths inside the code file can also be identified in `include` directive as:
+    - Public: `<project>/<lib>/<file>`
+    - Private: `<file>`
+- `llvm` project specifications:
+  - **LLVM-IR**
+    - It is mainly found inside the `lib/IR`
+    - IT optimization specifics are available at `lib/Analysis` and `lib/Transforms`
+    - Binary and textual representations are handled in `lib/Bitcode`, `lib/IRReader` and `lib/ITWriter`
+  - General backend code generation is in `lib/CodeGen`
+  - Target specific backend code generation: `lib/Target/<backend>`
