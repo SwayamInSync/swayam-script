@@ -1,6 +1,6 @@
 ---
 title: "[WIP] A Hitchhiker's Guide to LLVM"
-subtitle: "Just Another Day in the Life of a SSA Var"
+subtitle: "Just Another Day in the Life of a SSA Variable"
 author: "Swayam Singh"
 date: "2025-06-03"
 categories: [Compilers, LLVM]
