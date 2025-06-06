@@ -22,6 +22,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -292,7 +327,6 @@ ul.task-list li input[type="checkbox"] {
                                 <div class="quarto-categories">
                 <div class="quarto-category">Compilers</div>
                 <div class="quarto-category">LLVM</div>
-                <div class="quarto-category">Book</div>
               </div>
                   </div>
   </div>
@@ -337,24 +371,246 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <section id="a-hitchhikers-guide-to-llvm" class="level1">
 <h1>A Hitchhiker’s Guide to LLVM</h1>
-<section id="table-of-content" class="level2">
-<h2 class="anchored" data-anchor-id="table-of-content">Table of Content</h2>
+<!-- ## Table of Content
+
+| # | Title |
+|---------|-------|
+| 1 | [Introduction to LLVM](../../pages/A%20Hitchhiker's%20Guide%20to%20LLVM/chapter-1.qmd) | -->
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This guide is written during the release of LLVM version 21.0.0</p>
+</div>
+</div>
+<section id="building-clang-and-llvm" class="level2">
+<h2 class="anchored" data-anchor-id="building-clang-and-llvm">Building clang and LLVM</h2>
+<p>Dependencies (because why not?)</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
-<th>#</th>
-<th>Title</th>
+<th>Package</th>
+<th>Version</th>
+<th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>1</td>
-<td><a href="../../pages/A Hitchhiker's Guide to LLVM/chapter-1.html">Introduction to LLVM</a></td>
+<td>CMake</td>
+<td>&gt;=3.20.0</td>
+<td>Makefile/workspace generator</td>
+</tr>
+<tr class="even">
+<td>python</td>
+<td>&gt;=3.8</td>
+<td>Automated test suite</td>
+</tr>
+<tr class="odd">
+<td>Zlib</td>
+<td>&gt;=1.2.3.4</td>
+<td>Compression library</td>
+</tr>
+<tr class="even">
+<td>GNU Make</td>
+<td>3.79, 3.79.1</td>
+<td>Makefile/build processor</td>
+</tr>
+<tr class="odd">
+<td>PyYAML</td>
+<td>&gt;=5.1</td>
+<td>Header generator</td>
 </tr>
 </tbody>
 </table>
+<section id="building-clang-trust-me-youll-need-it" class="level3">
+<h3 class="anchored" data-anchor-id="building-clang-trust-me-youll-need-it">Building clang (trust me you’ll need it)</h3>
+<p>Clang is a llvm based compiler driver which provide frontend and invokes right tools for the llvm backend to compile the C-like languages.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/llvm/llvm-project.git</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">-DLLVM_ENABLE_PROJECTS</span><span class="op">=</span>clang <span class="at">-GNinja</span> <span class="at">-DCMAKE_BUILD_TYPE</span><span class="op">=</span>Release llvm</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">ninja</span> clang </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>How I know the tags you may ask? checkout the <code>llvm-project/llvm/CMakeLists.txt</code> file and search for <code>LLVM_ALL_PROJECTS</code> and read the comments above it.</p>
+<p>OR the instructions are also available here: <a href="https://clang.llvm.org/get_started.html">https://clang.llvm.org/get_started.html</a></p>
+</div>
+</div>
+</section>
+<section id="building-llvm-yeah-the-dragon-itself" class="level3">
+<h3 class="anchored" data-anchor-id="building-llvm-yeah-the-dragon-itself">Building LLVM (yeah the dragon itself)</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> build</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> build</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">-G</span> Ninja <span class="dt">\</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-DCMAKE_BUILD_TYPE</span><span class="op">=</span>Debug <span class="dt">\</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-DLLVM_ENABLE_PROJECTS</span><span class="op">=</span><span class="st">"all"</span> <span class="dt">\</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-DLLVM_OPTIMIZED_TABLEGEN</span><span class="op">=</span>1 <span class="dt">\</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  ../llvm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ninja</span> <span class="co"># this will build all the targets</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Notably some major targets generated inside you’ll find inside <code>build/bin</code> are:</p>
+<ul>
+<li><code>opt</code>: Driver for performing optimizations on LLVM IR i.e.&nbsp;LLVM IR =&gt; Optimized LLVM IR</li>
+<li><code>llc</code>: Driver for transforming LLVM IR to assembly or object file</li>
+<li><code>llvm-mc</code> Driver to interact with assembled and disassembled object</li>
+<li><code>check</code> Driver to run test</li>
+</ul>
+<p>Let’s quickly run the <code>check</code> target with ninja and it’ll automatically run the test suite</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ninja</span> check</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># or specific target</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ex">ninja</span> check-<span class="op">&lt;</span>target-name<span class="op">&gt;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># can print all the targets available by</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="ex">ninja</span> help</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>LLVM also has <code>llvm-lit</code> tool that runs the specified tests</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./bin/llvm-lit</span> test/CodeGen/RISCV/GlobalISel</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Output</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ex">--</span> Testing: 403 tests, 96 workers <span class="at">--</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ex">PASS:</span> LLVM :: CodeGen/RISCV/GlobalISel/regbankselect/fp-arith-f16.mir <span class="er">(</span><span class="ex">1</span> of 403<span class="kw">)</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="ex">PASS:</span> LLVM :: CodeGen/RISCV/GlobalISel/legalizer/legalize-bswap-rv64.mir <span class="er">(</span><span class="ex">2</span> of 403<span class="kw">)</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="ex">PASS:</span> LLVM :: CodeGen/RISCV/GlobalISel/irtranslator/calls.ll <span class="er">(</span><span class="ex">3</span> of 403<span class="kw">)</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ex">[...]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>There is also a tool inside LLVM known as <code>FileCheck</code> this basically governs the verification of test outputs. I won’t be going in depth but take it as you can write the expected outputs within comments inside the IR or any file and the <code>lit</code> when running test invoke <code>FileCheck</code> for verification, here is a small example</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode llvm code-with-copy"><code class="sourceCode llvm"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">; RUN: opt &lt; %s -passes=mem2reg | FileCheck %s</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">define</span> <span class="dt">i32</span> <span class="fu">@example</span>() {</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">; CHECK-LABEL: @example(</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">; CHECK-NOT: alloca</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">; CHECK: ret i32 42</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">%x</span> = <span class="kw">alloca</span> <span class="dt">i32</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">store</span> <span class="dt">i32</span> <span class="dv">42</span>, ptr <span class="fu">%x</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">%result</span> = <span class="kw">load</span> <span class="dt">i32</span>, ptr <span class="fu">%x</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ret</span> <span class="dt">i32</span> <span class="fu">%result</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In this case <code>FileCheck</code> will verify that the optimized IR has a label “<code>@example</code>” and optimize the current IR by removing the “<code>alloca</code>” instruction and directly returning 42 as int32.</p>
+<p>We can also verify this by on our own quickly. Create a <code>test.ll</code> file with the exact same content as shown above and since we already build the LLVM so we have the required tools to test this, run the following commands:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This will output the optimized IR (you can verify the pattern by yourself)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./bin/opt</span> <span class="at">-S</span> <span class="op">&lt;</span> ../../tweaks/test.ll <span class="at">-passes</span><span class="op">=</span>mem2reg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Here we are using the generated optimized IR as stdin to the FileCheck</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./bin/opt</span> <span class="at">-S</span> <span class="op">&lt;</span> ../../tweaks/test.ll <span class="at">-passes</span><span class="op">=</span>mem2reg <span class="kw">|</span> <span class="ex">./bin/FileCheck</span> ../../tweaks/test.ll  <span class="co"># no output mean success</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><code>./bin/opt &lt; ../../tweaks/test.ll -passes=mem2reg</code>: will generate the bytecode by default, use <code>-S</code> to get the textual representation</li>
+<li><code>passes=mem2reg</code> is just telling <code>opt</code> driver what optimization pass to apply</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Tools like <code>lit</code> and <code>FileCheck</code> are build by LLVM folks but they are very general to use for other projects and langauge as well, semi-colon <code>;</code> comments are specific to LLVM but these tools can work with any language and its comment styles</p>
+<p>Read more about them and usage:</p>
+<ul>
+<li><code>lit</code>: <a href="https://llvm.org/docs/CommandGuide/lit.html">https://llvm.org/docs/CommandGuide/lit.html</a></li>
+<li><code>FileCheck</code>: <a href="https://llvm.org/docs/CommandGuide/FileCheck.html">https://llvm.org/docs/CommandGuide/FileCheck.html</a></li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You should be thinking of a question at the moment (atleast I had):</p>
+<p>The optimization can reorder the instruction, how these checks would be valid in that case? well short answer, go to the docs and read about <code>CHECK-DAG</code></p>
+</div>
+</div>
+<p>LLVM tests are located inside the <code>build</code> directory as: - <code>unittests</code>: typical test written using gtest suite - <code>tests</code>: they are the <code>lit</code> tests, we already saw the example of a typical lit test in llvm above</p>
+</section>
+<section id="llvm-project-directory-tree" class="level3">
+<h3 class="anchored" data-anchor-id="llvm-project-directory-tree">LLVM-Project directory tree</h3>
+<ul>
+<li>The high level codebase division is organized among projects: mlir, clang, lldb, openmp, etc. <em>which we also pass inside the <code>-DLLVM_ENABLE_PROJECTS</code> to specify the targets during build</em></li>
+<li>Each of the project is further organized as:
+<ul>
+<li><code>lib</code>: Contain all the libraries like for llvm-project: CodeGen, Analysis, Linker, etc</li>
+<li><code>include/&lt;project&gt;</code>: These are the exposed public headers
+<ul>
+<li>Here the structure is as, you can see a folder for each project as in <code>lib</code></li>
+</ul></li>
+<li><code>tools</code>: Contains specific tools for llvm: like xcode-toolchain, llc, etc</li>
+<li><code>unittests</code>: Gtests</li>
+<li><code>tests</code>: llvm-it tests</li>
+<li><code>utils</code>: Utility tools like <code>FileCheck</code> and <code>llvm-lit</code></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For any library inside the <code>lib</code> folder, you can find corresponding</p>
+<ul>
+<li><code>include/&lt;project&gt;/&lt;lib&gt;</code></li>
+<li><code>unittests/&lt;lib&gt;</code></li>
+<li><code>test/&lt;lib&gt;</code></li>
+</ul>
+</div>
+</div></li>
+<li>To gather the public and private headers for some <code>&lt;project&gt;/&lt;lib&gt;</code>
+<ul>
+<li>Public headers: <code>&lt;project&gt;/include/&lt;project&gt;/&lt;lib&gt;/&lt;file&gt;</code></li>
+<li>Private headers: <code>&lt;project&gt;/lib/&lt;file&gt;</code></li>
+<li>The paths inside the code file can also be identified in <code>include</code> directive as:
+<ul>
+<li>Public: <code>&lt;project&gt;/&lt;lib&gt;/&lt;file&gt;</code></li>
+<li>Private: <code>&lt;file&gt;</code></li>
+</ul></li>
+</ul></li>
+<li><code>llvm</code> project specifications:
+<ul>
+<li><strong>LLVM-IR</strong>
+<ul>
+<li>It is mainly found inside the <code>lib/IR</code></li>
+<li>IT optimization specifics are available at <code>lib/Analysis</code> and <code>lib/Transforms</code></li>
+<li>Binary and textual representations are handled in <code>lib/Bitcode</code>, <code>lib/IRReader</code> and <code>lib/ITWriter</code></li>
+</ul></li>
+<li>General backend code generation is in <code>lib/CodeGen</code></li>
+<li>Target specific backend code generation: <code>lib/Target/&lt;backend&gt;</code></li>
+</ul></li>
+</ul>
 
 
+</section>
 </section>
 </section>
 
