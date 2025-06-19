@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.31">
+<meta name="generator" content="quarto-1.7.32">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -74,12 +74,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ae0b5334a1ec0bf99af3d0c304a697d2.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-ae0b5334a1ec0bf99af3d0c304a697d2.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-236d90495073fb2ac8939117e3e83141.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-236d90495073fb2ac8939117e3e83141.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-f83cbd1fc20dddf7f9024e6e18d5aa4c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-afa7946942467265bb6488a01c15a292.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-48f5283ceeef567b79ec9a6521ad8502.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-7c0378a8e211a2ea291389e2b7cab8e6.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -108,6 +108,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="[WIP] A Hitchhiker’s Guide to LLVM – Swayam’s Scripts">
@@ -369,13 +398,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="images/cover.png" class="preview-image img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="Cover Image"></p>
 </figure>
 </div>
-<section id="a-hitchhikers-guide-to-llvm" class="level1">
-<h1>A Hitchhiker’s Guide to LLVM</h1>
-<!-- ## Table of Content
-
-| # | Title |
-|---------|-------|
-| 1 | [Introduction to LLVM](../../pages/A%20Hitchhiker's%20Guide%20to%20LLVM/chapter-1.qmd) | -->
+<section id="table-of-content" class="level1">
+<h1>Table of Content</h1>
+<ul>
+<li><a href="#building-clang-and-llvm">Building clang and LLVM</a></li>
+<li><a href="#llvm-project-directory-tree">LLVM-Project Directory Tree</a></li>
+<li><a href="#some-important-compiler-lingo">Some Important Compiler Lingo</a></li>
+</ul>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -389,8 +418,9 @@ Note
 <p>This guide is written during the release of LLVM version 21.0.0</p>
 </div>
 </div>
-<section id="building-clang-and-llvm" class="level2">
-<h2 class="anchored" data-anchor-id="building-clang-and-llvm">Building clang and LLVM</h2>
+</section>
+<section id="building-clang-and-llvm" class="level1">
+<h1>Building clang and LLVM</h1>
 <p>Dependencies (because why not?)</p>
 <table class="caption-top table">
 <thead>
@@ -428,8 +458,8 @@ Note
 </tr>
 </tbody>
 </table>
-<section id="building-clang-trust-me-youll-need-it" class="level3">
-<h3 class="anchored" data-anchor-id="building-clang-trust-me-youll-need-it">Building clang (trust me you’ll need it)</h3>
+<section id="building-clang-trust-me-youll-need-it" class="level2">
+<h2 class="anchored" data-anchor-id="building-clang-trust-me-youll-need-it">Building clang (trust me you’ll need it)</h2>
 <p>Clang is a llvm based compiler driver which provide frontend and invokes right tools for the llvm backend to compile the C-like languages.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/llvm/llvm-project.git</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">-DLLVM_ENABLE_PROJECTS</span><span class="op">=</span>clang <span class="at">-GNinja</span> <span class="at">-DCMAKE_BUILD_TYPE</span><span class="op">=</span>Release llvm</span>
@@ -449,8 +479,8 @@ Tip
 </div>
 </div>
 </section>
-<section id="building-llvm-yeah-the-dragon-itself" class="level3">
-<h3 class="anchored" data-anchor-id="building-llvm-yeah-the-dragon-itself">Building LLVM (yeah the dragon itself)</h3>
+<section id="building-llvm-yeah-the-dragon-itself" class="level2">
+<h2 class="anchored" data-anchor-id="building-llvm-yeah-the-dragon-itself">Building LLVM (yeah the dragon itself)</h2>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> build</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> build</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">-G</span> Ninja <span class="dt">\</span></span>
@@ -552,8 +582,9 @@ Warning
 </div>
 <p>LLVM tests are located inside the <code>build</code> directory as: - <code>unittests</code>: typical test written using gtest suite - <code>tests</code>: they are the <code>lit</code> tests, we already saw the example of a typical lit test in llvm above</p>
 </section>
-<section id="llvm-project-directory-tree" class="level3">
-<h3 class="anchored" data-anchor-id="llvm-project-directory-tree">LLVM-Project directory tree</h3>
+</section>
+<section id="llvm-project-directory-tree" class="level1">
+<h1>LLVM-Project directory tree</h1>
 <ul>
 <li>The high level codebase division is organized among projects: mlir, clang, lldb, openmp, etc. <em>which we also pass inside the <code>-DLLVM_ENABLE_PROJECTS</code> to specify the targets during build</em></li>
 <li>Each of the project is further organized as:
@@ -608,6 +639,180 @@ Note
 <li>Target specific backend code generation: <code>lib/Target/&lt;backend&gt;</code></li>
 </ul></li>
 </ul>
+</section>
+<section id="some-important-compiler-lingo" class="level1">
+<h1>Some Important Compiler Lingo</h1>
+<section id="build-time" class="level3">
+<h3 class="anchored" data-anchor-id="build-time">Build Time:</h3>
+<p>Time taken to build the compiler; the time it takes for make or ninja to complete the build of LLVM</p>
+</section>
+<section id="compile-time" class="level3">
+<h3 class="anchored" data-anchor-id="compile-time">Compile Time:</h3>
+<p>Time taken to convert a source file to the object file by the compiler</p>
+</section>
+<section id="runtime" class="level3">
+<h3 class="anchored" data-anchor-id="runtime">Runtime:</h3>
+<p>Time taken to execute that binary file. i.e.&nbsp;time taken to run the binary file produced by clang</p>
+<blockquote class="blockquote">
+<p>Runtime of the compiler is basically the compile time of the application</p>
+</blockquote>
+</section>
+<section id="canonical-form" class="level3">
+<h3 class="anchored" data-anchor-id="canonical-form">Canonical form</h3>
+<p>A recommended way of representing expressions or a piece of code.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> b <span class="op">+</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">// OR</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="dv">2</span> <span class="op">+</span> b<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Agreeing on a canonical form means that the compiler will strive to generate expressions in only one way and sometimes it is possible that any other form can impact performance.</p>
+</section>
+<section id="middle-end" class="level3">
+<h3 class="anchored" data-anchor-id="middle-end">Middle-End</h3>
+<p>Usually this term is acknowledged inside backend but for the specificity here comes the <strong><em>target-agnostic</em></strong> transformations of the IR.</p>
+</section>
+<section id="backend" class="level3">
+<h3 class="anchored" data-anchor-id="backend">Backend</h3>
+<p><strong><em>Target-Specific</em></strong> transformations on the IR</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Three levels in LLVM</p>
+<ul>
+<li>LLVM IR (High-level, target-independent)</li>
+<li>Machine IR (Low-Level, target-specific, still IR)</li>
+<li>Assembly/Machine Code (Final output)</li>
+</ul>
+<pre><code>LLVM IR              Machine IR              Assembly
+-------              ----------              --------
+define i32 @add  →   MachineFunction    →    add:
+%result = add    →   ADD32 %vreg1      →        mov eax, edi
+ret i32 %result  →   RET %vreg1        →        add eax, esi
+                                       →        ret</code></pre>
+</div>
+</div>
+</section>
+<section id="application-binary-interface-abi" class="level3">
+<h3 class="anchored" data-anchor-id="application-binary-interface-abi">Application Binary Interface (ABI)</h3>
+<p>It can be tricky at first to understand, so think of it as a protocol that defines exactly how functions communicate with each other at machine code level. Consider we have 2 functions</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> add<span class="op">(</span><span class="dt">int</span> a<span class="op">,</span> <span class="dt">int</span> b<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> a <span class="op">+</span> b<span class="op">;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> result <span class="op">=</span> add<span class="op">(</span><span class="dv">5</span><span class="op">,</span> <span class="dv">10</span><span class="op">);</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> result<span class="op">;</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>When <code>main</code> calls <code>add</code> several low-level questions need answering:</p>
+<ul>
+<li>Where does <code>main</code> put the values 5 and 10 so that <code>add</code> can find them?</li>
+<li>Where does <code>add</code> puts the result 15 so <code>main</code> can retrive it?</li>
+<li>How is the function call actually made at the assembly level?</li>
+</ul>
+<p>An ABI provides these specific answers, for example in x85-64 a common ABI might specify:</p>
+<ul>
+<li>First int arguement goes in RDI register</li>
+<li>Second int argument goes in RSI register</li>
+<li>Return values goes in RAX register</li>
+<li>Stack must be 16-byte aligned before calls</li>
+</ul>
+<div class="sourceCode" id="cb12"><pre class="sourceCode asm code-with-copy"><code class="sourceCode fasm"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">mov</span> <span class="kw">rdi</span><span class="op">,</span> <span class="dv">5</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">mov</span> <span class="kw">rsi</span><span class="op">,</span> <span class="dv">10</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="cf">call</span> add</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>ABI <span class="math inline">\(\neq\)</span> Assembly, targets have their ABI and assembly instructions are used to code them</li>
+<li>You must define your own ABI when writing your own backend. For interoperability, it is recommended to use the existing if available</li>
+<li>One target can have multiple ABIs possible but for a particular <strong>calling convention</strong> there is one matching ABI.</li>
+<li><strong><em>Different compilers following same ABI rules then a function compiled on one can interact with the one compiled by other.</em></strong></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="encoding" class="level3">
+<h3 class="anchored" data-anchor-id="encoding">Encoding</h3>
+<p>Encoding is the specification of how to translate assembly instructions into the actual 1s and 0s that the CPU reads. Let’s say we want to encode <code>add eax, ebx</code></p>
+<p>The x86 encoding might be:</p>
+<pre><code>Binary:    00000001 11011000
+Hex:       01 D8</code></pre>
+<p>The ISA document of a particular target tells you exactly what each bit means:</p>
+<section id="first-byte-01-opcode" class="level4">
+<h4 class="anchored" data-anchor-id="first-byte-01-opcode">First Byte: 01 (Opcode)</h4>
+<p><code>01</code> = ADD instruction with format “r/m32, r32” (meaning: destination=r/m, source=reg)</p>
+</section>
+<section id="second-byte-d8-modrm-byte" class="level4">
+<h4 class="anchored" data-anchor-id="second-byte-d8-modrm-byte">Second Byte: D8 (ModR/M byte)</h4>
+<p>Binary: 11011000 Breaking down the ModR/M byte:</p>
+<ul>
+<li>Bits 7-6 (MOD): 11 = both operands are registers (not memory)</li>
+<li>Bits 5-3 (REG): 011 = EBX register (source)</li>
+<li>Bits 2-0 (R/M): 000 = EAX register (destination)</li>
+</ul>
+<p>So <code>01 D8</code> means: “ADD the value in EBX (reg field) to EAX (r/m field)”</p>
+</section>
+</section>
+<section id="misc" class="level3">
+<h3 class="anchored" data-anchor-id="misc">Misc</h3>
+<section id="virtual-and-physical-registers" class="level4">
+<h4 class="anchored" data-anchor-id="virtual-and-physical-registers">Virtual and Physical registers</h4>
+<p>Physical registers are the actual registers that exist in your CPU:</p>
+<pre><code>x86-64 has: RAX, RBX, RCX, RDX, RSI, RDI, R8-R15, etc.
+ARM has: R0-R15, etc.</code></pre>
+<p>They are limited in numbers as x86-64 has ~16 general-purpose registers and they are specifically named.</p>
+<p>On the other hand, Virtual registers are the temporary names created by the compiler</p>
+<pre><code>%vreg0, %vreg1, %vreg2, %vreg3, %vreg4, %vreg5, ...</code></pre>
+<p>They can be unlimited, doesn’t correspond to real hardware and generically numbered. Machine IR uses virtual registers and in later steps in compilation they get mapped to the physical registers with assembly.</p>
+</section>
+</section>
+</section>
+<section id="structures-within-llvm-programs" class="level1">
+<h1>Structures within LLVM programs</h1>
+<p>A typical program is divided into the following structure in LLVM processing; top-down manner:</p>
+<ul>
+<li>Modules</li>
+<li>Functions</li>
+<li>Basic Block</li>
+<li>Instruction</li>
+</ul>
+<section id="modules" class="level2">
+<h2 class="anchored" data-anchor-id="modules">Modules:</h2>
+<p>A module is essentially the container for everything the compiler is working on at a given time. Think of it as:</p>
+<pre><code>Input File (e.g., main.c) → LLVM Module</code></pre>
+<p>The module contains:</p>
+<ul>
+<li>All function definitions (main(), foo(), etc.)</li>
+<li>Global variables</li>
+<li>Metadata</li>
+<li>Everything else needed to compile that input</li>
+</ul>
+<p>It is also known as <strong>Translation Unit</strong> or <strong>Compilation Unit</strong>, all refer to same concept - the unit of compilation.</p>
+</section>
+<section id="creating-modules" class="level2">
+<h2 class="anchored" data-anchor-id="creating-modules">Creating Modules:</h2>
+<section id="from-scratch" class="level3">
+<h3 class="anchored" data-anchor-id="from-scratch">From Scratch</h3>
+<div class="sourceCode" id="cb17"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>LLVMContext Context<span class="op">;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>Module MyModule<span class="op">(</span><span class="st">"MyModule"</span><span class="op">,</span> Context<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="from-ir-file-.ll" class="level3">
+<h3 class="anchored" data-anchor-id="from-ir-file-.ll">From IR file (.ll)</h3>
+<div class="sourceCode" id="cb18"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>LLVMContext Context<span class="op">;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>SMDiagnostic Err<span class="op">;</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>unique_ptr<span class="op">&lt;</span>Module<span class="op">&gt;</span> MyModule <span class="op">=</span> parseIRFile<span class="op">(</span><span class="st">"MyIRFile"</span><span class="op">,</span> Err<span class="op">,</span> Context<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>
