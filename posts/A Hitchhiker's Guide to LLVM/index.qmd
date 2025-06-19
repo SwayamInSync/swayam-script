@@ -325,7 +325,7 @@ On the other hand, Virtual registers are the temporary names created by the comp
 
 They can be unlimited, doesn't correspond to real hardware and generically numbered. Machine IR uses virtual registers and in later steps in compilation they get mapped to the physical registers with assembly.
 
-# Structures within LLVM programs
+# Structures & Relations within LLVM programs
 
 A typical program is divided into the following structure in LLVM processing; top-down manner:
 
@@ -333,6 +333,14 @@ A typical program is divided into the following structure in LLVM processing; to
 - Functions
 - Basic Block
 - Instruction
+  - Definition
+  - Arguments / operands
+  - operation code / opcode
+
+Following are the way these components or structures are connected
+
+- Control Flow Graphs (CFG)
+- 
 
 ## Modules:
 A module is essentially the container for everything the compiler is working on at a given time. Think of it as:
@@ -347,19 +355,3 @@ The module contains:
 - Everything else needed to compile that input
 
 It is also known as **Translation Unit** or **Compilation Unit**, all refer to same concept - the unit of compilation.
-
-## Creating Modules:
-### From Scratch
-
-```cpp
-LLVMContext Context;
-Module MyModule("MyModule", Context);
-```
-
-### From IR file (.ll)
-
-```cpp
-LLVMContext Context;
-SMDiagnostic Err;
-std::unique_ptr<Module> MyModule = parseIRFile("MyIRFile", Err, Context);
-```
