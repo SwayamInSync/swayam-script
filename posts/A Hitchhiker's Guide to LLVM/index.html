@@ -779,14 +779,24 @@ ARM has: R0-R15, etc.</code></pre>
 </section>
 </section>
 </section>
-<section id="structures-within-llvm-programs" class="level1">
-<h1>Structures within LLVM programs</h1>
+<section id="structures-relations-within-llvm-programs" class="level1">
+<h1>Structures &amp; Relations within LLVM programs</h1>
 <p>A typical program is divided into the following structure in LLVM processing; top-down manner:</p>
 <ul>
 <li>Modules</li>
 <li>Functions</li>
 <li>Basic Block</li>
-<li>Instruction</li>
+<li>Instruction
+<ul>
+<li>Definition</li>
+<li>Arguments / operands</li>
+<li>operation code / opcode</li>
+</ul></li>
+</ul>
+<p>Following are the way these components or structures are connected</p>
+<ul>
+<li>Control Flow Graphs (CFG)</li>
+<li></li>
 </ul>
 <section id="modules" class="level2">
 <h2 class="anchored" data-anchor-id="modules">Modules:</h2>
@@ -800,22 +810,8 @@ ARM has: R0-R15, etc.</code></pre>
 <li>Everything else needed to compile that input</li>
 </ul>
 <p>It is also known as <strong>Translation Unit</strong> or <strong>Compilation Unit</strong>, all refer to same concept - the unit of compilation.</p>
-</section>
-<section id="creating-modules" class="level2">
-<h2 class="anchored" data-anchor-id="creating-modules">Creating Modules:</h2>
-<section id="from-scratch" class="level3">
-<h3 class="anchored" data-anchor-id="from-scratch">From Scratch</h3>
-<div class="sourceCode" id="cb17"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>LLVMContext Context<span class="op">;</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>Module MyModule<span class="op">(</span><span class="st">"MyModule"</span><span class="op">,</span> Context<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="from-ir-file-.ll" class="level3">
-<h3 class="anchored" data-anchor-id="from-ir-file-.ll">From IR file (.ll)</h3>
-<div class="sourceCode" id="cb18"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>LLVMContext Context<span class="op">;</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>SMDiagnostic Err<span class="op">;</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>unique_ptr<span class="op">&lt;</span>Module<span class="op">&gt;</span> MyModule <span class="op">=</span> parseIRFile<span class="op">(</span><span class="st">"MyIRFile"</span><span class="op">,</span> Err<span class="op">,</span> Context<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
-</section>
 </section>
 </section>
 
