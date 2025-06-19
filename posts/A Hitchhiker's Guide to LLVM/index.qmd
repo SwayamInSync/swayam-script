@@ -4,6 +4,7 @@ subtitle: "Just Another Day in the Life of a SSA Variable"
 author: "Swayam Singh"
 date: "2025-06-03"
 categories: [Compilers, LLVM]
+title-block-banner: true
 format:
   html:
     code-fold: false
@@ -19,19 +20,18 @@ comments: false
 ---
 ![](images/cover.png){fig-alt="Cover Image" fig-align="center" width=70% .preview-image}
 
-# A Hitchhiker's Guide to LLVM
 
-<!-- ## Table of Content
+# Table of Content
 
-| # | Title |
-|---------|-------|
-| 1 | [Introduction to LLVM](../../pages/A%20Hitchhiker's%20Guide%20to%20LLVM/chapter-1.qmd) | -->
+- [Building clang and LLVM](#building-clang-and-llvm)
+- [LLVM-Project Directory Tree](#llvm-project-directory-tree)
+- [Some Important Compiler Lingo](#some-important-compiler-lingo)
 
 :::{.callout-note}
 This guide is written during the release of LLVM version 21.0.0
 :::
 
-## Building clang and LLVM
+# Building clang and LLVM
 
 Dependencies (because why not?)
 
@@ -43,7 +43,7 @@ Dependencies (because why not?)
 | GNU Make | 3.79, 3.79.1 | Makefile/build processor |
 | PyYAML | >=5.1 | Header generator |
 
-### Building clang (trust me you'll need it)
+## Building clang (trust me you'll need it)
 Clang is a llvm based compiler driver which provide frontend and invokes right tools for the llvm backend to compile the C-like languages.
 
 ```bash
@@ -57,7 +57,7 @@ How I know the tags you may ask? checkout the `llvm-project/llvm/CMakeLists.txt`
 OR the instructions are also available here: [https://clang.llvm.org/get_started.html](https://clang.llvm.org/get_started.html)
 :::
 
-### Building LLVM (yeah the dragon itself)
+## Building LLVM (yeah the dragon itself)
 
 ```bash
 mkdir build
@@ -159,7 +159,7 @@ LLVM tests are located inside the `build` directory as:
 - `unittests`: typical test written using gtest suite
 - `tests`: they are the `lit` tests, we already saw the example of a typical lit test in llvm above
 
-### LLVM-Project directory tree
+# LLVM-Project directory tree
 
 - The high level codebase division is organized among projects: mlir, clang, lldb, openmp, etc. *which we also pass inside the `-DLLVM_ENABLE_PROJECTS` to specify the targets during build*
 - Each of the project is further organized as:
@@ -191,3 +191,175 @@ LLVM tests are located inside the `build` directory as:
     - Binary and textual representations are handled in `lib/Bitcode`, `lib/IRReader` and `lib/ITWriter`
   - General backend code generation is in `lib/CodeGen`
   - Target specific backend code generation: `lib/Target/<backend>`
+
+# Some Important Compiler Lingo
+
+### Build Time:
+Time taken to build the compiler; the time it takes for make or ninja to complete the build of LLVM
+
+### Compile Time:
+Time taken to convert a source file to the object file by the compiler
+
+### Runtime:
+Time taken to execute that binary file. i.e. time taken to run the binary file produced by clang
+
+> Runtime of the compiler is basically the compile time of the application
+
+### Canonical form
+A recommended way of representing expressions or a piece of code.
+
+```cpp
+a = b + 2;
+// OR
+a = 2 + b;
+```
+
+Agreeing on a canonical form means that the compiler will strive to generate expressions in only one way and sometimes it is possible that any other form can impact performance.
+
+### Middle-End
+Usually this term is acknowledged inside backend but for the specificity here comes the ***target-agnostic*** transformations of the IR.
+
+### Backend
+***Target-Specific*** transformations on the IR
+
+:::{.callout-note}
+Three levels in LLVM
+
+- LLVM IR (High-level, target-independent)
+- Machine IR (Low-Level, target-specific, still IR)
+- Assembly/Machine Code (Final output)
+
+```
+LLVM IR              Machine IR              Assembly
+-------              ----------              --------
+define i32 @add  →   MachineFunction    →    add:
+%result = add    →   ADD32 %vreg1      →        mov eax, edi
+ret i32 %result  →   RET %vreg1        →        add eax, esi
+                                       →        ret
+```
+:::
+
+### Application Binary Interface (ABI)
+
+It can be tricky at first to understand, so think of it as a protocol that defines exactly how functions communicate with each other at machine code level. Consider we have 2 functions
+
+```cpp
+int add(int a, int b) {
+    return a + b;
+}
+
+int main() {
+    int result = add(5, 10);
+    return result;
+}
+```
+
+When `main` calls `add` several low-level questions need answering:
+
+- Where does `main` put the values 5 and 10 so that `add` can find them?
+- Where does `add` puts the result 15 so `main` can retrive it?
+- How is the function call actually made at the assembly level?
+
+An ABI provides these specific answers, for example in x85-64 a common ABI might specify:
+
+- First int arguement goes in RDI register
+- Second int argument goes in RSI register
+- Return values goes in RAX register
+- Stack must be 16-byte aligned before calls
+
+```asm
+mov rdi, 5
+mov rsi, 10
+call add
+```
+
+:::{.callout-note}
+- ABI $\neq$ Assembly, targets have their ABI and assembly instructions are used to code them
+- You must define your own ABI when writing your own backend. For interoperability, it is recommended to use the existing if available
+- One target can have multiple ABIs possible but for a particular **calling convention** there is one matching ABI.
+- ***Different compilers following same ABI rules then a function compiled on one can interact with the one compiled by other.***
+:::
+
+### Encoding
+Encoding is the specification of how to translate assembly instructions into the actual 1s and 0s that the CPU reads.
+Let's say we want to encode `add eax, ebx`
+
+The x86 encoding might be:
+
+```
+Binary:    00000001 11011000
+Hex:       01 D8
+```
+
+The ISA document of a particular target tells you exactly what each bit means:
+
+#### First Byte: 01 (Opcode)
+
+`01` = ADD instruction with format "r/m32, r32" (meaning: destination=r/m, source=reg)
+
+#### Second Byte: D8 (ModR/M byte)
+Binary: 11011000
+Breaking down the ModR/M byte:
+
+- Bits 7-6 (MOD): 11 = both operands are registers (not memory)
+- Bits 5-3 (REG): 011 = EBX register (source)
+- Bits 2-0 (R/M): 000 = EAX register (destination)
+
+So `01 D8` means: "ADD the value in EBX (reg field) to EAX (r/m field)"
+
+### Misc
+#### Virtual and Physical registers
+Physical registers are the actual registers that exist in your CPU:
+
+```
+x86-64 has: RAX, RBX, RCX, RDX, RSI, RDI, R8-R15, etc.
+ARM has: R0-R15, etc.
+```
+
+They are limited in numbers as x86-64 has ~16 general-purpose registers and they are specifically named.
+
+On the other hand, Virtual registers are the temporary names created by the compiler
+```
+%vreg0, %vreg1, %vreg2, %vreg3, %vreg4, %vreg5, ...
+```
+
+They can be unlimited, doesn't correspond to real hardware and generically numbered. Machine IR uses virtual registers and in later steps in compilation they get mapped to the physical registers with assembly.
+
+# Structures within LLVM programs
+
+A typical program is divided into the following structure in LLVM processing; top-down manner:
+
+- Modules
+- Functions
+- Basic Block
+- Instruction
+
+## Modules:
+A module is essentially the container for everything the compiler is working on at a given time. Think of it as:
+```
+Input File (e.g., main.c) → LLVM Module
+```
+The module contains:
+
+- All function definitions (main(), foo(), etc.)
+- Global variables
+- Metadata
+- Everything else needed to compile that input
+
+It is also known as **Translation Unit** or **Compilation Unit**, all refer to same concept - the unit of compilation.
+
+## Creating Modules:
+### From Scratch
+
+```cpp
+LLVMContext Context;
+Module MyModule("MyModule", Context);
+```
+
+### From IR file (.ll)
+
+```cpp
+LLVMContext Context;
+SMDiagnostic Err;
+std::unique_ptr<Module> MyModule = parseIRFile("MyIRFile", Err, Context);
+```
