@@ -1,0 +1,20 @@
+---
+title: "Writing C++ for a Happy Compiler"
+subtitle: ""
+author: "Swayam Singh"
+date: "2025-09-19"
+categories: [CPP]
+format:
+  html:
+    code-fold: false
+toc: true
+highlight-style: pygments
+execute:
+  freeze: auto
+image: assets/header.png
+social:
+  - image: assets/header.png
+    description: "Header: Cooperative Groups"
+---
+
+## Introduction
