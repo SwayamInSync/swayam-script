@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.33">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -70,16 +70,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../favicon.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dcd723bd3e2d8e65306aa707aebc1039.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-dcd723bd3e2d8e65306aa707aebc1039.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-c18bd6dd0ddebc2b5caffbfa1bcf4404.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-8272168e6966a700fd3fde85c3a6a310.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-4f333732063fea702750327edd0592b3.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-ab8a9a69af8c690bbb663c9c76fcc648.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -285,6 +286,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    </a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Swayam’s Scripts</span>
     </a>
@@ -418,8 +421,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="what-cooperative-groups-are" class="level2">
 <h2 class="anchored" data-anchor-id="what-cooperative-groups-are">What Cooperative Groups are?</h2>
 <p>Cooperative groups are objects that represent a collection of communicating threads. You can obtain predefined groups or partition existing groups to create subgroups. The key is that you can then call methods on these group objects, most notably <code>sync()</code>, to coordinate only the members of that specific group.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// use the cooperative_groups:: namespace</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">namespace</span> cg <span class="op">=</span> cooperative_groups<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// use the cooperative_groups:: namespace</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">namespace</span> cg <span class="op">=</span> cooperative_groups<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="implicit-groups" class="level2">
 <h2 class="anchored" data-anchor-id="implicit-groups">Implicit Groups</h2>
@@ -440,16 +443,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>dim3 group_index()</code> 3-dimensional block index within the grid</li>
 <li><code>dim3 thread_index()</code> 3-dimensional thraed index within the block</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>thread_block g <span class="op">=</span> this_thread_block<span class="op">();</span> <span class="co">// creates a group of all threads in current block</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>thread_block g <span class="op">=</span> this_thread_block<span class="op">();</span> <span class="co">// creates a group of all threads in current block</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>thread_group tile32 <span class="op">=</span> tiled_partition<span class="op">(</span>g<span class="op">,</span> <span class="dv">32</span><span class="op">);</span> <span class="co">// partition the g into set of 32 threads (warp)</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>thread_group tile4 <span class="op">=</span> tiled_partition<span class="op">(</span>tile32<span class="op">,</span> <span class="dv">4</span><span class="op">);</span> <span class="co">// further partition `tile32` into tiles of equally 4 threads</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>thread_group tile4 <span class="op">=</span> tiled_partition<span class="op">(</span>tile32<span class="op">,</span> <span class="dv">4</span><span class="op">);</span> <span class="co">// further partition `tile32` into tiles of equally 4 threads</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <blockquote class="blockquote">
 <p>The tile parition size should be power of 2 and less than 1024 (this max limit varies with cc) <code>thread_block</code> is derived from more generic type <code>thread_group</code> that we used to represent tile (basically group is also a tile, check cuda c++ programming guide)</p>
 </blockquote>
 <section id="generic-parallel-algorithms" class="level4">
 <h4 class="anchored" data-anchor-id="generic-parallel-algorithms">Generic Parallel Algorithms</h4>
 <p>Designing algorithms that work with any level of groups (thread block, tiles, etc)</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>__device__ <span class="dt">int</span> reduce<span class="op">(</span>thread_group g<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>x<span class="op">,</span> <span class="dt">int</span> val<span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>__device__ <span class="dt">int</span> reduce<span class="op">(</span>thread_group g<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>x<span class="op">,</span> <span class="dt">int</span> val<span class="op">)</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> lane <span class="op">=</span> g<span class="op">.</span>thread_rank<span class="op">();</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span><span class="op">(</span><span class="dt">int</span> i<span class="op">=</span>g<span class="op">.</span>size<span class="op">()/</span><span class="dv">2</span><span class="op">;</span> i <span class="op">&gt;</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">/=</span><span class="dv">2</span> <span class="op">)</span></span>
@@ -473,13 +476,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co">// per-warp level</span></span>
 <span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="kw">auto</span> g <span class="op">=</span> tiled_partition<span class="op">(</span>this_thread_block<span class="op">(),</span> <span class="dv">32</span><span class="op">);</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>reduce<span class="op">(</span>g<span class="op">,</span> ptr<span class="op">,</span> myVal<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>reduce<span class="op">(</span>g<span class="op">,</span> ptr<span class="op">,</span> myVal<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 <section id="cluster-group" class="level3">
 <h3 class="anchored" data-anchor-id="cluster-group">Cluster Group</h3>
 <p>This represents all the threads launched in a single <strong>Thread Group Cluster</strong> (CC 9.0+) when a non-cluster grid is launched, the APIs assume a 1x1x1 cluster</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cluster_group g <span class="op">=</span> this_cluster<span class="op">();</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cluster_group g <span class="op">=</span> this_cluster<span class="op">();</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Most of the public API is same and matches to the <a href="#Thread-block">Thread Block</a> implicit group, some new are as follows:</p>
 <ul>
 <li><code>num_blocks()</code>Total number of thread blocks in a cluster</li>
@@ -488,7 +491,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>static unsigned int query_shared_rank(const void *addr)</code>: Obtain the block rank to which a shared memory address belongs</li>
 <li><code>static T* map_shared_rank(T *addr, int rank)</code>: Obtain the address of a shared memory variable of another block in the cluster</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">namespace</span> cg <span class="op">=</span> cooperative_groups<span class="op">;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">namespace</span> cg <span class="op">=</span> cooperative_groups<span class="op">;</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">// ============================================================================</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">// EXAMPLE 1: Basic Cluster Operations and Inter-block Communication</span></span>
@@ -546,13 +549,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">"Cluster </span><span class="sc">%d</span><span class="st"> completed with </span><span class="sc">%d</span><span class="st"> blocks</span><span class="sc">\n</span><span class="st">"</span><span class="op">,</span></span>
 <span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>               blockIdx<span class="op">.</span>x <span class="op">/</span> cluster_size<span class="op">,</span> cluster_size<span class="op">);</span></span>
 <span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Working with <strong>Distributed Shared Memory</strong> is very fast as compare to traditional Global memory synchronization for inter-block communication.</p>
 </section>
 <section id="grid-group" class="level3">
 <h3 class="anchored" data-anchor-id="grid-group">Grid Group</h3>
 <p>A set of threads within the same grid, guranteed to be resident on the device.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>grid_group g <span class="op">=</span> this_grid<span class="op">();</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>grid_group g <span class="op">=</span> this_grid<span class="op">();</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>static unsigned long long thread_rank()</code>: Rank of the calling thread within [0, num_threads)</p>
 <p><code>static unsigned long long block_rank()</code>: Rank of the calling block within [0, num_blocks)</p>
 <p><code>static unsigned long long cluster_rank()</code>: Rank of the calling cluster within [0, num_clusters)</p>
@@ -566,16 +569,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <blockquote class="blockquote">
 <p><strong>Ensure device supports the cooperative launch api</strong></p>
 </blockquote>
-<div class="sourceCode" id="cb7"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> dev <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> dev <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> supportsCoopLaunch <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>cudaDeviceGetAttribute<span class="op">(&amp;</span>supportsCoopLaunch<span class="op">,</span> cudaDevAttrCooperativeLaunch<span class="op">,</span> dev<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>cudaDeviceGetAttribute<span class="op">(&amp;</span>supportsCoopLaunch<span class="op">,</span> cudaDevAttrCooperativeLaunch<span class="op">,</span> dev<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>CUDA Occupancy and Grid-Level Synchronization Constraints:</strong></p>
 <p>Each SM has limited thread capacity (e.g., 2048 threads/SM), giving a total system capacity of <code>num_SMs × threads_per_SM</code>. While launching many threads seems beneficial, CUDA schedules thread blocks in streaming fashion as SMs become available, so excessive thread launches don’t improve performance due to occupancy limits. Grid-stride loops are more efficient as they reuse threads across data portions instead of creating thread explosion.</p>
 <p>The critical issue arises with grid-level synchronization: if all active SMs hit a synchronization barrier while other thread blocks wait in the scheduling queue, those waiting blocks cannot proceed, creating deadlock. This means <strong>grid size cannot exceed occupancy-determined limits</strong> for cooperative kernels.</p>
 <p>Occupancy calculations answer “how many threads can actually execute simultaneously per SM based on kernel design,” which determines the maximum safe grid size formula: <code>max_safe_grid_size = num_SMs × actual_threads_per_SM_for_this_kernel</code>. This occupancy-based upper bound is essential for any kernel requiring grid-level synchronization to prevent deadlock scenarios.</p>
 <ul>
 <li><p>CUDA provides the API to fetch number of concurrent thread blocks per SM. <code>cudaOccupancyMaxActiveBlocksPerMultiprocessor</code></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Device code</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Device code</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>__global__ <span class="dt">void</span> MyKernel<span class="op">(</span><span class="dt">int</span> <span class="op">*</span>d<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>a<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>b<span class="op">)</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> idx <span class="op">=</span> threadIdx<span class="op">.</span>x <span class="op">+</span> blockIdx<span class="op">.</span>x <span class="op">*</span> blockDim<span class="op">.</span>x<span class="op">;</span></span>
@@ -609,22 +612,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Occupancy: "</span> <span class="op">&lt;&lt;</span> <span class="op">(</span><span class="dt">double</span><span class="op">)</span>activeWarps <span class="op">/</span> maxWarps <span class="op">*</span> <span class="dv">100</span> <span class="op">&lt;&lt;</span> <span class="st">"%"</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
 <span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><p>Total Number of blocks that can be launched concurrently in a grid can be <code>total_no_of_SM * numBlocks</code> this is a requirement for cooperative grid launch.</p></li>
 <li><p>Grid-Stride loop methodology works nicely with this requirement.</p></li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>__global__ <span class="dt">void</span> kernel<span class="op">(...)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>__global__ <span class="dt">void</span> kernel<span class="op">(...)</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    grid_group grid <span class="op">=</span> this_grid<span class="op">();</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// load data</span></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// loop - compute, share data</span></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    grid<span class="op">.</span>sync<span class="op">();</span> <span class="co">// device wide execution barrier</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>This kernel should be launched via <code>cudaLaunchCooperativeKernel(...)</code> instead of <code>&lt;&lt;&lt;...&gt;&gt;&gt;</code> (three chevron)</li>
 </ul>
-<div class="sourceCode" id="cb10"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">/// This will launch a grid that can maximally fill the GPU, on the default stream with kernel arguments</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">/// This will launch a grid that can maximally fill the GPU, on the default stream with kernel arguments</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> numBlocksPerSm <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a> <span class="co">// Number of threads my_kernel will be launched with</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> numThreads <span class="op">=</span> <span class="dv">128</span><span class="op">;</span></span>
@@ -635,7 +638,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">*</span>kernelArgs<span class="op">[]</span> <span class="op">=</span> <span class="op">{</span> <span class="co">/* add kernel args */</span> <span class="op">};</span></span>
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>dim3 dimBlock<span class="op">(</span>numThreads<span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">1</span><span class="op">);</span></span>
 <span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>dim3 dimGrid<span class="op">(</span>deviceProp<span class="op">.</span>multiProcessorCount<span class="op">*</span>numBlocksPerSm<span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">1</span><span class="op">);</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>cudaLaunchCooperativeKernel<span class="op">((</span><span class="dt">void</span><span class="op">*)</span>my_kernel<span class="op">,</span> dimGrid<span class="op">,</span> dimBlock<span class="op">,</span> kernelArgs<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>cudaLaunchCooperativeKernel<span class="op">((</span><span class="dt">void</span><span class="op">*)</span>my_kernel<span class="op">,</span> dimGrid<span class="op">,</span> dimBlock<span class="op">,</span> kernelArgs<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 </ul>
 <section id="motivation-1" class="level4">
 <h4 class="anchored" data-anchor-id="motivation-1">Motivation</h4>
@@ -651,9 +654,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="thread-block-tile" class="level3">
 <h3 class="anchored" data-anchor-id="thread-block-tile">Thread Block Tile</h3>
 <p>A subset of thread blockm divided into tiles in row major order. This is another way of creating them in tempalte manner, but the size should be known at <strong>compile time contants</strong> (This provides more functionality) + fast (size known at compile time)</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>thread_block_tile<span class="op">&lt;</span><span class="dv">32</span><span class="op">&gt;</span> tile32 <span class="op">=</span> tiled_partition<span class="op">&lt;</span><span class="dv">32</span><span class="op">&gt;(</span>this_thread_block<span class="op">());</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>thread_block_tile<span class="op">&lt;</span><span class="dv">32</span><span class="op">&gt;</span> tile32 <span class="op">=</span> tiled_partition<span class="op">&lt;</span><span class="dv">32</span><span class="op">&gt;(</span>this_thread_block<span class="op">());</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>thread_block_tile<span class="op">&lt;</span><span class="dv">4</span><span class="op">&gt;</span> tile4 <span class="op">=</span> tiled_partition<span class="op">&lt;</span><span class="dv">4</span><span class="op">&gt;(</span>this_thread_block<span class="op">());</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>thread_block_tile<span class="op">&lt;</span><span class="dv">1</span><span class="op">&gt;</span> this_thread<span class="op">();</span> <span class="co">// single threaded group</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>thread_block_tile<span class="op">&lt;</span><span class="dv">1</span><span class="op">&gt;</span> this_thread<span class="op">();</span> <span class="co">// single threaded group</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Additional functionality (but on group level)</p>
 <ul>
 <li>Similar to <strong><em>warp shuffle</em></strong> primitives
@@ -675,7 +678,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>match_all()</code></li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb12"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span> <span class="op">&lt;</span><span class="dt">unsigned</span> size<span class="op">&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span> <span class="op">&lt;</span><span class="dt">unsigned</span> size<span class="op">&gt;</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>__device__ <span class="dt">int</span> tile_reduce<span class="op">(</span>thread_block_tile<span class="op">&lt;</span>size<span class="op">&gt;,</span> <span class="dt">int</span> val<span class="op">)</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span><span class="op">(</span><span class="dt">int</span> i<span class="op">=</span>g<span class="op">.</span>size<span class="op">()/</span><span class="dv">2</span><span class="op">;</span> i <span class="op">&gt;</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">/=</span><span class="dv">2</span> <span class="op">)</span></span>
@@ -688,15 +691,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">// per tile of 16 threads</span></span>
 <span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>thread_block_tile<span class="op">&lt;</span><span class="dv">16</span><span class="op">&gt;</span> g <span class="op">=</span> tiled_partition<span class="op">&lt;</span><span class="dv">16</span><span class="op">&gt;(</span>this_thread_block<span class="op">());</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>tile_reduce<span class="op">(</span>g<span class="op">,</span> myVal<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>tile_reduce<span class="op">(</span>g<span class="op">,</span> myVal<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="coalesced-groups" class="level3">
 <h3 class="anchored" data-anchor-id="coalesced-groups">Coalesced Groups</h3>
 <p>Discover a set of coalesced threads, i.e.&nbsp;a group of converged threads executing in SIMD</p>
 <p>In CUDA’s SIMT architecture, at the hardware level the multiprocessor executes threads in groups of 32 called warps. If there exists a data-dependent conditional branch in the application code such that threads within a warp diverge, then the warp serially executes each branch disabling threads not on that path. <strong><em>The threads that remain active on the path are referred to as coalesced. Cooperative Groups has functionality to discover, and create, a group containing all coalesced threads.</em></strong></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>coalesced_group active <span class="op">=</span> coalesced_threads<span class="op">();</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>coalesced_group active <span class="op">=</span> coalesced_threads<span class="op">();</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><img src="assets/image-24.png" class="img-fluid"></p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Example: Atomic Aggregation</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Example: Atomic Aggregation</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> __device__ <span class="dt">int</span> atomicAggInc<span class="op">(</span><span class="dt">int</span> <span class="op">*</span>p<span class="op">)</span></span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
@@ -706,7 +709,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>        prev <span class="op">=</span> atomicAdd<span class="op">(</span>p<span class="op">,</span> g<span class="op">.</span>size<span class="op">());</span></span>
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    prev <span class="op">=</span> g<span class="op">.</span>thread_rank<span class="op">()</span> <span class="op">+</span> g<span class="op">.</span>shfl<span class="op">(</span>prev<span class="op">,</span> <span class="dv">0</span><span class="op">);</span> <span class="co">// Note: this g.shfl is actually __shfl_sync's alias</span></span>
 <span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> prev<span class="op">;</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 <p>Apart fromt the above content there are synchronization and other primitives that I am avoiding in this article, as they are intuitively simple and can be read/reference from the CUDA programming guide.</p>
 
@@ -780,13 +783,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

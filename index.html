@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.33">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -35,16 +35,17 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-bc185b5c5bdbcb35c2eb49d8a876ef70.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-b651517ce65839d647a86e2780455cfb.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-4df3b0c4fafa0f66eafcead0ee6cff11.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-f348d45a7e63171ec3d22a863ffce275.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-1713c1db1ad41a796903378fc9ac7b2b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-5b86b919a61abfc3dacdbf9f5161a5a8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -116,7 +117,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -308,6 +309,8 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Swayam’s Scripts</span>
     </a>
@@ -364,7 +367,7 @@ window.Quarto = {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(9)</span></div><div class="category" data-category="Qm9vaw==">Book <span class="quarto-category-count">(2)</span></div><div class="category" data-category="QyUyQiUyQg==">C++ <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q29tcGlsZXJz">Compilers <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q1VEQQ==">CUDA <span class="quarto-category-count">(1)</span></div><div class="category" data-category="SW5mb3JtYXRpb24tVGhlb3J5">Information-Theory <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TExN">LLM <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TExWTQ==">LLVM <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TUw=">ML <span class="quarto-category-count">(2)</span></div><div class="category" data-category="TUwtVGhlb3J5">ML-Theory <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TkxQ">NLP <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TnVtUHk=">NumPy <span class="quarto-category-count">(1)</span></div><div class="category" data-category="T3Blbi1Tb3VyY2U=">Open-Source <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VGhlb3J5">Theory <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VHJhbnNmb3JtZXJz">Transformers <span class="quarto-category-count">(2)</span></div></div></div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(10)</span></div><div class="category" data-category="Qm9vaw==">Book <span class="quarto-category-count">(2)</span></div><div class="category" data-category="QyUyQiUyQg==">C++ <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q29tcGlsZXJz">Compilers <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q1BQ">CPP <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q1VEQQ==">CUDA <span class="quarto-category-count">(1)</span></div><div class="category" data-category="SW5mb3JtYXRpb24tVGhlb3J5">Information-Theory <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TExN">LLM <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TExWTQ==">LLVM <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TUw=">ML <span class="quarto-category-count">(2)</span></div><div class="category" data-category="TUwtVGhlb3J5">ML-Theory <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TkxQ">NLP <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TnVtUHk=">NumPy <span class="quarto-category-count">(1)</span></div><div class="category" data-category="T3Blbi1Tb3VyY2U=">Open-Source <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VGhlb3J5">Theory <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VHJhbnNmb3JtZXJz">Transformers <span class="quarto-category-count">(2)</span></div></div></div>
 <!-- main -->
 <main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
@@ -379,7 +382,48 @@ window.Quarto = {
 
 <div class="quarto-listing quarto-listing-container-default" id="listing-listing">
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="Q1VEQQ==" data-listing-date-sort="1755216000000" data-listing-file-modified-sort="1755439928639" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="13" data-listing-word-count-sort="2508">
+<div class="quarto-post image-right" data-index="0" data-categories="Q1BQ" data-listing-date-sort="1758240000000" data-listing-file-modified-sort="1758275583196" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="1">
+<div class="thumbnail"><a href="./posts/C++/index.html" class="no-external">
+
+<img loading="lazy" src="./posts/C++/assets/header.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/C++/index.html" class="no-external">[WIP] Writing C++ for a Happy Compiler</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./posts/C++/index.html" class="no-external"></a>
+</div>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q1BQ'); return false;">CPP</div>
+
+</div>
+<div class="delink listing-description"><a href="./posts/C++/index.html" class="no-external">
+
+
+
+
+
+</a></div>
+</div>
+<div class="metadata">
+<a href="./posts/C++/index.html" class="no-external">
+<div class="listing-date">
+Sep 19, 2025
+</div>
+<div class="listing-author">
+Swayam Singh
+</div>
+<div class="listing-reading-time">1 min</div>
+<div class="metadata-value listing-word-count">
+1 words
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-categories="Q1VEQQ==" data-listing-date-sort="1755216000000" data-listing-file-modified-sort="1758275583206" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="13" data-listing-word-count-sort="2508">
 <div class="thumbnail"><a href="./posts/Cooperative Groups/index.html" class="no-external">
 
 <img loading="lazy" src="./posts/Cooperative Groups/assets/header.png" class="thumbnail-image">
@@ -416,7 +460,7 @@ Swayam Singh
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-categories="Q29tcGlsZXJzJTJDTExWTQ==" data-listing-date-sort="1748908800000" data-listing-file-modified-sort="1755439928627" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1796">
+<div class="quarto-post image-right" data-index="2" data-categories="Q29tcGlsZXJzJTJDTExWTQ==" data-listing-date-sort="1748908800000" data-listing-file-modified-sort="1758275583196" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1796">
 <div class="thumbnail"><a href="./posts/A Hitchhiker's Guide to LLVM/index.html" class="no-external">
 
 <img loading="lazy" src="./posts/A Hitchhiker's Guide to LLVM/images/cover.png" class="thumbnail-image">
@@ -455,7 +499,7 @@ Swayam Singh
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-categories="TUwtVGhlb3J5JTJDVHJhbnNmb3JtZXJz" data-listing-date-sort="1742515200000" data-listing-file-modified-sort="1755439928640" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1625">
+<div class="quarto-post image-right" data-index="3" data-categories="TUwtVGhlb3J5JTJDVHJhbnNmb3JtZXJz" data-listing-date-sort="1742515200000" data-listing-file-modified-sort="1758275583207" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1625">
 <div class="thumbnail"><a href="./posts/DyT Analysis/index.html" class="no-external">
 
 <img loading="lazy" src="./posts/DyT Analysis/header.jpg" class="thumbnail-image">
@@ -494,7 +538,7 @@ Swayam Singh
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="3" data-categories="TUwlMkNUaGVvcnklMkNCb29r" data-listing-date-sort="1741996800000" data-listing-file-modified-sort="1755439928641" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="35">
+<div class="quarto-post image-right" data-index="4" data-categories="TUwlMkNUaGVvcnklMkNCb29r" data-listing-date-sort="1741996800000" data-listing-file-modified-sort="1758275583208" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="35">
 <div class="thumbnail"><a href="./posts/The Transparent Algorithm/index.html" class="no-external">
 
 <img loading="lazy" src="./posts/The Transparent Algorithm/images/cover.png" class="thumbnail-image">
@@ -539,7 +583,7 @@ Swayam Singh
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="4" data-categories="QyUyQiUyQiUyQ0Jvb2s=" data-listing-date-sort="1739059200000" data-listing-file-modified-sort="1755439928627" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="5">
+<div class="quarto-post image-right" data-index="5" data-categories="QyUyQiUyQiUyQ0Jvb2s=" data-listing-date-sort="1739059200000" data-listing-file-modified-sort="1758275583196" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="5">
 <div class="thumbnail"><a href="./posts/Concurrent C++, A Practical Guide/index.html" class="no-external">
 
 <img loading="lazy" src="./posts/Concurrent C++, A Practical Guide/img.jpeg" class="thumbnail-image">
@@ -578,7 +622,7 @@ Swayam Singh
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="5" data-categories="TUwlMkNJbmZvcm1hdGlvbi1UaGVvcnk=" data-listing-date-sort="1736380800000" data-listing-file-modified-sort="1755439928640" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2650">
+<div class="quarto-post image-right" data-index="6" data-categories="TUwlMkNJbmZvcm1hdGlvbi1UaGVvcnk=" data-listing-date-sort="1736380800000" data-listing-file-modified-sort="1758275583207" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2650">
 <div class="thumbnail"><a href="./posts/Information-Theory-In-ML/index.html" class="no-external">
 
 <img loading="lazy" src="./posts/Information-Theory-In-ML/intro.jpg" class="thumbnail-image">
@@ -617,7 +661,7 @@ Swayam Singh
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="6" data-categories="TExN" data-listing-date-sort="1728518400000" data-listing-file-modified-sort="1755439928641" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="595">
+<div class="quarto-post image-right" data-index="7" data-categories="TExN" data-listing-date-sort="1728518400000" data-listing-file-modified-sort="1758275583208" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="595">
 <div class="thumbnail"><a href="./posts/Understanding Perplexity/index.html" class="no-external">
 
 <img loading="lazy" src="./posts/Understanding Perplexity/meme.jpg" class="thumbnail-image">
@@ -654,7 +698,7 @@ Swayam Singh
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="7" data-categories="TnVtUHklMkNPcGVuLVNvdXJjZQ==" data-listing-date-sort="1727654400000" data-listing-file-modified-sort="1755439928641" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="5">
+<div class="quarto-post image-right" data-index="8" data-categories="TnVtUHklMkNPcGVuLVNvdXJjZQ==" data-listing-date-sort="1727654400000" data-listing-file-modified-sort="1758275583207" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="5">
 <div class="thumbnail"><a href="./posts/Numpy QuadDtype/index.html" class="no-external">
 
 <img loading="lazy" src="https://labs.quansight.org/_next/image?url=%2Fposts%2Fnumpy-quaddtype-blog%2Ffeature.png&amp;w=3840&amp;q=75" class="thumbnail-image">
@@ -693,7 +737,7 @@ Swayam Singh
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="8" data-categories="TkxQJTJDVHJhbnNmb3JtZXJz" data-listing-date-sort="1697241600000" data-listing-file-modified-sort="1755439928641" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1671">
+<div class="quarto-post image-right" data-index="9" data-categories="TkxQJTJDVHJhbnNmb3JtZXJz" data-listing-date-sort="1697241600000" data-listing-file-modified-sort="1758275583207" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1671">
 <div class="thumbnail"><a href="./posts/Self-Attention Mimicking Gradient Descent/index.html" class="no-external">
 
 <p class="card-img-top"><img src="posts/Self-Attention Mimicking Gradient Descent/section-image.png"  class="thumbnail-image card-img"/></p>
@@ -799,13 +843,14 @@ Swayam Singh
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
