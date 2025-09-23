@@ -176,6 +176,179 @@ const int *const p; // const pointer to const int data
 ***Rule of thumb***: `const` applies to whatever the immediate left to it, if nothing then whatever is immediate right to it.
 
 ### Function declarations
+It is a good habit to keep the `const` constraints on the function declaration to keep the consistency with the client. Also 
+returning a `const` from a function might not make sense but sometimes it can be a good habit
 
+```cpp
+class Rational {...};
 
+const Rational operator* (const Rational &lhs, const Rational &rhs);
+
+// this can prevent the doings like
+// (a*b) = c although sometimes this is what a user wants but unlikely from a user-defined type
+```
+
+### `const` Member functions
+The purpose of `const` member functions is to operate on the `const` objects (they can also call by the non-const objects) but gurantees to not modify the object's properties. The 2 variants can be overloaded to ensure the seprate functionalities
+```cpp
+class MyVector {
+private:
+    int* data;
+    size_t size;
+    
+public:
+    MyVector(size_t s) : size(s) {
+        data = new int[s];
+    }
+    
+    // Non-const version - returns modifiable reference
+    int& operator[](size_t index) {
+        std::cout << "Non-const version called\n";
+        return data[index];
+    }
+    
+    // Const version - returns read-only reference  
+    const int& operator[](size_t index) const {
+        std::cout << "Const version called\n";
+        return data[index];
+    }
+    
+    ~MyVector() { delete[] data; }
+};
+
+int main() {
+    MyVector vec(5);           // non-const object
+    const MyVector constVec(5); // const object
+    
+    vec[0] = 10;      // ✅ Calls non-const version, returns int&
+    int x = vec[0];   // ✅ Calls non-const version (but we can't modify)
+    
+    int y = constVec[0]; // ✅ Calls const version, returns const int&
+    // constVec[0] = 20;    // ❌ ILLEGAL - const version returns const int&
+}
+```
+
+There are 2 notions of defining **constness**
+- **bitwise const**: No member variables are modified (this is what c++ follows)
+  ```cpp
+  class CTextBlock {
+  public:
+    char& operator[](std::size_t position) const   
+    { return pText[position]; }                    
+                                                  
+  private:
+    char *pText;  // The POINTER itself is not modified
+  };
+
+  int main() {
+    const CTextBlock ctb("Hello");
+    
+    ctb[0] = 'J';  // ✅ Compiles! But we just modified a const object!
+    // Now the "const" object "ctb" contains "Jello" instead of "Hello"
+  }
+  ```
+- **logical constness** The object's observable state doesn't change (this is what violated above). There can be cases when a method cannot be bitwise const but logically it can make sense
+  ```cpp
+  class CTextBlock {
+  public:
+
+    ...
+
+    std::size_t length() const;
+
+  private:
+    char *pText;
+    std::size_t textLength;            // last calculated length of textblock
+    bool lengthIsValid;                // whether length is currently valid
+  };
+
+  std::size_t CTextBlock::length() const
+  {
+    if (!lengthIsValid) {
+      textLength = std::strlen(pText);  // error! can't assign to textLength
+      lengthIsValid = true;             // and lengthIsValid in a const
+    }                                   // member function
+
+    return textLength;
+  }
+  ```
+  It seems fine "logically" even for a const object but compiler won't agree as it violates the bitwise constness. Solution is in the next subsection
+
+#### `mutable`
+`mutable` keyword frees the **non-static** data members from the constraints of bitwise constness.
+
+```cpp
+class CTextBlock {
+public:
+
+  ...
+
+  std::size_t length() const;
+
+private:
+  char *pText;
+  mutable std::size_t textLength; // it can vary
+  mutable bool lengthIsValid; // this too, even in const member functions
+};
+
+std::size_t CTextBlock::length() const
+{
+  if (!lengthIsValid) {
+    textLength = std::strlen(pText); // now fine 
+    lengthIsValid = true; // also fine
+  }
+
+  return textLength;
+}
+```
+
+#### Casting away the constness
+Consider one more scenario, `mutable` is actually good to solve some certain mutability within const methods, but still usually we have 2 overloaded function of `operator[]` one returning the direct alias and other returning an `const alias` for const objects.
+Situation can comes in that both of these oeprators perform some more work like, reading data, manipulting it, some conditional checks, some logging, etc. This can lead to redundant code duplicate as both performing same thing.
+One solution is to one or more private methods and call them but still the calls are duplicated, so the idea **what if we implement one `operator[]` and use it twice**
+
+> It is a bad idea, but sometimes can be taken as a pinch of salt
+
+So one might try
+```cpp
+char& operator[](std::size_t position) {
+    return (*this)[position];  // ❌ INFINITE RECURSION! 
+                              // Calls itself, not the const version
+}
+```
+Here `*this` is still the same non-const object hence everytime it is going to call itself, following is the step by step understanding of right method using `const_cast`
+
+```cpp
+// step 0: Have the const version implemented
+// step 1: cast the non-const object (*this) to const
+static_cast<const TextBlock&>(*this);
+
+// step 2: now call the [] operator (should call the const version)
+static_cast<const TextBlock&>(*this)[position]; // this returns `const char&`
+
+// step 3: Remove const from returned value
+const_cast<char &>(
+  static_cast<const TextBlock&>(*this)[position]
+);
+
+============================================================================================
+// In end it should be like
+
+const char & operator[](std::size_t position) const {
+  .... // preprocessing
+  return text[position];
+}
+
+char & operator[](std::size_t position) {
+  return const_cast<char &>(
+    static_cast<const TextBlock&>(*this)[position]
+  );
+}
+```
+::: {.callout-note}
+Note-1: if `*this` is already a const object then you CANNOT do `static_cast<TextBlock &>(*this);` i.e. you cannot remove the constness, use `const_cast` for that
+Note-2: having the non-const implemented and calling the const will get compiled but again, there are chances that implemented non-const can modify the properties, so always call const from a non-const
+:::
+
+## Item-4: Make sure that objects are initialized before they're used
 
