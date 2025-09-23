@@ -374,7 +374,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#const-and-pointers" id="toc-const-and-pointers" class="nav-link" data-scroll-target="#const-and-pointers"><code>const</code> and pointers</a></li>
   <li><a href="#function-declarations" id="toc-function-declarations" class="nav-link" data-scroll-target="#function-declarations">Function declarations</a></li>
+  <li><a href="#const-member-functions" id="toc-const-member-functions" class="nav-link" data-scroll-target="#const-member-functions"><code>const</code> Member functions</a></li>
   </ul></li>
+  <li><a href="#item-4-make-sure-that-objects-are-initialized-before-theyre-used" id="toc-item-4-make-sure-that-objects-are-initialized-before-theyre-used" class="nav-link" data-scroll-target="#item-4-make-sure-that-objects-are-initialized-before-theyre-used">Item-4: Make sure that objects are initialized before they’re used</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -499,9 +501,149 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="function-declarations" class="level3">
 <h3 class="anchored" data-anchor-id="function-declarations">Function declarations</h3>
-
-
+<p>It is a good habit to keep the <code>const</code> constraints on the function declaration to keep the consistency with the client. Also returning a <code>const</code> from a function might not make sense but sometimes it can be a good habit</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Rational <span class="op">{...};</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> Rational <span class="kw">operator</span><span class="op">*</span> <span class="op">(</span><span class="at">const</span> Rational <span class="op">&amp;</span>lhs<span class="op">,</span> <span class="at">const</span> Rational <span class="op">&amp;</span>rhs<span class="op">);</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">// this can prevent the doings like</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">// (a*b) = c although sometimes this is what a user wants but unlikely from a user-defined type</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
+<section id="const-member-functions" class="level3">
+<h3 class="anchored" data-anchor-id="const-member-functions"><code>const</code> Member functions</h3>
+<p>The purpose of <code>const</code> member functions is to operate on the <code>const</code> objects (they can also call by the non-const objects) but gurantees to not modify the object’s properties. The 2 variants can be overloaded to ensure the seprate functionalities</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyVector <span class="op">{</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span><span class="op">:</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span><span class="op">*</span> data<span class="op">;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">size_t</span> size<span class="op">;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    MyVector<span class="op">(</span><span class="dt">size_t</span> s<span class="op">)</span> <span class="op">:</span> size<span class="op">(</span>s<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> <span class="kw">new</span> <span class="dt">int</span><span class="op">[</span>s<span class="op">];</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Non-const version - returns modifiable reference</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span><span class="op">&amp;</span> <span class="kw">operator</span><span class="op">[](</span><span class="dt">size_t</span> index<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>        <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Non-const version called</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> data<span class="op">[</span>index<span class="op">];</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Const version - returns read-only reference  </span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span><span class="op">&amp;</span> <span class="kw">operator</span><span class="op">[](</span><span class="dt">size_t</span> index<span class="op">)</span> <span class="at">const</span> <span class="op">{</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>        <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Const version called</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> data<span class="op">[</span>index<span class="op">];</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>    <span class="op">~</span>MyVector<span class="op">()</span> <span class="op">{</span> <span class="kw">delete</span><span class="op">[]</span> data<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>    MyVector vec<span class="op">(</span><span class="dv">5</span><span class="op">);</span>           <span class="co">// non-const object</span></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> MyVector constVec<span class="op">(</span><span class="dv">5</span><span class="op">);</span> <span class="co">// const object</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>    vec<span class="op">[</span><span class="dv">0</span><span class="op">]</span> <span class="op">=</span> <span class="dv">10</span><span class="op">;</span>      <span class="co">// ✅ Calls non-const version, returns int&amp;</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> x <span class="op">=</span> vec<span class="op">[</span><span class="dv">0</span><span class="op">];</span>   <span class="co">// ✅ Calls non-const version (but we can't modify)</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> y <span class="op">=</span> constVec<span class="op">[</span><span class="dv">0</span><span class="op">];</span> <span class="co">// ✅ Calls const version, returns const int&amp;</span></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>    <span class="co">// constVec[0] = 20;    // ❌ ILLEGAL - const version returns const int&amp;</span></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>There are 2 notions of defining <strong>constness</strong> - <strong>bitwise const</strong>: No member variables are modified (this is what c++ follows) ```cpp class CTextBlock { public: char&amp; operator<a href="std::size_t%20position"></a> const<br>
+{ return pText[position]; }</p>
+<p>private: char *pText; // The POINTER itself is not modified };</p>
+<p>int main() { const CTextBlock ctb(“Hello”);</p>
+<pre><code>ctb[0] = 'J';  // ✅ Compiles! But we just modified a const object!
+// Now the "const" object "ctb" contains "Jello" instead of "Hello"</code></pre>
+<p>} <code>- **logical constness** The object's observable state doesn't change (this is what violated above). There can be cases when a method cannot be bitwise const but logically it can make sense</code>cpp class CTextBlock { public:</p>
+<pre><code>...
+
+std::size_t length() const;</code></pre>
+<p>private: char *pText; std::size_t textLength; // last calculated length of textblock bool lengthIsValid; // whether length is currently valid };</p>
+<p>std::size_t CTextBlock::length() const { if (!lengthIsValid) { textLength = std::strlen(pText); // error! can’t assign to textLength lengthIsValid = true; // and lengthIsValid in a const } // member function</p>
+<pre><code>return textLength;</code></pre>
+<p>} ``` It seems fine “logically” even for a const object but compiler won’t agree as it violates the bitwise constness. Solution is in the next subsection</p>
+<section id="mutable" class="level4">
+<h4 class="anchored" data-anchor-id="mutable"><code>mutable</code></h4>
+<p><code>mutable</code> keyword frees the <strong>non-static</strong> data members from the constraints of bitwise constness.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> CTextBlock <span class="op">{</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>size_t length<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span><span class="op">:</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">char</span> <span class="op">*</span>pText<span class="op">;</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">mutable</span> <span class="bu">std::</span>size_t textLength<span class="op">;</span> <span class="co">// it can vary</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">mutable</span> <span class="dt">bool</span> lengthIsValid<span class="op">;</span> <span class="co">// this too, even in const member functions</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>size_t CTextBlock<span class="op">::</span>length<span class="op">()</span> <span class="at">const</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(!</span>lengthIsValid<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    textLength <span class="op">=</span> <span class="bu">std::</span>strlen<span class="op">(</span>pText<span class="op">);</span> <span class="co">// now fine </span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>    lengthIsValid <span class="op">=</span> <span class="kw">true</span><span class="op">;</span> <span class="co">// also fine</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> textLength<span class="op">;</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="casting-away-the-constness" class="level4">
+<h4 class="anchored" data-anchor-id="casting-away-the-constness">Casting away the constness</h4>
+<p>Consider one more scenario, <code>mutable</code> is actually good to solve some certain mutability within const methods, but still usually we have 2 overloaded function of <code>operator[]</code> one returning the direct alias and other returning an <code>const alias</code> for const objects. Situation can comes in that both of these oeprators perform some more work like, reading data, manipulting it, some conditional checks, some logging, etc. This can lead to redundant code duplicate as both performing same thing. One solution is to one or more private methods and call them but still the calls are duplicated, so the idea <strong>what if we implement one <code>operator[]</code> and use it twice</strong></p>
+<blockquote class="blockquote">
+<p>It is a bad idea, but sometimes can be taken as a pinch of salt</p>
+</blockquote>
+<p>So one might try</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span><span class="op">&amp;</span> <span class="kw">operator</span><span class="op">[](</span><span class="bu">std::</span>size_t position<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">(*</span><span class="kw">this</span><span class="op">)[</span>position<span class="op">];</span>  <span class="co">// ❌ INFINITE RECURSION! </span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                              <span class="co">// Calls itself, not the const version</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Here <code>*this</code> is still the same non-const object hence everytime it is going to call itself, following is the step by step understanding of right method using <code>const_cast</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">// step 0: Have the const version implemented</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">// step 1: cast the non-const object (*this) to const</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="kw">static_cast</span><span class="op">&lt;</span><span class="at">const</span> TextBlock<span class="op">&amp;&gt;(*</span><span class="kw">this</span><span class="op">);</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">// step 2: now call the [] operator (should call the const version)</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="kw">static_cast</span><span class="op">&lt;</span><span class="at">const</span> TextBlock<span class="op">&amp;&gt;(*</span><span class="kw">this</span><span class="op">)[</span>position<span class="op">];</span> <span class="co">// this returns `const char&amp;`</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co">// step 3: Remove const from returned value</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="kw">const_cast</span><span class="op">&lt;</span><span class="dt">char</span> <span class="op">&amp;&gt;(</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">static_cast</span><span class="op">&lt;</span><span class="at">const</span> TextBlock<span class="op">&amp;&gt;(*</span><span class="kw">this</span><span class="op">)[</span>position<span class="op">]</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="op">);</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="op">============================================================================================</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="co">// In end it should be like</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> <span class="dt">char</span> <span class="op">&amp;</span> <span class="kw">operator</span><span class="op">[](</span><span class="bu">std::</span>size_t position<span class="op">)</span> <span class="at">const</span> <span class="op">{</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  <span class="op">....</span> <span class="co">// preprocessing</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> text<span class="op">[</span>position<span class="op">];</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> <span class="op">&amp;</span> <span class="kw">operator</span><span class="op">[](</span><span class="bu">std::</span>size_t position<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="kw">const_cast</span><span class="op">&lt;</span><span class="dt">char</span> <span class="op">&amp;&gt;(</span></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">static_cast</span><span class="op">&lt;</span><span class="at">const</span> TextBlock<span class="op">&amp;&gt;(*</span><span class="kw">this</span><span class="op">)[</span>position<span class="op">]</span></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>  <span class="op">);</span></span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Note-1: if <code>*this</code> is already a const object then you CANNOT do <code>static_cast&lt;TextBlock &amp;&gt;(*this);</code> i.e.&nbsp;you cannot remove the constness, use <code>const_cast</code> for that Note-2: having the non-const implemented and calling the const will get compiled but again, there are chances that implemented non-const can modify the properties, so always call const from a non-const</p>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="item-4-make-sure-that-objects-are-initialized-before-theyre-used" class="level2">
+<h2 class="anchored" data-anchor-id="item-4-make-sure-that-objects-are-initialized-before-theyre-used">Item-4: Make sure that objects are initialized before they’re used</h2>
+
+
 </section>
 </section>
 
