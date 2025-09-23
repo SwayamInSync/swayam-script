@@ -370,7 +370,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#dont" id="toc-dont" class="nav-link" data-scroll-target="#dont">Don’t</a></li>
   <li><a href="#do" id="toc-do" class="nav-link" data-scroll-target="#do">Do</a></li>
   </ul></li>
-  <li><a href="#item-3-use-const-whenever-possible" id="toc-item-3-use-const-whenever-possible" class="nav-link" data-scroll-target="#item-3-use-const-whenever-possible">Item-3: Use <code>const</code> whenever possible</a></li>
+  <li><a href="#item-3-use-const-whenever-possible" id="toc-item-3-use-const-whenever-possible" class="nav-link" data-scroll-target="#item-3-use-const-whenever-possible">Item-3: Use <code>const</code> whenever possible</a>
+  <ul class="collapse">
+  <li><a href="#const-and-pointers" id="toc-const-and-pointers" class="nav-link" data-scroll-target="#const-and-pointers"><code>const</code> and pointers</a></li>
+  <li><a href="#function-declarations" id="toc-function-declarations" class="nav-link" data-scroll-target="#function-declarations">Function declarations</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -484,8 +488,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="item-3-use-const-whenever-possible" class="level2">
 <h2 class="anchored" data-anchor-id="item-3-use-const-whenever-possible">Item-3: Use <code>const</code> whenever possible</h2>
+<section id="const-and-pointers" class="level3">
+<h3 class="anchored" data-anchor-id="const-and-pointers"><code>const</code> and pointers</h3>
+<p>Consider the following code</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> <span class="dt">int</span> <span class="op">*</span>p<span class="op">;</span> <span class="co">// non-const pointer to const int data</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span><span class="at">const</span> p<span class="op">;</span> <span class="co">// const pointer to non-const int data</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="at">const</span> <span class="op">*</span>p<span class="op">;</span> <span class="co">// non-const pointer to const int data</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> <span class="dt">int</span> <span class="op">*</span><span class="at">const</span> p<span class="op">;</span> <span class="co">// const pointer to const int data</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong><em>Rule of thumb</em></strong>: <code>const</code> applies to whatever the immediate left to it, if nothing then whatever is immediate right to it.</p>
+</section>
+<section id="function-declarations" class="level3">
+<h3 class="anchored" data-anchor-id="function-declarations">Function declarations</h3>
 
 
+</section>
 </section>
 </section>
 
