@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Swayam Singh">
+<meta name="dcterms.date" content="2025-09-19">
 
-<title>Swayam’s Scripts</title>
+<title>[WIP] Effective C++ (Complete series) – Swayam’s Scripts</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,32 +22,65 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./favicon.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-b651517ce65839d647a86e2780455cfb.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-1713c1db1ad41a796903378fc9ac7b2b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-5b86b919a61abfc3dacdbf9f5161a5a8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-4f333732063fea702750327edd0592b3.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-ab8a9a69af8c690bbb663c9c76fcc648.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -73,73 +108,15 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-image','listing-date','listing-title','listing-author','listing-reading-time','listing-description','listing-subtitle','listing-word-count','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-subtitle","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="Swayam’s Scripts">
-<meta property="og:description" content="A collection of my original writings">
-<meta property="og:image" content="https://SwayamInSync.github.io/swayam-script/posts/A Hitchhiker's Guide to LLVM/images/cover.png">
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="[WIP] Effective C++ (Complete series) – Swayam’s Scripts">
+<meta property="og:description" content="This article summarizes all the items mentioned in Effective C++ (2005), More Effective C++ (1995) and Effective Modern C++ (2015) by Scott Meyers">
+<meta property="og:image" content="https://SwayamInSync.github.io/swayam-script/posts/C++/assets/header.png">
 <meta property="og:site_name" content="Swayam's Scripts">
 <meta property="og:image:height" content="1024">
-<meta property="og:image:width" content="1536">
+<meta property="og:image:width" content="1024">
 </head>
 
 <body class="nav-fixed quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
@@ -309,9 +286,9 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Swayam’s Scripts</span>
     </a>
   </div>
@@ -347,434 +324,172 @@ window.Quarto = {
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page-left">
-      <h1 class="title">Swayam’s Scripts</h1>
-            <p class="subtitle lead">A collection of my original writings</p>
-                      </div>
+    <div class="quarto-title column-body">
+      <h1 class="title">[WIP] Effective C++ (Complete series)</h1>
+            <p class="subtitle lead">This article summarizes all the items mentioned in Effective C++ (2005), More Effective C++ (1995) and Effective Modern C++ (2015) by Scott Meyers</p>
+                                <div class="quarto-categories">
+                <div class="quarto-category">C++</div>
+              </div>
+                  </div>
   </div>
     
   
-  <div class="quarto-title-meta column-page-left">
+  <div class="quarto-title-meta">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Swayam Singh </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">September 19, 2025</p>
+      </div>
+    </div>
     
       
     </div>
     
   
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(10)</span></div><div class="category" data-category="Qm9vaw==">Book <span class="quarto-category-count">(2)</span></div><div class="category" data-category="QyUyQiUyQg==">C++ <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Q29tcGlsZXJz">Compilers <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q1VEQQ==">CUDA <span class="quarto-category-count">(1)</span></div><div class="category" data-category="SW5mb3JtYXRpb24tVGhlb3J5">Information-Theory <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TExN">LLM <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TExWTQ==">LLVM <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TUw=">ML <span class="quarto-category-count">(2)</span></div><div class="category" data-category="TUwtVGhlb3J5">ML-Theory <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TkxQ">NLP <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TnVtUHk=">NumPy <span class="quarto-category-count">(1)</span></div><div class="category" data-category="T3Blbi1Tb3VyY2U=">Open-Source <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VGhlb3J5">Theory <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VHJhbnNmb3JtZXJz">Transformers <span class="quarto-category-count">(2)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#effective-c-2005" id="toc-effective-c-2005" class="nav-link active" data-scroll-target="#effective-c-2005">Effective C++ (2005)</a>
+  <ul class="collapse">
+  <li><a href="#item-1-view-c-as-a-federation-of-languages" id="toc-item-1-view-c-as-a-federation-of-languages" class="nav-link" data-scroll-target="#item-1-view-c-as-a-federation-of-languages">Item-1: View C++ as a federation of languages</a></li>
+  <li><a href="#item-2-prefer-const-enum-and-inline-to-define" id="toc-item-2-prefer-const-enum-and-inline-to-define" class="nav-link" data-scroll-target="#item-2-prefer-const-enum-and-inline-to-define">Item-2: Prefer <code>const</code> <code>enum</code> and <code>inline</code> to <code>#define</code></a>
+  <ul class="collapse">
+  <li><a href="#dont" id="toc-dont" class="nav-link" data-scroll-target="#dont">Don’t</a></li>
+  <li><a href="#do" id="toc-do" class="nav-link" data-scroll-target="#do">Do</a></li>
+  </ul></li>
+  <li><a href="#item-3-use-const-whenever-possible" id="toc-item-3-use-const-whenever-possible" class="nav-link" data-scroll-target="#item-3-use-const-whenever-possible">Item-3: Use <code>const</code> whenever possible</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
-<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
 
 
+<p><img src="assets/header.png" style="zoom:70%;"></p>
+<section id="effective-c-2005" class="level1">
+<h1>Effective C++ (2005)</h1>
+<section id="item-1-view-c-as-a-federation-of-languages" class="level2">
+<h2 class="anchored" data-anchor-id="item-1-view-c-as-a-federation-of-languages">Item-1: View C++ as a federation of languages</h2>
+<p>C++ encapsulates multiple programming paradigms <strong>Object Oriented, Template Metaprogramming, Functional, Generic</strong>. It is more of a federation of languages.</p>
+</section>
+<section id="item-2-prefer-const-enum-and-inline-to-define" class="level2">
+<h2 class="anchored" data-anchor-id="item-2-prefer-const-enum-and-inline-to-define">Item-2: Prefer <code>const</code> <code>enum</code> and <code>inline</code> to <code>#define</code></h2>
+<blockquote class="blockquote">
+<p>Prefer compiler over preprocessor</p>
+</blockquote>
+<section id="dont" class="level3">
+<h3 class="anchored" data-anchor-id="dont">Don’t</h3>
+<p>Consider the following piece of code</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define ASPECT_RATIO </span><span class="fl">1.653</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The issue is that the symbolic name “ASPECT RATIO” is never visible to compiler as it get replaced by the preprocessor everywhere within the code making it does not being registered on symbol table. This makes it interpret the errors during compilation as it’ll refer to <code>1.653</code> rather than <code>ASPECT RATIO</code>, also makes hard in symbolic debugging as there is no corresponding symbol.</p>
+</section>
+<section id="do" class="level3">
+<h3 class="anchored" data-anchor-id="do">Do</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> <span class="dt">double</span> ASPECT_RATIO <span class="op">=</span> <span class="fl">1.653</span><span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This can not only register in symbol table but also allows compiler to dispatch optimisations.</p>
+<p><strong>2 Special cases to consider when using <code>const</code> in place of <code>#define</code></strong></p>
+<ul>
+<li><p><strong>Constant pointers</strong></p>
+<p>It is advised to do a const pointer pointing to a const object i.e.&nbsp;</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> <span class="dt">char</span> <span class="op">*</span><span class="at">const</span> name <span class="op">=</span> <span class="st">"Swayam"</span><span class="op">;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">// OR</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> <span class="bu">std::</span>string name<span class="op">(</span><span class="st">"Swayam"</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p><strong>Class-Specific constants</strong></p>
+<p>To ensure the scope of constant to a class, we need to make it a member and also to make sure there are no duplicate copies, make it <code>static</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> GamePlayer<span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span><span class="op">:</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">static</span> <span class="at">const</span> <span class="dt">int</span> NUM_TURNS <span class="op">=</span> <span class="dv">5</span><span class="op">;</span> <span class="co">// constant declaration</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> score<span class="op">[</span>NUM_TURNS<span class="op">];</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>An important point here is that the above is constant declaration (not definition). C++ requires programmer to provide the definition for anything we use, <em>but class-specific constants that are <strong><code>static</code> and of integral type (int, char, bool)</strong> are exception.</em></p>
+<p><strong>As long as we don’t use their address, we can declare them and use them without providing a definition</strong></p>
+<p>The definition can be provided as follows (must need to be at the namespace scope level)</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> <span class="dt">int</span> GamePlayer<span class="op">::</span>NUM_TURNS<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Not providing any value as it is being already initialized at declaration. For any other (non-integral data type) initialization at declaration time can give error (<em>Can use <code>constexpr</code> to achieve that</em>)</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include</span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> A</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">private</span><span class="op">:</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">static</span> <span class="at">const</span> <span class="dt">double</span> f<span class="op">;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">// constexpr static const double f = 10.9; // this also works</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> print<span class="op">()</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="kw">this</span><span class="op">-&gt;</span>f <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> <span class="dt">double</span> A<span class="op">::</span>f <span class="op">=</span> <span class="fl">10.9</span><span class="op">;</span> <span class="co">// if not then get linking error that undefined reference</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    A a <span class="op">=</span> A<span class="op">();</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    a<span class="op">.</span>print<span class="op">();</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Note that cannot use <code>#define</code> for class scoped constants, as those macros are entire lifetime unless manually being <code>#undef</code> nor they agree to encapsulation like private or public</p>
+<ul>
+<li><p><strong>The enum trick</strong></p>
+<p><code>enum</code> values are compile-time constants built into the type system, no storage needed. Consider the following code</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include</span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> A</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">private</span><span class="op">:</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">static</span> <span class="at">const</span> <span class="dt">int</span> NUM<span class="op">;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> scores<span class="op">[</span>NUM<span class="op">];</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> <span class="dt">int</span> A<span class="op">::</span>NUM <span class="op">=</span> <span class="dv">10</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Here <code>NUM</code> needs to be known at compile time to create the array of NUM size but that is defined later in the scope. We can use the <strong>enum hack</strong> for this</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include</span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> A</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">private</span><span class="op">:</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">enum</span> <span class="op">{</span>NUM <span class="op">=</span> <span class="dv">10</span><span class="op">};</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> scores<span class="op">[</span>NUM<span class="op">];</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This is worth knowing as</p>
+<ul>
+<li>It is more like <code>#define</code> than <code>const</code> , i.e.&nbsp;it is legal to take the address of a const but it is not legal to take the address of an <code>#define</code> macro as well as same for <code>enum</code></li>
+<li>Good compilers usually don’t allocate storage for compile time constants, unless user is access the address somewhere in code</li>
+<li>Other reason for worth knowing is that lots of code use this, so need to be aware.</li>
+</ul></li>
+</ul>
+<p>Another major issue using <code>#define</code> directive is using it to implement macros that look like functions but that don’t incur the overhead of a function call.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">// call f with the maximum of a and b</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#define CALL_WITH_MAX</span><span class="op">(</span>a<span class="op">,</span><span class="pp"> </span>b<span class="op">)</span><span class="pp"> </span>f<span class="op">((</span>a<span class="op">)</span><span class="pp"> </span><span class="op">&gt;</span><span class="pp"> </span><span class="op">(</span>b<span class="op">)</span><span class="pp"> </span><span class="op">?</span><span class="pp"> </span><span class="op">(</span>a<span class="op">)</span><span class="pp"> </span><span class="op">:</span><span class="pp"> </span><span class="op">(</span>b<span class="op">))</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This is very painful to think even, you have to remember to parenthesize all the arguments in the macro body. I prefer it doing as</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span> <span class="op">&lt;</span><span class="kw">typename</span> T<span class="op">&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="dt">void</span> CALL_WITH_MAX<span class="op">(</span><span class="at">const</span> T <span class="op">&amp;</span>a <span class="op">,</span><span class="at">const</span> T <span class="op">&amp;</span>b<span class="op">){</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    f <span class="op">(</span>a <span class="op">&gt;</span> b <span class="op">?</span> a <span class="op">:</span> b<span class="op">)</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+</ul>
+</section>
+</section>
+<section id="item-3-use-const-whenever-possible" class="level2">
+<h2 class="anchored" data-anchor-id="item-3-use-const-whenever-possible">Item-3: Use <code>const</code> whenever possible</h2>
 
 
+</section>
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="QyUyQiUyQg==" data-listing-date-sort="1758240000000" data-listing-file-modified-sort="1758628526662" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="904">
-<div class="thumbnail"><a href="./posts/C++/index.html" class="no-external">
-
-<img loading="lazy" src="./posts/C++/assets/header.png" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/C++/index.html" class="no-external">[WIP] Effective C++ (Complete series)</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/C++/index.html" class="no-external">This article summarizes all the items mentioned in Effective C++ (2005), More Effective C++ (1995) and Effective Modern C++ (2015) by Scott Meyers</a>
-</div>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('QyUyQiUyQg=='); return false;">C++</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/C++/index.html" class="no-external">
-C++ encapsulates multiple programming paradigms <strong>Object Oriented, Template Metaprogramming, Functional, Generic</strong>. It is more of a federation of languages.
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/C++/index.html" class="no-external">
-<div class="listing-date">
-Sep 19, 2025
-</div>
-<div class="listing-author">
-Swayam Singh
-</div>
-<div class="listing-reading-time">5 min</div>
-<div class="metadata-value listing-word-count">
-904 words
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="Q1VEQQ==" data-listing-date-sort="1755216000000" data-listing-file-modified-sort="1758628526675" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="13" data-listing-word-count-sort="2508">
-<div class="thumbnail"><a href="./posts/Cooperative Groups/index.html" class="no-external">
-
-<img loading="lazy" src="./posts/Cooperative Groups/assets/header.png" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/Cooperative Groups/index.html" class="no-external">CUDA Notes: Cooperative Groups</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/Cooperative Groups/index.html" class="no-external">Beyond Block Barriers, Flexible Thread Synchronization from Warps to Grids</a>
-</div>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q1VEQQ=='); return false;">CUDA</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/Cooperative Groups/index.html" class="no-external">
-A flexible model for synchronization and communication within groups of threads
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/Cooperative Groups/index.html" class="no-external">
-<div class="listing-date">
-Aug 15, 2025
-</div>
-<div class="listing-author">
-Swayam Singh
-</div>
-<div class="listing-reading-time">13 min</div>
-<div class="metadata-value listing-word-count">
-2,508 words
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-categories="Q29tcGlsZXJzJTJDTExWTQ==" data-listing-date-sort="1748908800000" data-listing-file-modified-sort="1758628526660" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1796">
-<div class="thumbnail"><a href="./posts/A Hitchhiker's Guide to LLVM/index.html" class="no-external">
-
-<img loading="lazy" src="./posts/A Hitchhiker's Guide to LLVM/images/cover.png" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/A Hitchhiker's Guide to LLVM/index.html" class="no-external">[WIP] A Hitchhiker’s Guide to LLVM</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/A Hitchhiker's Guide to LLVM/index.html" class="no-external">Just Another Day in the Life of a SSA Variable</a>
-</div>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q29tcGlsZXJz'); return false;">Compilers</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TExWTQ=='); return false;">LLVM</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/A Hitchhiker's Guide to LLVM/index.html" class="no-external">
-This guide is written during the release of LLVM version 21.0.0
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/A Hitchhiker's Guide to LLVM/index.html" class="no-external">
-<div class="listing-date">
-Jun 3, 2025
-</div>
-<div class="listing-author">
-Swayam Singh
-</div>
-<div class="listing-reading-time">9 min</div>
-<div class="metadata-value listing-word-count">
-1,796 words
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-categories="TUwtVGhlb3J5JTJDVHJhbnNmb3JtZXJz" data-listing-date-sort="1742515200000" data-listing-file-modified-sort="1758628526676" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1625">
-<div class="thumbnail"><a href="./posts/DyT Analysis/index.html" class="no-external">
-
-<img loading="lazy" src="./posts/DyT Analysis/header.jpg" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/DyT Analysis/index.html" class="no-external">Gradient Flow and Variance Propogation Analysis of Dynamic Tanh Layer</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/DyT Analysis/index.html" class="no-external">A Mathematical Investigation into DyT’s Potential to Mitigate the Curse of Depth in Pre-LN Transformers</a>
-</div>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('TUwtVGhlb3J5'); return false;">ML-Theory</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VHJhbnNmb3JtZXJz'); return false;">Transformers</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/DyT Analysis/index.html" class="no-external">
-The “Curse of Depth” in Pre-LN transformers, identified by Sun et al.&nbsp;(2025), reveals that deeper layers often function as near-identity mappings, contributing minimally to…
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/DyT Analysis/index.html" class="no-external">
-<div class="listing-date">
-Mar 21, 2025
-</div>
-<div class="listing-author">
-Swayam Singh
-</div>
-<div class="listing-reading-time">9 min</div>
-<div class="metadata-value listing-word-count">
-1,625 words
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="4" data-categories="TUwlMkNUaGVvcnklMkNCb29r" data-listing-date-sort="1741996800000" data-listing-file-modified-sort="1758628526677" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="35">
-<div class="thumbnail"><a href="./posts/The Transparent Algorithm/index.html" class="no-external">
-
-<img loading="lazy" src="./posts/The Transparent Algorithm/images/cover.png" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/The Transparent Algorithm/index.html" class="no-external">[WIP] The Transparent Algorithm</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/The Transparent Algorithm/index.html" class="no-external">A bridge between formal mathematical proofs and intuitive understanding, guiding readers through the theoretical foundations of machine learning with clarity and precision.</a>
-</div>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('TUw='); return false;">ML</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VGhlb3J5'); return false;">Theory</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Qm9vaw=='); return false;">Book</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/The Transparent Algorithm/index.html" class="no-external">
-
-<figure class="figure">
-<p></p>
-</figure>
-
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/The Transparent Algorithm/index.html" class="no-external">
-<div class="listing-date">
-Mar 15, 2025
-</div>
-<div class="listing-author">
-Swayam Singh
-</div>
-<div class="listing-reading-time">1 min</div>
-<div class="metadata-value listing-word-count">
-35 words
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="5" data-categories="QyUyQiUyQiUyQ0Jvb2s=" data-listing-date-sort="1739059200000" data-listing-file-modified-sort="1758628526663" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="5">
-<div class="thumbnail"><a href="./posts/Concurrent C++, A Practical Guide/index.html" class="no-external">
-
-<img loading="lazy" src="./posts/Concurrent C++, A Practical Guide/img.jpeg" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/Concurrent C++, A Practical Guide/index.html" class="no-external">Concurrent C++ A Practical Guide</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/Concurrent C++, A Practical Guide/index.html" class="no-external">A concise and practical guide to mastering C++ concurrency, covering threads, synchronization, parallelism, and debugging—all in one place.</a>
-</div>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('QyUyQiUyQg=='); return false;">C++</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Qm9vaw=='); return false;">Book</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/Concurrent C++, A Practical Guide/index.html" class="no-external">
-
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/Concurrent C++, A Practical Guide/index.html" class="no-external">
-<div class="listing-date">
-Feb 9, 2025
-</div>
-<div class="listing-author">
-Swayam Singh
-</div>
-<div class="listing-reading-time">1 min</div>
-<div class="metadata-value listing-word-count">
-5 words
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="6" data-categories="TUwlMkNJbmZvcm1hdGlvbi1UaGVvcnk=" data-listing-date-sort="1736380800000" data-listing-file-modified-sort="1758628526676" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2650">
-<div class="thumbnail"><a href="./posts/Information-Theory-In-ML/index.html" class="no-external">
-
-<img loading="lazy" src="./posts/Information-Theory-In-ML/intro.jpg" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/Information-Theory-In-ML/index.html" class="no-external">Information Theory in Machine Learning: A Fun Approach</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/Information-Theory-In-ML/index.html" class="no-external">Teaching Neural Networks to Handle Their Trust Issues</a>
-</div>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('TUw='); return false;">ML</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SW5mb3JtYXRpb24tVGhlb3J5'); return false;">Information-Theory</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/Information-Theory-In-ML/index.html" class="no-external">
-Have you ever noticed how the best stories start with uncertainty? Like that moment when you’re watching a thriller and <em>think</em> you know who the culprit is, but you’re not…
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/Information-Theory-In-ML/index.html" class="no-external">
-<div class="listing-date">
-Jan 9, 2025
-</div>
-<div class="listing-author">
-Swayam Singh
-</div>
-<div class="listing-reading-time">14 min</div>
-<div class="metadata-value listing-word-count">
-2,650 words
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="7" data-categories="TExN" data-listing-date-sort="1728518400000" data-listing-file-modified-sort="1758628526677" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="595">
-<div class="thumbnail"><a href="./posts/Understanding Perplexity/index.html" class="no-external">
-
-<img loading="lazy" src="./posts/Understanding Perplexity/meme.jpg" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/Understanding Perplexity/index.html" class="no-external">Understanding Perplexity</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/Understanding Perplexity/index.html" class="no-external">A New Perspective on Model Uncertainty</a>
-</div>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('TExN'); return false;">LLM</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/Understanding Perplexity/index.html" class="no-external">
-Recently, I was reading the Chapter 5 (Pretraining) of the book <em>“Build a Large Language Model (From Scratch)”</em> by Sebastian Raschka. I stumbled upon an intriguing…<strong></strong>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/Understanding Perplexity/index.html" class="no-external">
-<div class="listing-date">
-Oct 10, 2024
-</div>
-<div class="listing-author">
-Swayam Singh
-</div>
-<div class="listing-reading-time">3 min</div>
-<div class="metadata-value listing-word-count">
-595 words
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="8" data-categories="TnVtUHklMkNPcGVuLVNvdXJjZQ==" data-listing-date-sort="1727654400000" data-listing-file-modified-sort="1758628526676" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="5">
-<div class="thumbnail"><a href="./posts/Numpy QuadDtype/index.html" class="no-external">
-
-<img loading="lazy" src="https://labs.quansight.org/_next/image?url=%2Fposts%2Fnumpy-quaddtype-blog%2Ffeature.png&amp;w=3840&amp;q=75" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/Numpy QuadDtype/index.html" class="no-external">Numpy QuadDType: Quadruple Precision for Everyone</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/Numpy QuadDtype/index.html" class="no-external">Quad Precision for All: Simplifying High-Accuracy Computing with numpy_quaddtype</a>
-</div>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('TnVtUHk='); return false;">NumPy</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('T3Blbi1Tb3VyY2U='); return false;">Open-Source</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/Numpy QuadDtype/index.html" class="no-external">
-
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/Numpy QuadDtype/index.html" class="no-external">
-<div class="listing-date">
-Sep 30, 2024
-</div>
-<div class="listing-author">
-Swayam Singh
-</div>
-<div class="listing-reading-time">1 min</div>
-<div class="metadata-value listing-word-count">
-5 words
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="9" data-categories="TkxQJTJDVHJhbnNmb3JtZXJz" data-listing-date-sort="1697241600000" data-listing-file-modified-sort="1758628526677" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1671">
-<div class="thumbnail"><a href="./posts/Self-Attention Mimicking Gradient Descent/index.html" class="no-external">
-
-<p class="card-img-top"><img src="posts/Self-Attention Mimicking Gradient Descent/section-image.png"  class="thumbnail-image card-img"/></p>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/Self-Attention Mimicking Gradient Descent/index.html" class="no-external">Self-Attention Mimicking Gradient Descent</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/Self-Attention Mimicking Gradient Descent/index.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('TkxQ'); return false;">NLP</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VHJhbnNmb3JtZXJz'); return false;">Transformers</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/Self-Attention Mimicking Gradient Descent/index.html" class="no-external">
-This section of paper <strong>Uncovering mesa-optimization algorithms in Transformers</strong> presents a theoretical construction where a linear self-attention layer in a Transformer…
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/Self-Attention Mimicking Gradient Descent/index.html" class="no-external">
-<div class="listing-date">
-Oct 14, 2023
-</div>
-<div class="listing-author">
-Swayam Singh
-</div>
-<div class="listing-reading-time">9 min</div>
-<div class="metadata-value listing-word-count">
-1,671 words
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
@@ -1188,6 +903,38 @@ Swayam Singh
     }
   });
   </script>
+<input type="hidden" id="giscus-base-theme" value="dark_dimmed">
+<input type="hidden" id="giscus-alt-theme" value="light">
+<script>
+  function loadGiscus() {
+    // Function to get the theme based on body class
+    const getTheme = () => {
+      let baseTheme = document.getElementById('giscus-base-theme').value;
+      let altTheme = document.getElementById('giscus-alt-theme').value;
+      if (authorPrefersDark) {
+          [baseTheme, altTheme] = [altTheme, baseTheme];
+      }
+      return document.body.classList.contains('quarto-dark') ? altTheme : baseTheme;
+    };
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.async = true;
+    script.dataset.repo = "SwayamInSync/swayam-script";
+    script.dataset.repoId = "R_kgDOM9t4DA";
+    script.dataset.category = "General";
+    script.dataset.categoryId = "DIC_kwDOM9t4DM4CjN7v";
+    script.dataset.mapping = "title";
+    script.dataset.reactionsEnabled = "1";
+    script.dataset.emitMetadata = "0";
+    script.dataset.inputPosition = "top";
+    script.dataset.theme = getTheme();
+    script.dataset.lang = "en";
+    script.crossOrigin = "anonymous";
+    // Append the script to the desired div instead of at the end of the body
+    document.getElementById("quarto-content").appendChild(script);
+  }
+  loadGiscus();
+</script>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
