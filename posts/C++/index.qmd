@@ -358,3 +358,151 @@ Note-2: having the non-const implemented and calling the const will get compiled
 
 ## Item-4: Make sure that objects are initialized before they're used
 
+::: {.callout-tip}
+Its my own experience in working with different kernels and Operating Systems, please initialize after allocation, else a heisenbug will be waiting for you
+:::
+
+::: {.callout-note}
+Reading uninitialized values is an undefined behaviour
+:::
+
+So there are rules that decide when object initialization is guranteed to take place and when not, but those rules are complex. So just initialize them if you are going to use them.
+
+#### Difference between assignment and initialization
+
+Consider the following code
+
+```cpp
+class PhoneNumber {...};
+
+class ABEntry {
+public:
+  ABEntry(const std::string & name, const std::string &address, const std::list<PhoneNumber> &phones);
+private:
+  std::string theName;
+  std::string theAddress;
+  std::list<PhoneNumber> thePhones;
+  int numTimesConsulted;
+};
+
+ABEntry::ABEntry(const std::string & name, const std::string &address, const std::list<PhoneNumber> &phones) {
+  theName = name; // all these are not initializations, they are assignments
+  theAddress = address;
+  thePhones = phones;
+  numTimesConsulted = 0;
+}
+```
+
+It may work with the values we expect but **THIS IS NOT INITIALIZATION, IT IS ASSIGNMENT**.
+
+::: {.callout-note}
+**The rule is that, data members of an object are initialized before the body of the constructor is entered**
+
+(This isn't true for built-in types though)
+:::
+
+A better way is to use **Member Initialization List** instead of assignments, remember the initialization order must follow the declaration order of members
+
+```cpp
+ABEntry::ABEntry(const std::string& name, const std::string& address,
+                 const std::list<PhoneNumber>& phones)
+: theName(name),
+  theAddress(address),                  // these are now all initializations
+  thePhones(phones),
+  numTimesConsulted(0)
+{}                                      // the ctor body is now empty
+```
+
+Earlier with constructor assignment, the compiler will call the default constructor and then use copy assignment operator to override the values. With Member Initialization list, all the members are initialized using the copy-constructor of corresponding objects.
+
+We can also use the same for default constructor
+
+```cpp
+ABEntry::ABEntry()
+:theName(),                         // call theName's default ctor;
+theAddress(),                      // do the same for theAddress;
+thePhones(),                       // and for thePhones;
+numTimesConsulted(0)               // but explicitly initialize
+{}                                  // numTimesConsulted to zero
+```
+
+::: {.callout-note}
+Objects like `const` and `references` must be initialized, they can't be assigned, hence here the use of member initialization list method is a must
+:::
+
+#### Order of initialization of non-local static objects defined in different translation unit
+- A static object is one that exists from the time it's constructed until the end of the program
+- Stack and heap-based objects are thus excluded. Included are global objects, objects defined at namespace scope, objects declared static inside classes, objects declared static inside functions, and objects declared static at file scope
+- Static objects inside functions are known as local static objects (because they're local to a function) and the other kinds of static objects are known as non-local static objects
+- Static objects are automatically destroyed when the program exits i.e destructor is called on `main` function exit
+- A translation unit is basically, source file + all of its `#include` files
+
+So the issue is, lets say for initialization our logic depends on the initialization of some other "non-local static object in another translation unit" then there is no way to gurantee that it is being already initialized and good to use. This is actually undefined.
+
+```cpp
+// File: logger.cpp
+class Logger {
+public:
+    void log(const std::string& msg) { /* ... */ }
+};
+
+Logger globalLogger;  // Non-local static object
+
+// File: database.cpp  
+#include "logger.h"
+extern Logger globalLogger;
+
+class Database {
+public:
+    Database() {
+        globalLogger.log("Database initialized");  // ❌ DANGER!
+        // What if globalLogger isn't initialized yet?
+    }
+};
+
+Database globalDB;  // Another non-local static object
+```
+
+Solution? **Function-Local Static Objects**
+wrap those non-static into a function and convert them into a local-static objects, that way refer to that function and it is being guranteed to be initialized
+
+```cpp
+// File: logger.cpp
+class Logger {
+public:
+    void log(const std::string& msg) { /* ... */ }
+};
+
+// Replace global static with function returning local static
+Logger& getLogger() {
+    static Logger instance;  // Local static - initialized on first call
+    return instance;
+}
+
+// File: database.cpp
+Logger& getLogger();  // Declaration
+
+class Database {
+public:
+    Database() {
+        getLogger().log("Database initialized");  // ✅ SAFE!
+        // getLogger() ensures Logger is initialized before we use it
+    }
+};
+
+Database& getDatabase() {
+    static Database instance;  // Local static
+    return instance;
+}
+```
+
+::: {.callout-note}
+C++11 and further guarantees that Static local initialization is thread-safe 
+
+```cpp
+Logger& getLogger() {
+    static Logger instance;  // ✅ Thread-safe since C++11!
+    return instance;
+}
+```
+:::
