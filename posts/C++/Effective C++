@@ -1,0 +1,160 @@
+---
+title: "[WIP] Effective C++ (Complete series)"
+subtitle: "This article summarizes all the items mentioned in Effective C++ (2005), More Effective C++ (1995) and Effective Modern C++ (2015) by Scott Meyers"
+author: "Swayam Singh"
+date: "2025-09-19"
+categories: [CPP]
+format:
+  html:
+    code-fold: false
+toc: true
+highlight-style: pygments
+execute:
+  freeze: auto
+image: assets/header.png
+social:
+  - image: assets/header.png
+    description: "Header: Effective C++, complete series"
+---
+
+# Effective C++ (2005)
+
+## Item-1: View C++ as a federation of languages
+
+C++ encapsulates multiple programming paradigms **Object Oriented, Template Metaprogramming, Functional, Generic**. It is more of a federation of languages.
+
+## Item-2: Prefer `const` `enum` and `inline` to `#define`
+
+> Prefer compiler over preprocessor
+
+### Don't
+
+Consider the following piece of code
+
+```c
+#define ASPECT_RATIO 1.653
+```
+
+The issue is that the symbolic name "ASPECT RATIO" is never visible to compiler as it get replaced by the preprocessor everywhere within the code making it does not being registered on symbol table. This makes it interpret the errors during compilation as it'll refer to `1.653` rather than `ASPECT RATIO`, also makes hard in symbolic debugging as there is no corresponding symbol.
+
+### Do
+
+```cpp
+const double ASPECT_RATIO = 1.653;
+```
+
+This can not only register in symbol table but also allows compiler to dispatch optimisations. 
+
+**2 Special cases to consider when using `const` in place of `#define`**
+
+- **Constant pointers**
+
+  It is advised to do a const pointer pointing to a const object i.e. 
+
+  ```cpp
+  const char *const name = "Swayam";
+  // OR
+  const std::string name("Swayam");
+  ```
+
+- **Class-Specific constants**
+
+  To ensure the scope of constant to a class, we need to make it a member and also to make sure there are no duplicate copies, make it `static`
+
+  ```cpp
+  class GamePlayer{
+  private:
+      static const int NUM_TURNS = 5; // constant declaration
+      int score[NUM_TURNS];
+  }
+  ```
+
+  An important point here is that the above is constant declaration (not definition). C++ requires programmer to provide the definition for anything we use, *but class-specific constants that are **`static` and of integral type (int, char, bool)** are exception.*
+
+  **As long as we don't use their address, we can declare them and use them without providing a definition**
+
+  The definition can be provided as follows (must need to be at the namespace scope level)
+
+  ```cpp
+  const int GamePlayer::NUM_TURNS;
+  ```
+
+  Not providing any value as it is being already initialized at declaration. For any other (non-integral data type) initialization at declaration time can give error (*Can use `constexpr` to achieve that*)
+
+  ```c++
+  #include<iostream>
+  class A
+  {
+      private:
+      static const double f;
+  	// constexpr static const double f = 10.9; // this also works
+      public:
+      void print()
+      {
+          std::cout << this->f << std::endl;
+      }
+  
+  };
+  const double A::f = 10.9; // if not then get linking error that undefined reference
+  int main()
+  {
+      A a = A();
+      a.print();
+      return 0;
+  } 
+  ```
+
+  
+
+  Note that cannot use `#define` for class scoped constants, as those macros are entire lifetime unless manually being `#undef` nor they agree to encapsulation like private or public
+
+  * **The enum trick**
+
+    `enum` values are compile-time constants built into the type system, no storage needed. Consider the following code
+
+    ```cpp
+    #include<iostream>
+    class A
+    {
+        private:
+        static const int NUM;
+        int scores[NUM];
+    };
+    const int A::NUM = 10
+    ```
+
+    Here ` NUM` needs to be known at compile time to create the array of NUM size but that is defined later in the scope. We can use the **enum hack** for this
+
+    ```cpp
+    #include<iostream>
+    class A
+    {
+        private:
+        enum {NUM = 10};
+        int scores[NUM];
+    };
+    ```
+
+    This is worth knowing as
+
+    - It is more like `#define` than `const` , i.e. it is legal to take the address of a const but it is not legal to take the address of an `#define` macro as well as same for `enum`
+    - Good compilers usually don't allocate storage for compile time constants, unless user is access the address somewhere in code
+    - Other reason for worth knowing is that lots of code use this, so need to be aware.
+
+  Another major issue using `#define` directive is using it to implement macros that look like functions but that don't incur the overhead of a function call.
+
+  ```cpp
+  // call f with the maximum of a and b
+  #define CALL_WITH_MAX(a, b) f((a) > (b) ? (a) : (b))
+  ```
+
+  This is very painful to think even, you have to remember to parenthesize all the arguments in the macro body. I prefer it doing as
+
+  ```cpp
+  template <typename T>
+  inline void CALL_WITH_MAX(const T &a ,const T &b){
+      f (a > b ? a : b)
+  }
+  ```
+
+  
