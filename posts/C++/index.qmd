@@ -229,7 +229,9 @@ int main() {
 ```
 
 There are 2 notions of defining **constness**
+
 - **bitwise const**: No member variables are modified (this is what c++ follows)
+
   ```cpp
   class CTextBlock {
   public:
@@ -247,7 +249,9 @@ There are 2 notions of defining **constness**
     // Now the "const" object "ctb" contains "Jello" instead of "Hello"
   }
   ```
+
 - **logical constness** The object's observable state doesn't change (this is what violated above). There can be cases when a method cannot be bitwise const but logically it can make sense
+
   ```cpp
   class CTextBlock {
   public:
@@ -272,6 +276,7 @@ There are 2 notions of defining **constness**
     return textLength;
   }
   ```
+
   It seems fine "logically" even for a const object but compiler won't agree as it violates the bitwise constness. Solution is in the next subsection
 
 #### `mutable`
@@ -347,6 +352,7 @@ char & operator[](std::size_t position) {
 ```
 ::: {.callout-note}
 Note-1: if `*this` is already a const object then you CANNOT do `static_cast<TextBlock &>(*this);` i.e. you cannot remove the constness, use `const_cast` for that
+
 Note-2: having the non-const implemented and calling the const will get compiled but again, there are chances that implemented non-const can modify the properties, so always call const from a non-const
 :::
 
