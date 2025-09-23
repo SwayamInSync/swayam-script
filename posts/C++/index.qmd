@@ -3,7 +3,7 @@ title: "[WIP] Effective C++ (Complete series)"
 subtitle: "This article summarizes all the items mentioned in Effective C++ (2005), More Effective C++ (1995) and Effective Modern C++ (2015) by Scott Meyers"
 author: "Swayam Singh"
 date: "2025-09-19"
-categories: [CPP]
+categories: [C++]
 format:
   html:
     code-fold: false
@@ -16,6 +16,8 @@ social:
   - image: assets/header.png
     description: "Header: Effective C++, complete series"
 ---
+
+<img src="assets/header.png" style="zoom:70%;" />
 
 # Effective C++ (2005)
 
@@ -157,4 +159,6 @@ This can not only register in symbol table but also allows compiler to dispatch 
   }
   ```
 
-  
+
+## Item-3: Use `const` whenever possible
+
