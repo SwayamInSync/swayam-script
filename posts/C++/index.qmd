@@ -162,3 +162,20 @@ This can not only register in symbol table but also allows compiler to dispatch 
 
 ## Item-3: Use `const` whenever possible
 
+### `const` and pointers
+
+Consider the following code
+
+```cpp
+const int *p; // non-const pointer to const int data
+int *const p; // const pointer to non-const int data
+int const *p; // non-const pointer to const int data
+const int *const p; // const pointer to const int data
+```
+
+***Rule of thumb***: `const` applies to whatever the immediate left to it, if nothing then whatever is immediate right to it.
+
+### Function declarations
+
+
+
