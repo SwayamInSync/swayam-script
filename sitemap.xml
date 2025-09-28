@@ -1,59 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://SwayamInSync.github.io/swayam-script/pages/The Transparent Algorithm/chapter-2.html</loc>
-    <lastmod>2025-09-23T18:43:34.826Z</lastmod>
-  </url>
-  <url>
-    <loc>https://SwayamInSync.github.io/swayam-script/pages/A Hitchhiker&#39;s Guide to LLVM/chapter-1.html</loc>
-    <lastmod>2025-09-23T18:43:34.825Z</lastmod>
-  </url>
-  <url>
-    <loc>https://SwayamInSync.github.io/swayam-script/posts/Numpy QuadDtype/index.html</loc>
-    <lastmod>2025-09-23T18:43:34.847Z</lastmod>
-  </url>
-  <url>
-    <loc>https://SwayamInSync.github.io/swayam-script/posts/C++/index.html</loc>
-    <lastmod>2025-09-23T18:43:34.836Z</lastmod>
-  </url>
-  <url>
-    <loc>https://SwayamInSync.github.io/swayam-script/posts/A Hitchhiker&#39;s Guide to LLVM/index.html</loc>
-    <lastmod>2025-09-23T18:43:34.834Z</lastmod>
-  </url>
-  <url>
-    <loc>https://SwayamInSync.github.io/swayam-script/posts/Concurrent C++, A Practical Guide/index.html</loc>
-    <lastmod>2025-09-23T18:43:34.836Z</lastmod>
-  </url>
-  <url>
-    <loc>https://SwayamInSync.github.io/swayam-script/posts/DyT Analysis/index.html</loc>
-    <lastmod>2025-09-23T18:43:34.847Z</lastmod>
+    <loc>https://SwayamInSync.github.io/swayam-script/posts/Information-Theory-In-ML/index.html</loc>
+    <lastmod>2025-09-28T12:40:40.047Z</lastmod>
   </url>
   <url>
     <loc>https://SwayamInSync.github.io/swayam-script/posts/Self-Attention Mimicking Gradient Descent/index.html</loc>
-    <lastmod>2025-09-23T18:43:34.847Z</lastmod>
+    <lastmod>2025-09-28T12:40:40.048Z</lastmod>
   </url>
   <url>
-    <loc>https://SwayamInSync.github.io/swayam-script/posts/Understanding Perplexity/index.html</loc>
-    <lastmod>2025-09-23T18:43:34.848Z</lastmod>
+    <loc>https://SwayamInSync.github.io/swayam-script/posts/CUDA-GEMM/WIP.html</loc>
+    <lastmod>2025-09-28T12:40:40.036Z</lastmod>
   </url>
   <url>
-    <loc>https://SwayamInSync.github.io/swayam-script/posts/Cooperative Groups/index.html</loc>
-    <lastmod>2025-09-23T18:43:34.846Z</lastmod>
+    <loc>https://SwayamInSync.github.io/swayam-script/posts/DyT Analysis/index.html</loc>
+    <lastmod>2025-09-28T12:40:40.047Z</lastmod>
   </url>
   <url>
-    <loc>https://SwayamInSync.github.io/swayam-script/posts/The Transparent Algorithm/index.html</loc>
-    <lastmod>2025-09-23T18:43:34.848Z</lastmod>
+    <loc>https://SwayamInSync.github.io/swayam-script/posts/A Hitchhiker&#39;s Guide to LLVM/index.html</loc>
+    <lastmod>2025-09-28T12:40:40.035Z</lastmod>
   </url>
   <url>
-    <loc>https://SwayamInSync.github.io/swayam-script/posts/Information-Theory-In-ML/index.html</loc>
-    <lastmod>2025-09-23T18:43:34.847Z</lastmod>
+    <loc>https://SwayamInSync.github.io/swayam-script/posts/Numpy QuadDtype/index.html</loc>
+    <lastmod>2025-09-28T12:40:40.048Z</lastmod>
+  </url>
+  <url>
+    <loc>https://SwayamInSync.github.io/swayam-script/pages/The Transparent Algorithm/chapter-2.html</loc>
+    <lastmod>2025-09-28T12:40:40.026Z</lastmod>
   </url>
   <url>
     <loc>https://SwayamInSync.github.io/swayam-script/index.html</loc>
-    <lastmod>2025-09-23T18:43:34.825Z</lastmod>
+    <lastmod>2025-09-28T12:40:40.026Z</lastmod>
+  </url>
+  <url>
+    <loc>https://SwayamInSync.github.io/swayam-script/pages/A Hitchhiker&#39;s Guide to LLVM/chapter-1.html</loc>
+    <lastmod>2025-09-28T12:40:40.026Z</lastmod>
   </url>
   <url>
     <loc>https://SwayamInSync.github.io/swayam-script/pages/The Transparent Algorithm/chapter-1.html</loc>
-    <lastmod>2025-09-23T18:43:34.826Z</lastmod>
+    <lastmod>2025-09-28T12:40:40.026Z</lastmod>
+  </url>
+  <url>
+    <loc>https://SwayamInSync.github.io/swayam-script/posts/Understanding Perplexity/index.html</loc>
+    <lastmod>2025-09-28T12:40:40.049Z</lastmod>
+  </url>
+  <url>
+    <loc>https://SwayamInSync.github.io/swayam-script/posts/Cooperative Groups/index.html</loc>
+    <lastmod>2025-09-28T12:40:40.047Z</lastmod>
+  </url>
+  <url>
+    <loc>https://SwayamInSync.github.io/swayam-script/posts/The Transparent Algorithm/index.html</loc>
+    <lastmod>2025-09-28T12:40:40.049Z</lastmod>
+  </url>
+  <url>
+    <loc>https://SwayamInSync.github.io/swayam-script/posts/C++/index.html</loc>
+    <lastmod>2025-09-28T12:40:40.036Z</lastmod>
+  </url>
+  <url>
+    <loc>https://SwayamInSync.github.io/swayam-script/posts/Concurrent C++, A Practical Guide/index.html</loc>
+    <lastmod>2025-09-28T12:40:40.037Z</lastmod>
   </url>
 </urlset>
