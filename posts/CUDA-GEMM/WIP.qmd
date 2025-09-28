@@ -1,0 +1,41 @@
+---
+title: "CUDA GEMM [No Tensor Cores]"
+subtitle: "Documenting the implementations"
+author: "Swayam Singh"
+date: "2025-09-28"
+categories: [CUDA]
+format:
+  html:
+    code-fold: false
+toc: true
+highlight-style: pygments
+execute:
+  freeze: auto
+image: assets/header.png
+social:
+  - image: assets/header.png
+    description: "Header: CUDA-GEMM No Tensor Cores"
+---
+# What & Why?
+# Notations
+- `A` Input matrix of shape `[M, K]` stored in row-major
+- `B` Input matrix of shape `[K, N]` stored in row-major
+- `C` Output matrix of shape `[M, N]` stored in row-major
+- `BLOCK_SIZE_M` Height of the C tile processed by a thread block
+- `BLOCK_SIZE_N` Width of the C tile processed by a thread block)
+- `BLOCK_SIZE_K` Contracting-dimension of tiles loaded into shared memory
+- `WARP_SIZE_M` Height of the C tile processed by a single warp
+  // WARP_SIZE_N        (Width of the C tile processed by a single warp)
+  // WARP_STEPS_N       (Number of iterations for a warp along its N-dimension)
+  // THREAD_M           (M-dimension of the C sub-tile processed by a single thread per step)
+  // THREAD_N           (N-dimension of the C sub-tile processed by a single thread per step)
+  // MAX_THREADS        (Total threads in a thread block)
+
+# Kernel: Ping-Pong Buffering with Hierarchical tiling and vectorized loads
+
+## Idea
+### hierarchical Loads
+- Each thread block will work on the `[BLOCK_SIZE_M, BLOCK_SIZE_N]` tile of output C matrix
+- 
+
+
