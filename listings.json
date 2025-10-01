@@ -2,7 +2,6 @@
   {
     "listing": "/index.html",
     "items": [
-      "/posts/CUDA-GEMM/WIP.html",
       "/posts/C++/index.html",
       "/posts/Cooperative Groups/index.html",
       "/posts/A Hitchhiker's Guide to LLVM/index.html",
