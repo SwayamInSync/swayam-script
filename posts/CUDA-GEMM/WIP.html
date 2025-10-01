@@ -2,14 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.24">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Swayam Singh">
-<meta name="dcterms.date" content="2025-09-28">
 
-<title>CUDA GEMM [No Tensor Cores] – Swayam’s Scripts</title>
+<title>wip – Swayam's Scripts</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -40,12 +38,12 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-707d8167ce6003fca903bfe2be84ab7f.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-26500bfc55c7891837a911d6d50a6255.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-86dad25fa9976c2602891ca23f775bcb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-0b37c64f34216b628666a8dac638b53b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-b6871152dc33c25e97e10f79624f84be.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -76,13 +74,11 @@ ul.task-list li input[type="checkbox"] {
 
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="CUDA GEMM [No Tensor Cores] – Swayam’s Scripts">
-<meta property="og:description" content="Documenting the implementations">
-<meta property="og:image" content="https://SwayamInSync.github.io/swayam-script/posts/CUDA-GEMM/assets/header.png">
+<meta property="og:title" content="Swayam’s Scripts">
 <meta property="og:site_name" content="Swayam's Scripts">
 </head>
 
-<body class="nav-fixed quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-fixed fullcontent quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -285,58 +281,10 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
-      <h1 class="title">CUDA GEMM [No Tensor Cores]</h1>
-            <p class="subtitle lead">Documenting the implementations</p>
-                                <div class="quarto-categories">
-                <div class="quarto-category">CUDA</div>
-              </div>
-                  </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta">
-
-      <div>
-      <div class="quarto-title-meta-heading">Author</div>
-      <div class="quarto-title-meta-contents">
-               <p>Swayam Singh </p>
-            </div>
-    </div>
-      
-      <div>
-      <div class="quarto-title-meta-heading">Published</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date">September 28, 2025</p>
-      </div>
-    </div>
-    
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block"></header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#what-why" id="toc-what-why" class="nav-link active" data-scroll-target="#what-why">What &amp; Why?</a></li>
-  <li><a href="#notations" id="toc-notations" class="nav-link" data-scroll-target="#notations">Notations</a></li>
-  <li><a href="#kernel-ping-pong-buffering-with-hierarchical-tiling-and-vectorized-loads" id="toc-kernel-ping-pong-buffering-with-hierarchical-tiling-and-vectorized-loads" class="nav-link" data-scroll-target="#kernel-ping-pong-buffering-with-hierarchical-tiling-and-vectorized-loads">Kernel: Ping-Pong Buffering with Hierarchical tiling and vectorized loads</a>
-  <ul class="collapse">
-  <li><a href="#idea" id="toc-idea" class="nav-link" data-scroll-target="#idea">Idea</a>
-  <ul class="collapse">
-  <li><a href="#hierarchical-loads" id="toc-hierarchical-loads" class="nav-link" data-scroll-target="#hierarchical-loads">hierarchical Loads</a></li>
-  </ul></li>
-  </ul></li>
-  </ul>
-</nav>
-    </div>
+    
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -344,7 +292,24 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-
+<!-- ---
+title: "CUDA GEMM [No Tensor Cores]"
+subtitle: "Documenting the implementations"
+author: "Swayam Singh"
+date: "2025-09-28"
+categories: [CUDA]
+format:
+  html:
+    code-fold: false
+toc: true
+highlight-style: pygments
+execute:
+  freeze: auto
+image: assets/header.png
+social:
+  - image: assets/header.png
+    description: "Header: CUDA-GEMM No Tensor Cores"
+--- -->
 <section id="what-why" class="level1">
 <h1>What &amp; Why?</h1>
 </section>
