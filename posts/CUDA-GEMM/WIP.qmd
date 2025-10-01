@@ -1,4 +1,4 @@
-<!-- ---
+---
 title: "CUDA GEMM [No Tensor Cores]"
 subtitle: "Documenting the implementations"
 author: "Swayam Singh"
@@ -15,7 +15,8 @@ image: assets/header.png
 social:
   - image: assets/header.png
     description: "Header: CUDA-GEMM No Tensor Cores"
---- -->
+draft: true
+---
 # What & Why?
 # Notations
 - `A` Input matrix of shape `[M, K]` stored in row-major
