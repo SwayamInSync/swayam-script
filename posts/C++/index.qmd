@@ -21,6 +21,8 @@ social:
 
 # Effective C++ (2005)
 
+# Accustoming Yourself to C++
+
 ## Item-1: View C++ as a federation of languages
 
 C++ encapsulates multiple programming paradigms **Object Oriented, Template Metaprogramming, Functional, Generic**. It is more of a federation of languages.
@@ -506,3 +508,70 @@ Logger& getLogger() {
 }
 ```
 :::
+
+# Constructors, Destructors and Assignment Operators
+
+## Item-5: Know what functions C++ silently writes and calls
+
+For a C++ class (if not created) compiler can implicitly declare their own versions of **copy constructor, copy assignment operator, destructor** furthermore if there is no constructor then it'll also declare a default constructor and all of these declarations will be **public and inline**.
+There are cases when this is not possible as
+
+```cpp
+#include <iostream>
+#include <string>
+
+class A
+{
+    int &ref;
+    public:
+        A(int &v) : ref(v) {}
+};
+
+int main() {
+    int i1 = 1;
+    int i2 = 2;
+    A a1 = A(i1);
+    A a2 = A(i2);
+    a1 = a2;
+}
+```
+
+Here the privarte class member `ref` is an reference which cannot be just assigned to a new object leading to a ill-formed default definition, hence compiler will give an error here. Same goes for `const` members. In these cases users are expected to define their own. Finally compilers reject the implicit copy assignment operators in derived classes that inherit from base classes declaring their copy assignment operator `private`
+
+## Item-6: Explicitly disallow the use of compiler-generated functions you do not want
+
+In case we don't want compiler to define the functions implictly we can just declare them in the private
+
+```cpp
+class A
+{
+    int ref;
+    A& operator=(const A&);
+    public:
+        A(int v) : ref(v) {}
+};
+```
+
+
+And in case if within some friend function or member tries to do use the copy assignment operator then it'll give the linker-error. Although its good to convert linking errors in conpile time so here in this case we can create a base class
+
+```cpp
+class Uncopyable {
+protected:
+    Uncopyable() = default;
+    ~Uncopyable() = default;
+
+private:
+    Uncopyable(const Uncopyable&);            // declared, no definition
+    Uncopyable& operator=(const Uncopyable&); // declared, no definition
+};
+
+```
+
+And inherit this in the derived class.
+
+::: {.callout-note}
+In new C++-11 we can also use `delete` keyword, which always gives compilation error (better option)
+:::
+
+## Item-7: Declare Destructors virtual in polymorphic base classes
