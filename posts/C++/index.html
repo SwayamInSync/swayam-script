@@ -362,7 +362,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#effective-c-2005" id="toc-effective-c-2005" class="nav-link active" data-scroll-target="#effective-c-2005">Effective C++ (2005)</a>
+  <li><a href="#effective-c-2005" id="toc-effective-c-2005" class="nav-link active" data-scroll-target="#effective-c-2005">Effective C++ (2005)</a></li>
+  <li><a href="#accustoming-yourself-to-c" id="toc-accustoming-yourself-to-c" class="nav-link" data-scroll-target="#accustoming-yourself-to-c">Accustoming Yourself to C++</a>
   <ul class="collapse">
   <li><a href="#item-1-view-c-as-a-federation-of-languages" id="toc-item-1-view-c-as-a-federation-of-languages" class="nav-link" data-scroll-target="#item-1-view-c-as-a-federation-of-languages">Item-1: View C++ as a federation of languages</a></li>
   <li><a href="#item-2-prefer-const-enum-and-inline-to-define" id="toc-item-2-prefer-const-enum-and-inline-to-define" class="nav-link" data-scroll-target="#item-2-prefer-const-enum-and-inline-to-define">Item-2: Prefer <code>const</code> <code>enum</code> and <code>inline</code> to <code>#define</code></a>
@@ -378,6 +379,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#item-4-make-sure-that-objects-are-initialized-before-theyre-used" id="toc-item-4-make-sure-that-objects-are-initialized-before-theyre-used" class="nav-link" data-scroll-target="#item-4-make-sure-that-objects-are-initialized-before-theyre-used">Item-4: Make sure that objects are initialized before they’re used</a></li>
   </ul></li>
+  <li><a href="#constructors-destructors-and-assignment-operators" id="toc-constructors-destructors-and-assignment-operators" class="nav-link" data-scroll-target="#constructors-destructors-and-assignment-operators">Constructors, Destructors and Assignment Operators</a>
+  <ul class="collapse">
+  <li><a href="#item-5-know-what-functions-c-silently-writes-and-calls" id="toc-item-5-know-what-functions-c-silently-writes-and-calls" class="nav-link" data-scroll-target="#item-5-know-what-functions-c-silently-writes-and-calls">Item-5: Know what functions C++ silently writes and calls</a></li>
+  <li><a href="#item-6-explicitly-disallow-the-use-of-compiler-generated-functions-you-do-not-want" id="toc-item-6-explicitly-disallow-the-use-of-compiler-generated-functions-you-do-not-want" class="nav-link" data-scroll-target="#item-6-explicitly-disallow-the-use-of-compiler-generated-functions-you-do-not-want">Item-6: Explicitly disallow the use of compiler-generated functions you do not want</a></li>
+  <li><a href="#item-7-declare-destructors-virtual-in-polymorphic-base-classes" id="toc-item-7-declare-destructors-virtual-in-polymorphic-base-classes" class="nav-link" data-scroll-target="#item-7-declare-destructors-virtual-in-polymorphic-base-classes">Item-7: Declare Destructors virtual in polymorphic base classes</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -392,6 +399,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="assets/header.png" style="zoom:70%;"></p>
 <section id="effective-c-2005" class="level1">
 <h1>Effective C++ (2005)</h1>
+</section>
+<section id="accustoming-yourself-to-c" class="level1">
+<h1>Accustoming Yourself to C++</h1>
 <section id="item-1-view-c-as-a-federation-of-languages" class="level2">
 <h2 class="anchored" data-anchor-id="item-1-view-c-as-a-federation-of-languages">Item-1: View C++ as a federation of languages</h2>
 <p>C++ encapsulates multiple programming paradigms <strong>Object Oriented, Template Metaprogramming, Functional, Generic</strong>. It is more of a federation of languages.</p>
@@ -841,9 +851,72 @@ Note
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
-
-
 </section>
+</section>
+</section>
+<section id="constructors-destructors-and-assignment-operators" class="level1">
+<h1>Constructors, Destructors and Assignment Operators</h1>
+<section id="item-5-know-what-functions-c-silently-writes-and-calls" class="level2">
+<h2 class="anchored" data-anchor-id="item-5-know-what-functions-c-silently-writes-and-calls">Item-5: Know what functions C++ silently writes and calls</h2>
+<p>For a C++ class (if not created) compiler can implicitly declare their own versions of <strong>copy constructor, copy assignment operator, destructor</strong> furthermore if there is no constructor then it’ll also declare a default constructor and all of these declarations will be <strong>public and inline</strong>. There are cases when this is not possible as</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;string&gt;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> A</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> <span class="op">&amp;</span>ref<span class="op">;</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>        A<span class="op">(</span><span class="dt">int</span> <span class="op">&amp;</span>v<span class="op">)</span> <span class="op">:</span> ref<span class="op">(</span>v<span class="op">)</span> <span class="op">{}</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> i1 <span class="op">=</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> i2 <span class="op">=</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    A a1 <span class="op">=</span> A<span class="op">(</span>i1<span class="op">);</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>    A a2 <span class="op">=</span> A<span class="op">(</span>i2<span class="op">);</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    a1 <span class="op">=</span> a2<span class="op">;</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Here the privarte class member <code>ref</code> is an reference which cannot be just assigned to a new object leading to a ill-formed default definition, hence compiler will give an error here. Same goes for <code>const</code> members. In these cases users are expected to define their own. Finally compilers reject the implicit copy assignment operators in derived classes that inherit from base classes declaring their copy assignment operator <code>private</code></p>
+</section>
+<section id="item-6-explicitly-disallow-the-use-of-compiler-generated-functions-you-do-not-want" class="level2">
+<h2 class="anchored" data-anchor-id="item-6-explicitly-disallow-the-use-of-compiler-generated-functions-you-do-not-want">Item-6: Explicitly disallow the use of compiler-generated functions you do not want</h2>
+<p>In case we don’t want compiler to define the functions implictly we can just declare them in the private</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> A</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> ref<span class="op">;</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    A<span class="op">&amp;</span> <span class="kw">operator</span><span class="op">=(</span><span class="at">const</span> A<span class="op">&amp;);</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>        A<span class="op">(</span><span class="dt">int</span> v<span class="op">)</span> <span class="op">:</span> ref<span class="op">(</span>v<span class="op">)</span> <span class="op">{}</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>And in case if within some friend function or member tries to do use the copy assignment operator then it’ll give the linker-error. Although its good to convert linking errors in conpile time so here in this case we can create a base class</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Uncopyable <span class="op">{</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="kw">protected</span><span class="op">:</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    Uncopyable<span class="op">()</span> <span class="op">=</span> <span class="cf">default</span><span class="op">;</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">~</span>Uncopyable<span class="op">()</span> <span class="op">=</span> <span class="cf">default</span><span class="op">;</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span><span class="op">:</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    Uncopyable<span class="op">(</span><span class="at">const</span> Uncopyable<span class="op">&amp;);</span>            <span class="co">// declared, no definition</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    Uncopyable<span class="op">&amp;</span> <span class="kw">operator</span><span class="op">=(</span><span class="at">const</span> Uncopyable<span class="op">&amp;);</span> <span class="co">// declared, no definition</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>And inherit this in the derived class.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In new C++-11 we can also use <code>delete</code> keyword, which always gives compilation error (better option)</p>
+</div>
+</div>
+</section>
+<section id="item-7-declare-destructors-virtual-in-polymorphic-base-classes" class="level2">
+<h2 class="anchored" data-anchor-id="item-7-declare-destructors-virtual-in-polymorphic-base-classes">Item-7: Declare Destructors virtual in polymorphic base classes</h2>
+
+
 </section>
 </section>
 
