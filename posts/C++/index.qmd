@@ -574,4 +574,92 @@ And inherit this in the derived class.
 In new C++-11 we can also use `delete` keyword, which always gives compilation error (better option)
 :::
 
-## Item-7: Declare Destructors virtual in polymorphic base classes
+## Item-7: Declare Destructors virtual in polymorphic base classes\
+
+Whoever class is designed or implemented to be inherited by others and provide virtual functions that can be overwritten by the derived classes, must implement an virtual distructor. The reason is in case the pointers to the base classes are being used to manage the derived class's objects and in case of deleting, not having an virtual distructor will only delete the **base part of that derived class** leaving the instances of derived data still living and can lead to memory leak.
+
+```cpp
+class TimeKeeper {
+public:
+    ~TimeKeeper() { /* cleanup for base */ }
+    // Notice: destructor is NON-virtual
+};
+
+class AtomicClock : public TimeKeeper {
+public:
+    ~AtomicClock() { /* cleanup for derived */ }
+};
+
+TimeKeeper* getTimeKeeper() {
+    return new AtomicClock(); // heap object
+}
+
+TimeKeeper* p = getTimeKeeper();
+delete p;  // Uh oh...
+```
+Polymorphism in C++ requires a virtual destructor if you ever plan to delete derived objects via a base class pointer. Without a virtual destructor, only the base class destructor gets called when you delete through a TimeKeeper*. Fix?
+
+```cpp
+class TimeKeeper {
+public:
+    virtual ~TimeKeeper() { /* cleanup for base */ }
+};
+```
+
+::: {.callout-warning}
+Not having an virtual destructor in a base class planned to be used in polymorphism is defined as **Undefined Behaviour**
+:::
+
+If a class is not meant to be used virtually (i.e. not contain any virtual functions) means it is not means to be a base calss, hence there is no need to give virtual destructor. Consider the following
+
+```cpp
+class Point {                           // a 2D point
+public:
+  Point(int xCoord, int yCoord);
+  ~Point();
+
+private:
+  int x, y;
+};
+```
+
+The above If an int occupies 32 bits, a Point object can typically fit into a 64-bit register. Furthermore, such a Point object can be passed as a 64-bit quantity to functions written in other languages, such as C or FORTRAN. If Point's destructor is made virtual, however, the situation changes.
+
+Supporting virtual dispatch forces each object to carry a vptr pointing to its class's vtbl. That one hidden pointer bumps `Point` from 64 bits to roughly 96 bits on 32-bit targets and to 128 bits on 64-bit systems, so it no longer fits in a 64-bit register. It also breaks layout compatibility with a plain C struct, so you can't pass `Point` across language boundaries without compensating for the vptr.
+
+Now consider one more example
+
+```cpp
+class SpecialString : public std::string {...};
+
+SpecialString *pss = new SpecialString("bad idea");
+std::string *ps;
+
+ps = pss;
+delete ps;
+```
+
+Bad idea, All the STL containers types do not implement any virtual functions or destrutor (Its a design choice).
+
+Now lets talk about **Abstract Classes**. Classes that can't be instantiated and it has all the pure virtual functions so what if I do this
+
+```cpp
+class Abstract
+{
+  virtual ~Abstract() = 0;
+};
+```
+
+Again bad idea, although the code will compile fine. When a derived class object is destroyed, the destructor chain is called from most-derived to base class. The base class destructor ~Abstract() will be invoked, so it needs an implementation. Without it, you'll get a linker error. So a better option is to have all the functions purely virtual except destructor
+
+```cpp
+class Abstract {
+public:
+    virtual ~Abstract() = default;  // Virtual, but not pure
+    virtual void someFunction() = 0;  // Pure virtual function
+};
+```
+
+Not all base classes are designed to be used polymorphically. Some are just inteded to be the base class like `Uncopyable` [Item-5](#item-6-explicitly-disallow-the-use-of-compiler-generated-functions-you-do-not-want).
+
+## Item-8: Prevent exceptions from leaving destructors
