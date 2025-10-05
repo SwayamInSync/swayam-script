@@ -383,7 +383,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#item-5-know-what-functions-c-silently-writes-and-calls" id="toc-item-5-know-what-functions-c-silently-writes-and-calls" class="nav-link" data-scroll-target="#item-5-know-what-functions-c-silently-writes-and-calls">Item-5: Know what functions C++ silently writes and calls</a></li>
   <li><a href="#item-6-explicitly-disallow-the-use-of-compiler-generated-functions-you-do-not-want" id="toc-item-6-explicitly-disallow-the-use-of-compiler-generated-functions-you-do-not-want" class="nav-link" data-scroll-target="#item-6-explicitly-disallow-the-use-of-compiler-generated-functions-you-do-not-want">Item-6: Explicitly disallow the use of compiler-generated functions you do not want</a></li>
-  <li><a href="#item-7-declare-destructors-virtual-in-polymorphic-base-classes" id="toc-item-7-declare-destructors-virtual-in-polymorphic-base-classes" class="nav-link" data-scroll-target="#item-7-declare-destructors-virtual-in-polymorphic-base-classes">Item-7: Declare Destructors virtual in polymorphic base classes</a></li>
+  <li><a href="#item-7-declare-destructors-virtual-in-polymorphic-base-classes" id="toc-item-7-declare-destructors-virtual-in-polymorphic-base-classes" class="nav-link" data-scroll-target="#item-7-declare-destructors-virtual-in-polymorphic-base-classes">Item-7: Declare Destructors virtual in polymorphic base classes<br>
+  </a></li>
+  <li><a href="#item-8-prevent-exceptions-from-leaving-destructors" id="toc-item-8-prevent-exceptions-from-leaving-destructors" class="nav-link" data-scroll-target="#item-8-prevent-exceptions-from-leaving-destructors">Item-8: Prevent exceptions from leaving destructors</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -914,7 +916,79 @@ Note
 </div>
 </section>
 <section id="item-7-declare-destructors-virtual-in-polymorphic-base-classes" class="level2">
-<h2 class="anchored" data-anchor-id="item-7-declare-destructors-virtual-in-polymorphic-base-classes">Item-7: Declare Destructors virtual in polymorphic base classes</h2>
+<h2 class="anchored" data-anchor-id="item-7-declare-destructors-virtual-in-polymorphic-base-classes">Item-7: Declare Destructors virtual in polymorphic base classes<br>
+</h2>
+<p>Whoever class is designed or implemented to be inherited by others and provide virtual functions that can be overwritten by the derived classes, must implement an virtual distructor. The reason is in case the pointers to the base classes are being used to manage the derived class’s objects and in case of deleting, not having an virtual distructor will only delete the <strong>base part of that derived class</strong> leaving the instances of derived data still living and can lead to memory leak.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TimeKeeper <span class="op">{</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">~</span>TimeKeeper<span class="op">()</span> <span class="op">{</span> <span class="co">/* cleanup for base */</span> <span class="op">}</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Notice: destructor is NON-virtual</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> AtomicClock <span class="op">:</span> <span class="kw">public</span> TimeKeeper <span class="op">{</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">~</span>AtomicClock<span class="op">()</span> <span class="op">{</span> <span class="co">/* cleanup for derived */</span> <span class="op">}</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>TimeKeeper<span class="op">*</span> getTimeKeeper<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="kw">new</span> AtomicClock<span class="op">();</span> <span class="co">// heap object</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>TimeKeeper<span class="op">*</span> p <span class="op">=</span> getTimeKeeper<span class="op">();</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a><span class="kw">delete</span> p<span class="op">;</span>  <span class="co">// Uh oh...</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Polymorphism in C++ requires a virtual destructor if you ever plan to delete derived objects via a base class pointer. Without a virtual destructor, only the base class destructor gets called when you delete through a TimeKeeper*. Fix?</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TimeKeeper <span class="op">{</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">virtual</span> <span class="op">~</span>TimeKeeper<span class="op">()</span> <span class="op">{</span> <span class="co">/* cleanup for base */</span> <span class="op">}</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Not having an virtual destructor in a base class planned to be used in polymorphism is defined as <strong>Undefined Behaviour</strong></p>
+</div>
+</div>
+<p>If a class is not meant to be used virtually (i.e.&nbsp;not contain any virtual functions) means it is not means to be a base calss, hence there is no need to give virtual destructor. Consider the following</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Point <span class="op">{</span>                           <span class="co">// a 2D point</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  Point<span class="op">(</span><span class="dt">int</span> xCoord<span class="op">,</span> <span class="dt">int</span> yCoord<span class="op">);</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">~</span>Point<span class="op">();</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span><span class="op">:</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> x<span class="op">,</span> y<span class="op">;</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The above If an int occupies 32 bits, a Point object can typically fit into a 64-bit register. Furthermore, such a Point object can be passed as a 64-bit quantity to functions written in other languages, such as C or FORTRAN. If Point’s destructor is made virtual, however, the situation changes.</p>
+<p>Supporting virtual dispatch forces each object to carry a vptr pointing to its class’s vtbl. That one hidden pointer bumps <code>Point</code> from 64 bits to roughly 96 bits on 32-bit targets and to 128 bits on 64-bit systems, so it no longer fits in a 64-bit register. It also breaks layout compatibility with a plain C struct, so you can’t pass <code>Point</code> across language boundaries without compensating for the vptr.</p>
+<p>Now consider one more example</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SpecialString <span class="op">:</span> <span class="kw">public</span> <span class="bu">std::</span>string <span class="op">{...};</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>SpecialString <span class="op">*</span>pss <span class="op">=</span> <span class="kw">new</span> SpecialString<span class="op">(</span><span class="st">"bad idea"</span><span class="op">);</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>string <span class="op">*</span>ps<span class="op">;</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>ps <span class="op">=</span> pss<span class="op">;</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="kw">delete</span> ps<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Bad idea, All the STL containers types do not implement any virtual functions or destrutor (Its a design choice).</p>
+<p>Now lets talk about <strong>Abstract Classes</strong>. Classes that can’t be instantiated and it has all the pure virtual functions so what if I do this</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Abstract</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">virtual</span> <span class="op">~</span>Abstract<span class="op">()</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Again bad idea, although the code will compile fine. When a derived class object is destroyed, the destructor chain is called from most-derived to base class. The base class destructor ~Abstract() will be invoked, so it needs an implementation. Without it, you’ll get a linker error. So a better option is to have all the functions purely virtual except destructor</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Abstract <span class="op">{</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">virtual</span> <span class="op">~</span>Abstract<span class="op">()</span> <span class="op">=</span> <span class="cf">default</span><span class="op">;</span>  <span class="co">// Virtual, but not pure</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">virtual</span> <span class="dt">void</span> someFunction<span class="op">()</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span>  <span class="co">// Pure virtual function</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Not all base classes are designed to be used polymorphically. Some are just inteded to be the base class like <code>Uncopyable</code> <a href="#item-6-explicitly-disallow-the-use-of-compiler-generated-functions-you-do-not-want">Item-5</a>.</p>
+</section>
+<section id="item-8-prevent-exceptions-from-leaving-destructors" class="level2">
+<h2 class="anchored" data-anchor-id="item-8-prevent-exceptions-from-leaving-destructors">Item-8: Prevent exceptions from leaving destructors</h2>
 
 
 </section>
