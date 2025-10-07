@@ -386,6 +386,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#item-7-declare-destructors-virtual-in-polymorphic-base-classes" id="toc-item-7-declare-destructors-virtual-in-polymorphic-base-classes" class="nav-link" data-scroll-target="#item-7-declare-destructors-virtual-in-polymorphic-base-classes">Item-7: Declare Destructors virtual in polymorphic base classes<br>
   </a></li>
   <li><a href="#item-8-prevent-exceptions-from-leaving-destructors" id="toc-item-8-prevent-exceptions-from-leaving-destructors" class="nav-link" data-scroll-target="#item-8-prevent-exceptions-from-leaving-destructors">Item-8: Prevent exceptions from leaving destructors</a></li>
+  <li><a href="#item-9-never-call-virtual-functions-during-construction-or-destruction" id="toc-item-9-never-call-virtual-functions-during-construction-or-destruction" class="nav-link" data-scroll-target="#item-9-never-call-virtual-functions-during-construction-or-destruction">Item-9: Never call virtual functions during construction or destruction</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -989,6 +990,47 @@ Warning
 </section>
 <section id="item-8-prevent-exceptions-from-leaving-destructors" class="level2">
 <h2 class="anchored" data-anchor-id="item-8-prevent-exceptions-from-leaving-destructors">Item-8: Prevent exceptions from leaving destructors</h2>
+<p>C++ does not prohibit destructors from emitting exceptions but it certainly discourages the practice. In C++ having more than 1 active exception at a time is considered as the undefined behaviour.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>How its possible to have more than 1 active exception at a time?</strong></p>
+<p>When an exception is thrown, the program doesn’t just “exit” immediately. It performs <strong>stack unwinding</strong>, destroying all local objects in scope while searching for a catch block. Consider following code</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> doSomething<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>vector<span class="op">&lt;</span>Widget<span class="op">&gt;</span> v<span class="op">;</span>  <span class="co">// 10 Widgets, suppose ~Widget (destructor) throws an exception</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span> <span class="bu">std::</span>runtime_error<span class="op">(</span><span class="st">"Error!"</span><span class="op">);</span>  <span class="co">// Exception #1 thrown!</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span>  <span class="co">// &lt;-- Program counter comes here during unwinding</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Now when the #1 exception is thrown, it start unwinding the stack deleting all the local variables to this function, leading to call the destructor of any of the <code>Widget</code> instance leading to have another active exception. <strong>Undefined behaviour</strong>.</p>
+</div>
+</div>
+<p>I hope the <strong>tip</strong> also explains the problem of why destructor should be encouraged to throw an exception. So what to do if they do?</p>
+<ul>
+<li>Terminate the program immediately by calling <code>std::abort()</code>;</li>
+<li><strong>Swallow the exception</strong> i.e.&nbsp;just catch and keep the program working. Usually a bad practice as it hides the information of what failed.</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Here Scott Meyers also proposed a method to pass the responsibility to the client/user to manually handle if such things happen. I don’t know, I am don’t happily agree to it. But nevertheless point to be note is that, a destructor should not throw an exception, its a very bad design.</p>
+</div>
+</div>
+</section>
+<section id="item-9-never-call-virtual-functions-during-construction-or-destruction" class="level2">
+<h2 class="anchored" data-anchor-id="item-9-never-call-virtual-functions-during-construction-or-destruction">Item-9: Never call virtual functions during construction or destruction</h2>
 
 
 </section>
