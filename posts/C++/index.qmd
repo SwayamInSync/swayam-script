@@ -663,3 +663,33 @@ public:
 Not all base classes are designed to be used polymorphically. Some are just inteded to be the base class like `Uncopyable` [Item-5](#item-6-explicitly-disallow-the-use-of-compiler-generated-functions-you-do-not-want).
 
 ## Item-8: Prevent exceptions from leaving destructors
+
+C++ does not prohibit destructors from emitting exceptions but it certainly discourages the practice. In C++ having more than 1 active exception at a time is 
+considered as the undefined behaviour.
+
+::: {.callout-tip}
+**How its possible to have more than 1 active exception at a time?**
+
+When an exception is thrown, the program doesn't just "exit" immediately. It performs **stack unwinding**, destroying all local objects in scope while searching for a catch block. Consider following code
+
+```cpp
+void doSomething() {
+    std::vector<Widget> v;  // 10 Widgets, suppose ~Widget (destructor) throws an exception
+    throw std::runtime_error("Error!");  // Exception #1 thrown!
+}  // <-- Program counter comes here during unwinding
+```
+
+Now when the #1 exception is thrown, it start unwinding the stack deleting all the local variables to this function, leading to call the destructor of any of the `Widget` instance leading to have another active exception. **Undefined behaviour**.
+:::
+
+I hope the **tip** also explains the problem of why destructor should be encouraged to throw an exception. So what to do if they do?
+
+- Terminate the program immediately by calling `std::abort()`;
+- **Swallow the exception** i.e. just catch and keep the program working. Usually a bad practice as it hides the information of what failed.
+
+::: {.callout-note}
+Here Scott Meyers also proposed a method to pass the responsibility to the client/user to manually handle if such things happen. I don't know, I am don't happily agree to it. But nevertheless point to be note is that, a destructor should not throw an exception, its a very bad design.
+:::
+
+## Item-9: Never call virtual functions during construction or destruction
+
