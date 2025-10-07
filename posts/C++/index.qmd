@@ -688,8 +688,118 @@ I hope the **tip** also explains the problem of why destructor should be encoura
 - **Swallow the exception** i.e. just catch and keep the program working. Usually a bad practice as it hides the information of what failed.
 
 ::: {.callout-note}
-Here Scott Meyers also proposed a method to pass the responsibility to the client/user to manually handle if such things happen. I don't know, I am don't happily agree to it. But nevertheless point to be note is that, a destructor should not throw an exception, its a very bad design.
+Here Scott Meyers also proposed a method to pass the responsibility to the client/user to manually handle if such things happen. I don't know, I am not happily agree to it. But nevertheless point to be note is that, a destructor should not throw an exception, its a very bad design.
 :::
 
 ## Item-9: Never call virtual functions during construction or destruction
 
+Suppose maintaining a transaction system and logging every type of transaction
+
+```cpp
+class Transaction
+{
+  public:
+    Transaction();
+    ~Transaction();
+    virtual void logTransaction() const = 0; // make type-dependent log entry
+};
+
+Transaction::Transaction()
+{
+  ...
+  logTransaction(); // log this transaction
+}
+
+Transaction::~Transaction()
+{
+  ...;
+  logTransaction();
+}
+
+class BuyTransaction: public Transaction
+{
+  public:
+    virtual void logTransaction() const;
+};
+
+class SellTransaction: public Transaction
+{
+  public:
+    virtual void logTransaction() const;
+};
+
+BuyTransaction b; // what logTransaction this will call?
+```
+
+In principle, in order to instantiate a derived class the parts of base class instantiate first, hence it'll call the base class `Transaction` constructor which 
+itself calls the `logTransaction()` method for the base class NOT the derived as the derived components aren't being initialized yet.
+Same thing with the destruction, the derived class's elements gets destroyed first hence when the base class destructor calls `logTransaction` it is again the type call of base not derived (`BuyTransaction`/`SellTransaction`)
+
+::: {.callout-note}
+It is more fundamental that that, Not only do virtual functions resolve to the base class, but the parts of the languauge using runtime information e.g. `dynamic_cast` or `typeid` also treat the object as base class type
+:::
+
+Some compilers raise a warining about this, some don't. In case the if the `logTransaction` would've been **purely virtual** (i.e. no definition in base class) then linker would've thrown the error (so sometimes easy to catch this)
+
+So what to do? In such cases keep the function `logTransaction` non-virtual and instead recieve relevant information from derived to log
+
+```cpp
+class Transaction
+{
+  public:
+    explicit Transaction(std::string &logInfo);
+    void logTransaction(std::string &logInfo) const; // make type-dependent log entry
+};
+
+Transaction::Transaction(std::string &logInfo)
+{
+  ...
+  logTransaction(logInfo); // log this transaction
+}
+
+Transaction::~Transaction()
+{
+  ...;
+  logTransaction();
+}
+
+class BuyTransaction: public Transaction
+{
+  private:
+    static std::string createLogString(parameters); // focus how this function is made static
+  public:
+    BuyTransaction(parameters); : Transaction(createLogString(parameters))
+    {};
+};
+```
+
+::: {.callout-note}
+If the `createLogString` inside `BuyTranscation` wouldn't be `static` then again we will be in dilemma:
+
+```cpp
+BuyTransaction(parameters) : Transaction(createLogString(parameters))
+//                           ↑ Base constructor called HERE
+//                           The BuyTransaction object DOESN'T EXIST YET!
+```
+
+At the point where createLogString(parameters) is called:
+
+❌ The `BuyTransaction` object is not fully constructed
+❌ Member variables are not initialized
+❌ The this pointer is not valid for the derived class
+❌ ***Cannot call non-static member functions***
+
+This would be undefined behavior, you're trying to use `this->createLogString()` before `this` is valid.
+
+```cpp
+static std::string createLogString(parameters);
+// ↑ Static = doesn't need 'this' pointer
+// Can be called like a regular function
+// Doesn't access any instance data
+```
+
+Static functions:
+✅ Don't need a this pointer
+✅ Can be called before object construction
+✅ Work like regular functions, just scoped to the class
+:::
