@@ -1124,13 +1124,19 @@ Note
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co">//                           ↑ Base constructor called HERE</span></span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co">//                           The BuyTransaction object DOESN'T EXIST YET!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>At the point where createLogString(parameters) is called:</p>
-<p>❌ The <code>BuyTransaction</code> object is not fully constructed ❌ Member variables are not initialized ❌ The this pointer is not valid for the derived class ❌ <strong><em>Cannot call non-static member functions</em></strong></p>
+<p>❌ The <code>BuyTransaction</code> object is not fully constructed</p>
+<p>❌ Member variables are not initialized</p>
+<p>❌ The this pointer is not valid for the derived class</p>
+<p>❌ <strong><em>Cannot call non-static member functions</em></strong></p>
 <p>This would be undefined behavior, you’re trying to use <code>this-&gt;createLogString()</code> before <code>this</code> is valid.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="at">static</span> <span class="bu">std::</span>string createLogString<span class="op">(</span>parameters<span class="op">);</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co">// ↑ Static = doesn't need 'this' pointer</span></span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Can be called like a regular function</span></span>
 <span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Doesn't access any instance data</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Static functions: ✅ Don’t need a this pointer ✅ Can be called before object construction ✅ Work like regular functions, just scoped to the class</p>
+<p>Static functions:</p>
+<p>✅ Don’t need a this pointer</p>
+<p>✅ Can be called before object construction</p>
+<p>✅ Work like regular functions, just scoped to the class</p>
 </div>
 </div>
 </section>
