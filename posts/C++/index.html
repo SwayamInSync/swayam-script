@@ -387,6 +387,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </a></li>
   <li><a href="#item-8-prevent-exceptions-from-leaving-destructors" id="toc-item-8-prevent-exceptions-from-leaving-destructors" class="nav-link" data-scroll-target="#item-8-prevent-exceptions-from-leaving-destructors">Item-8: Prevent exceptions from leaving destructors</a></li>
   <li><a href="#item-9-never-call-virtual-functions-during-construction-or-destruction" id="toc-item-9-never-call-virtual-functions-during-construction-or-destruction" class="nav-link" data-scroll-target="#item-9-never-call-virtual-functions-during-construction-or-destruction">Item-9: Never call virtual functions during construction or destruction</a></li>
+  <li><a href="#item-10-have-assignment-operator-return-a-reference-to-this" id="toc-item-10-have-assignment-operator-return-a-reference-to-this" class="nav-link" data-scroll-target="#item-10-have-assignment-operator-return-a-reference-to-this">Item-10: Have assignment operator return a reference to <code>*this</code></a></li>
   </ul></li>
   </ul>
 </nav>
@@ -1132,6 +1133,9 @@ Note
 <p>Static functions: ✅ Don’t need a this pointer ✅ Can be called before object construction ✅ Work like regular functions, just scoped to the class</p>
 </div>
 </div>
+</section>
+<section id="item-10-have-assignment-operator-return-a-reference-to-this" class="level2">
+<h2 class="anchored" data-anchor-id="item-10-have-assignment-operator-return-a-reference-to-this">Item-10: Have assignment operator return a reference to <code>*this</code></h2>
 
 
 </section>
