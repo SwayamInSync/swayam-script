@@ -785,8 +785,11 @@ BuyTransaction(parameters) : Transaction(createLogString(parameters))
 At the point where createLogString(parameters) is called:
 
 ❌ The `BuyTransaction` object is not fully constructed
+
 ❌ Member variables are not initialized
+
 ❌ The this pointer is not valid for the derived class
+
 ❌ ***Cannot call non-static member functions***
 
 This would be undefined behavior, you're trying to use `this->createLogString()` before `this` is valid.
@@ -799,8 +802,11 @@ static std::string createLogString(parameters);
 ```
 
 Static functions:
+
 ✅ Don't need a this pointer
+
 ✅ Can be called before object construction
+
 ✅ Work like regular functions, just scoped to the class
 :::
 
