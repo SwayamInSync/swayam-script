@@ -803,3 +803,5 @@ Static functions:
 ✅ Can be called before object construction
 ✅ Work like regular functions, just scoped to the class
 :::
+
+## Item-10: Have assignment operator return a reference to `*this`
