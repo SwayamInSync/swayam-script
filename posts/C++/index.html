@@ -389,6 +389,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#item-9-never-call-virtual-functions-during-construction-or-destruction" id="toc-item-9-never-call-virtual-functions-during-construction-or-destruction" class="nav-link" data-scroll-target="#item-9-never-call-virtual-functions-during-construction-or-destruction">Item-9: Never call virtual functions during construction or destruction</a></li>
   <li><a href="#item-10-have-assignment-operator-return-a-reference-to-this" id="toc-item-10-have-assignment-operator-return-a-reference-to-this" class="nav-link" data-scroll-target="#item-10-have-assignment-operator-return-a-reference-to-this">Item-10: Have assignment operator return a reference to <code>*this</code></a></li>
   <li><a href="#item-11-handle-assignment-to-self-in-operator" id="toc-item-11-handle-assignment-to-self-in-operator" class="nav-link" data-scroll-target="#item-11-handle-assignment-to-self-in-operator">Item-11: Handle assignment to self in <code>operator=</code></a></li>
+  <li><a href="#item-12-copy-all-parts-of-an-object" id="toc-item-12-copy-all-parts-of-an-object" class="nav-link" data-scroll-target="#item-12-copy-all-parts-of-an-object">Item-12: Copy all parts of an object</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -1161,6 +1162,126 @@ Note
 </section>
 <section id="item-11-handle-assignment-to-self-in-operator" class="level2">
 <h2 class="anchored" data-anchor-id="item-11-handle-assignment-to-self-in-operator">Item-11: Handle assignment to self in <code>operator=</code></h2>
+<p>It is very possible to perform a self-assign operation in C++</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>a<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> a<span class="op">[</span>j<span class="op">];</span> <span class="co">// i and j might be same</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Base <span class="op">{..};</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Derived<span class="op">:</span> <span class="kw">public</span> Base <span class="op">{</span> <span class="op">...</span> <span class="op">};</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> doSomething<span class="op">(</span><span class="at">const</span> Class<span class="op">&amp;</span> rb<span class="op">,</span> Derived<span class="op">&amp;</span> pd<span class="op">);</span> <span class="co">// they both can be pointing to same object</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Take example of the following code and it’ll show it can be disastrous. We are managing the resource here</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Bitmap <span class="op">{...};</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Widget</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">private</span><span class="op">:</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>    Bitmap <span class="op">*</span>pb<span class="op">;</span> <span class="co">// pointer to heap allocated Bitmap object</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>Widget<span class="op">&amp;</span> </span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>Widget<span class="op">::</span><span class="kw">operator</span><span class="op">=(</span><span class="at">const</span> Widget<span class="op">&amp;</span> rhs<span class="op">)</span></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">delete</span> pb<span class="op">;</span> <span class="co">// stop using current butmap, free It</span></span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>  pb <span class="op">=</span> <span class="kw">new</span> Bitmap<span class="op">(*</span>rhs<span class="op">.</span>pb<span class="op">);</span></span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="op">*</span><span class="kw">this</span><span class="op">;</span></span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Now suppose if you do the self-assignment operator here then the <code>delete pb</code> statement will delete both source’s as well as the RHS’s bitmap. So how to solve? well an obvious way is to an identity check as</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>Widget<span class="op">&amp;</span> </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>Widget<span class="op">::</span><span class="kw">operator</span><span class="op">=(</span><span class="at">const</span> Widget<span class="op">&amp;</span> rhs<span class="op">)</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span><span class="kw">this</span> <span class="op">==</span> <span class="op">&amp;</span>rhs<span class="op">)</span> <span class="co">// identity check</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">*</span><span class="kw">this</span><span class="op">;</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">delete</span> pb<span class="op">;</span> <span class="co">// stop using current butmap, free It</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  pb <span class="op">=</span> <span class="kw">new</span> Bitmap<span class="op">(*</span>rhs<span class="op">.</span>pb<span class="op">);</span></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="op">*</span><span class="kw">this</span><span class="op">;</span></span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>There is one more issue in above code, it is also NOT <strong>exception-safe</strong> i.e.&nbsp;if the call to <code>new</code> failed (maybe because of not enough memory) then we are again left with the invalid pointers. Happily making <code>operator=</code> exception-safe also makes it self-assignment-safe too.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>Widget<span class="op">&amp;</span> </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>Widget<span class="op">::</span><span class="kw">operator</span><span class="op">=(</span><span class="at">const</span> Widget<span class="op">&amp;</span> rhs<span class="op">)</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  Bitmap <span class="op">*</span>pOrig <span class="op">=</span> pb<span class="op">;</span></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  pb <span class="op">=</span> <span class="kw">new</span> Bitmap<span class="op">(*</span>rhs<span class="op">.</span>pb<span class="op">);</span></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">delete</span> pOrig<span class="op">;</span> <span class="co">// delete the original</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="op">*</span><span class="kw">this</span><span class="op">;</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This may not be efficient (can add the identity check) but it works as now we have a backup copy. But still an even better approach is <strong>Copy And Swap</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>Widget<span class="op">&amp;</span> </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>Widget<span class="op">::</span><span class="kw">operator</span><span class="op">=(</span><span class="at">const</span> Widget<span class="op">&amp;</span> rhs<span class="op">)</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  Widget temp<span class="op">(</span>rhs<span class="op">);</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  swap<span class="op">(</span>temp<span class="op">);</span> <span class="co">// exchange this and rhs's data</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="op">*</span><span class="kw">this</span><span class="op">;</span> <span class="co">// destructor of temp will clean the old pb</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="item-12-copy-all-parts-of-an-object" class="level2">
+<h2 class="anchored" data-anchor-id="item-12-copy-all-parts-of-an-object">Item-12: Copy all parts of an object</h2>
+<p>Tl;dr copy each and everything in the respective class</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Customer</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    Customer<span class="op">(</span><span class="at">const</span> Customer <span class="op">&amp;</span>rhs<span class="op">);</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>    Customer<span class="op">&amp;</span> <span class="kw">operator</span><span class="op">=(</span><span class="at">const</span> Customer<span class="op">&amp;</span> rhs<span class="op">);</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">private</span><span class="op">:</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>string name<span class="op">;</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>Customer<span class="op">::</span>Customer<span class="op">(</span><span class="at">const</span> Customer<span class="op">&amp;</span> rhs<span class="op">)</span> <span class="op">:</span> name<span class="op">(</span>rhs<span class="op">.</span>name<span class="op">)</span></span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>  logCall<span class="op">(</span><span class="st">"Customer copy constructor"</span><span class="op">);</span></span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a>Customer<span class="op">&amp;</span> Customer<span class="op">::</span><span class="kw">operator</span><span class="op">=(</span><span class="at">const</span> Customer<span class="op">&amp;</span> rhs<span class="op">)</span></span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a>  logCall<span class="op">(</span><span class="st">"Customer copy assignment operator"</span><span class="op">);</span></span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a>  name <span class="op">=</span> rhs<span class="op">.</span>name<span class="op">;</span></span>
+<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="op">*</span><span class="kw">this</span><span class="op">;</span></span>
+<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> PriorityCustomer<span class="op">:</span> <span class="kw">public</span> Customer</span>
+<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb46-27"><a href="#cb46-27" aria-hidden="true" tabindex="-1"></a>    PriorityCustomer<span class="op">(</span><span class="at">const</span> PriorityCustomer<span class="op">&amp;</span> rhs<span class="op">);</span></span>
+<span id="cb46-28"><a href="#cb46-28" aria-hidden="true" tabindex="-1"></a>    PriorityCustomer<span class="op">&amp;</span> <span class="kw">operator</span><span class="op">=(</span><span class="at">const</span> PriorityCustomer<span class="op">&amp;</span> rhs<span class="op">);</span></span>
+<span id="cb46-29"><a href="#cb46-29" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb46-30"><a href="#cb46-30" aria-hidden="true" tabindex="-1"></a>  <span class="kw">private</span><span class="op">:</span></span>
+<span id="cb46-31"><a href="#cb46-31" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> priority<span class="op">;</span></span>
+<span id="cb46-32"><a href="#cb46-32" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb46-33"><a href="#cb46-33" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb46-34"><a href="#cb46-34" aria-hidden="true" tabindex="-1"></a><span class="co">// This is bad</span></span>
+<span id="cb46-35"><a href="#cb46-35" aria-hidden="true" tabindex="-1"></a>PriorityCustomer<span class="op">::</span>PriorityCustomer<span class="op">(</span><span class="at">const</span> PriorityCustomer<span class="op">&amp;</span> rhs<span class="op">):</span> priority<span class="op">(</span>rhs<span class="op">.</span>priority<span class="op">)</span></span>
+<span id="cb46-36"><a href="#cb46-36" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb46-37"><a href="#cb46-37" aria-hidden="true" tabindex="-1"></a>  logCall<span class="op">(</span><span class="st">"PriorityCustomer Copy Constructor"</span><span class="op">);</span></span>
+<span id="cb46-38"><a href="#cb46-38" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb46-39"><a href="#cb46-39" aria-hidden="true" tabindex="-1"></a><span class="co">// This is too</span></span>
+<span id="cb46-40"><a href="#cb46-40" aria-hidden="true" tabindex="-1"></a>PriorityCustomer<span class="op">&amp;</span></span>
+<span id="cb46-41"><a href="#cb46-41" aria-hidden="true" tabindex="-1"></a>PriorityCustomer<span class="op">::</span><span class="kw">operator</span><span class="op">=(</span><span class="at">const</span> PriorityCustomer<span class="op">&amp;</span> rhs<span class="op">)</span></span>
+<span id="cb46-42"><a href="#cb46-42" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb46-43"><a href="#cb46-43" aria-hidden="true" tabindex="-1"></a>  logCall<span class="op">(</span><span class="st">"PriorityCustomer copy assignment operator"</span><span class="op">);</span></span>
+<span id="cb46-44"><a href="#cb46-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-45"><a href="#cb46-45" aria-hidden="true" tabindex="-1"></a>  priority <span class="op">=</span> rhs<span class="op">.</span>priority<span class="op">;</span></span>
+<span id="cb46-46"><a href="#cb46-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-47"><a href="#cb46-47" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="op">*</span><span class="kw">this</span><span class="op">;</span></span>
+<span id="cb46-48"><a href="#cb46-48" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>For <code>PriorityCustomer</code> class in case of the copy-constructor call, issue is the base class’s elements aren’t getting copied so they will be initialized via the default constructor. And in case of the copy-assignment operator call the base class elements remains to original values. We explicitly need to call their copy functions as well</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>PriorityCustomer<span class="op">::</span>PriorityCustomer<span class="op">(</span><span class="at">const</span> PriorityCustomer<span class="op">&amp;</span> rhs<span class="op">):</span> Customer<span class="op">(</span>rhs<span class="op">),</span> priority<span class="op">(</span>rhs<span class="op">.</span>priority<span class="op">)</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  logCall<span class="op">(</span><span class="st">"PriorityCustomer Copy Constructor"</span><span class="op">);</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>PriorityCustomer<span class="op">&amp;</span></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>PriorityCustomer<span class="op">::</span><span class="kw">operator</span><span class="op">=(</span><span class="at">const</span> PriorityCustomer<span class="op">&amp;</span> rhs<span class="op">)</span></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>  logCall<span class="op">(</span><span class="st">"PriorityCustomer copy assignment operator"</span><span class="op">);</span></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>  Customer<span class="op">::</span><span class="kw">operator</span><span class="op">=(</span>rhs<span class="op">);</span> <span class="co">// assign base class parts</span></span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>  priority <span class="op">=</span> rhs<span class="op">.</span>priority<span class="op">;</span></span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="op">*</span><span class="kw">this</span><span class="op">;</span></span>
+<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 </section>
