@@ -388,6 +388,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#item-8-prevent-exceptions-from-leaving-destructors" id="toc-item-8-prevent-exceptions-from-leaving-destructors" class="nav-link" data-scroll-target="#item-8-prevent-exceptions-from-leaving-destructors">Item-8: Prevent exceptions from leaving destructors</a></li>
   <li><a href="#item-9-never-call-virtual-functions-during-construction-or-destruction" id="toc-item-9-never-call-virtual-functions-during-construction-or-destruction" class="nav-link" data-scroll-target="#item-9-never-call-virtual-functions-during-construction-or-destruction">Item-9: Never call virtual functions during construction or destruction</a></li>
   <li><a href="#item-10-have-assignment-operator-return-a-reference-to-this" id="toc-item-10-have-assignment-operator-return-a-reference-to-this" class="nav-link" data-scroll-target="#item-10-have-assignment-operator-return-a-reference-to-this">Item-10: Have assignment operator return a reference to <code>*this</code></a></li>
+  <li><a href="#item-11-handle-assignment-to-self-in-operator" id="toc-item-11-handle-assignment-to-self-in-operator" class="nav-link" data-scroll-target="#item-11-handle-assignment-to-self-in-operator">Item-11: Handle assignment to self in <code>operator=</code></a></li>
   </ul></li>
   </ul>
 </nav>
@@ -1142,6 +1143,24 @@ Note
 </section>
 <section id="item-10-have-assignment-operator-return-a-reference-to-this" class="level2">
 <h2 class="anchored" data-anchor-id="item-10-have-assignment-operator-return-a-reference-to-this">Item-10: Have assignment operator return a reference to <code>*this</code></h2>
+<p>Assignment operation returns a reference to its left hand operand and it is right associative</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x<span class="op">,</span> y<span class="op">,</span> z<span class="op">;</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> y <span class="op">=</span> z <span class="op">=</span> <span class="dv">15</span><span class="op">;</span> <span class="co">// x = (y = ( z = 15 ))</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Here, 15 is assigned to <code>z</code>, then the result of that assignment (the updated <code>z</code>) is assigned to <code>y</code>, then the result of that assignment (the updated <code>y</code>) is assigned to <code>x</code>. We should also need to follow this convention for our classes</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Widget</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    Widget<span class="op">&amp;</span> <span class="kw">operator</span><span class="op">=(</span><span class="at">const</span> Widget<span class="op">&amp;</span> rhs<span class="op">)</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>      <span class="op">...</span> <span class="co">// copy logic</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="op">*</span><span class="kw">this</span><span class="op">;</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This convention should follow for all the types of assignment operators like <code>+=</code>, <code>*=</code>, <code>/=</code> etc. Not following convention will compile the code but it may not be as useful with other C++ language features as all built-in as well as STL follow this convention. Do thi only if there is a strong reasoning.</p>
+</section>
+<section id="item-11-handle-assignment-to-self-in-operator" class="level2">
+<h2 class="anchored" data-anchor-id="item-11-handle-assignment-to-self-in-operator">Item-11: Handle assignment to self in <code>operator=</code></h2>
 
 
 </section>
