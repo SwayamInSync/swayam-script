@@ -836,5 +836,150 @@ class Widget
 
 This convention should follow for all the types of assignment operators like `+=`, `*=`, `/=` etc. Not following convention will compile the code but it may not be as useful with other C++ language features as all built-in as well as STL follow this convention. Do thi only if there is a strong reasoning.
 
-## Item-11: Handle assignment to self in `operator=` 
+## Item-11: Handle assignment to self in `operator=`
 
+It is very possible to perform a self-assign operation in C++
+
+```cpp
+a[i] = a[j]; // i and j might be same
+
+class Base {..};
+class Derived: public Base { ... };
+
+void doSomething(const Class& rb, Derived& pd); // they both can be pointing to same object
+```
+
+Take example of the following code and it'll show it can be disastrous. We are managing the resource here
+
+```cpp
+class Bitmap {...};
+
+class Widget
+{
+  private:
+    Bitmap *pb; // pointer to heap allocated Bitmap object
+};
+
+Widget& 
+Widget::operator=(const Widget& rhs)
+{
+  delete pb; // stop using current butmap, free It
+  pb = new Bitmap(*rhs.pb);
+  return *this;
+}
+```
+
+Now suppose if you do the self-assignment operator here then the `delete pb` statement will delete both source's as well as the RHS's bitmap. So how to solve? well an obvious way is to an identity check as 
+
+```cpp
+Widget& 
+Widget::operator=(const Widget& rhs)
+{
+  if (this == &rhs) // identity check
+    return *this;
+
+  delete pb; // stop using current butmap, free It
+  pb = new Bitmap(*rhs.pb);
+  return *this;
+}
+```
+
+There is one more issue in above code, it is also NOT **exception-safe** i.e. if the call to `new` failed (maybe because of not enough memory) then we are again left with the invalid pointers. Happily making `operator=` exception-safe also makes it self-assignment-safe too.
+
+```cpp
+Widget& 
+Widget::operator=(const Widget& rhs)
+{
+
+  Bitmap *pOrig = pb;
+  pb = new Bitmap(*rhs.pb);
+  delete pOrig; // delete the original
+  return *this;
+}
+```
+
+This may not be efficient (can add the identity check) but it works as now we have a backup copy. But still an even better approach is **Copy And Swap**
+
+```cpp
+Widget& 
+Widget::operator=(const Widget& rhs)
+{
+  Widget temp(rhs);
+  swap(temp); // exchange this and rhs's data
+  return *this; // destructor of temp will clean the old pb
+}
+```
+
+## Item-12: Copy all parts of an object
+Tl;dr copy each and everything in the respective class
+
+```cpp
+class Customer
+{
+  public:
+    Customer(const Customer &rhs);
+    Customer& operator=(const Customer& rhs);
+
+  private:
+    std::string name;
+};
+
+Customer::Customer(const Customer& rhs) : name(rhs.name)
+{
+  logCall("Customer copy constructor");
+}
+
+Customer& Customer::operator=(const Customer& rhs)
+{
+  logCall("Customer copy assignment operator");
+  name = rhs.name;
+  return *this;
+}
+
+
+class PriorityCustomer: public Customer
+{
+  public:
+    PriorityCustomer(const PriorityCustomer& rhs);
+    PriorityCustomer& operator=(const PriorityCustomer& rhs);
+  
+  private:
+    int priority;
+}
+ 
+// This is bad
+PriorityCustomer::PriorityCustomer(const PriorityCustomer& rhs): priority(rhs.priority)
+{
+  logCall("PriorityCustomer Copy Constructor");
+}
+// This is too
+PriorityCustomer&
+PriorityCustomer::operator=(const PriorityCustomer& rhs)
+{
+  logCall("PriorityCustomer copy assignment operator");
+
+  priority = rhs.priority;
+
+  return *this;
+}
+```
+
+For `PriorityCustomer` class in case of the copy-constructor call, issue is the base class's elements aren't getting copied so they will be initialized via the default constructor. And in case of the copy-assignment operator call the base class elements remains to original values. We explicitly need to call their copy functions as well
+
+```cpp
+PriorityCustomer::PriorityCustomer(const PriorityCustomer& rhs): Customer(rhs), priority(rhs.priority)
+{
+  logCall("PriorityCustomer Copy Constructor");
+}
+
+PriorityCustomer&
+PriorityCustomer::operator=(const PriorityCustomer& rhs)
+{
+  logCall("PriorityCustomer copy assignment operator");
+
+  Customer::operator=(rhs); // assign base class parts
+  priority = rhs.priority;
+
+  return *this;
+}
+```
