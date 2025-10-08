@@ -811,3 +811,30 @@ Static functions:
 :::
 
 ## Item-10: Have assignment operator return a reference to `*this`
+
+Assignment operation returns a reference to its left hand operand and it is right associative
+
+```cpp
+int x, y, z;
+
+x = y = z = 15; // x = (y = ( z = 15 ))
+```
+
+Here, 15 is assigned to `z`, then the result of that assignment (the updated `z`) is assigned to `y`, then the result of that assignment (the updated `y`) is assigned to `x`. We should also need to follow this convention for our classes
+
+```cpp
+class Widget
+{
+  public:
+    Widget& operator=(const Widget& rhs)
+    {
+      ... // copy logic
+      return *this;
+    }
+};
+```
+
+This convention should follow for all the types of assignment operators like `+=`, `*=`, `/=` etc. Not following convention will compile the code but it may not be as useful with other C++ language features as all built-in as well as STL follow this convention. Do thi only if there is a strong reasoning.
+
+## Item-11: Handle assignment to self in `operator=` 
+
