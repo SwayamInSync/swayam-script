@@ -983,3 +983,95 @@ PriorityCustomer::operator=(const PriorityCustomer& rhs)
   return *this;
 }
 ```
+# Resource Management
+
+## Item-13: Use objects to manage resources
+
+We typically don't want to rely on user front logic to free the acquired resources since lots of things can go wrong, consider the following example
+
+```cpp
+class Investment {...};
+
+// suppose a factory function is used to instantiate the Investment
+Investment* createInvestment(); // return ptr to dynamically allocated object
+
+void f()
+{
+  Investment* pInv = createInvestment();
+  ... // use pInv
+
+  delete pInv;
+}
+```
+
+Its very much possible that something bad can happen in the `...` area like exception throwm, an imature return statement or anything that can lead the program logic to not encounter the `delete` statement. It'll be better in that cases to free the object as it loses from the scope automatically.
+C++'s `auto_ptr` does exactly that
+
+```cpp
+void f()
+{
+  std::auto_ptr<Investment> pInv(createInvestment());
+  ...
+
+  // it is guranteed that the destructor wil run for auto_ptr and free the holding resource as well
+}
+```
+
+This is often called **RAII (Resource Acquisition is Initialization)** although it is possible that destructing `Investment` object leads to exception but we already saw in earlier items that this is a bad thing to do.
+
+The thing to note here is that not more than one `auto_ptr` can point to the same object as that way they all will try to delete the same memory. To ensure this `auto_ptr` does an bizzare behaviour of ***transfering ownership on copy***
+
+```cpp
+auto_ptr<Investment> pInv1(createInvestment());  // pInv1 owns the object
+
+auto_ptr<Investment> pInv2(pInv1);  // Copy constructor called
+                                    // pInv1 is now NULL
+                                    // pInv2 now owns the object
+
+pInv1 = pInv2;  // Copy assignment called
+                // pInv2 is now NULL
+                // pInv1 owns the object again
+```
+
+This violates the normal C++ copy semantics! After copying both the original and copy shouild be valid and independent. This also makes it incompatible to work with STL
+
+```cpp
+vector<auto_ptr<Investment>> vec;
+vec.push_back(auto_ptr<Investment>(createInvestment()));
+
+auto_ptr<Investment> ptr = vec[0];  // Copies from vector
+                                    // vec[0] is now NULL!
+                                    // Vector contains a broken element!
+
+// Sorting could destroy elements:
+sort(vec.begin(), vec.end());  // Copying during sort leaves NULLs everywhere!
+```
+
+So how to solve? We need **Reference-Counting Smart Pointer (RCSP)**. An RCSP is a smart pointer that keeps track of how many objects point to a particular resource and automatically deletes the resource when nobody is pointing to it any longer. As such, RCSPs offer behavior that is similar to that of garbage collection. Unlike garbage collection, however, RCSPs can't break cycles of references (e.g., two otherwise unused objects that point to one another).
+
+```cpp
+void f()
+{
+  ...
+
+  std::tr1::shared_ptr<Investment> pInv1(createInvestment()); // pInv1 points to the object returned from createInvestment
+
+
+  std::tr1::shared_ptr<Investment> pInv2(pInv1);       // both pInv1 and pInv2 now point to the object
+
+  pInv1 = pInv2;                            // ditto — nothing has
+                                            // changed
+  ...
+} // pInv1 and pInv2 are destroyed, and the object they point to is automatically deleted
+```
+
+Don't be misled, though. This Item isn't about `auto_ptr`, `tr1::shared_ptr`, or any other kind of smart pointer. It's about the importance of using objects to manage resources. `auto_ptr` and `tr1::shared_ptr` are just examples of objects that do that. 
+Down the line `auto_ptr` and `tr1::shared_tr` insid their destructor uses the `delete` so we cannot free the dynamically allocted arrays and the reason is that `vector` and `string` can almost always replace dynamically allocated arrays. Sadly even doing that will get successfully compiled.
+
+```cpp
+// following are the bad ideas to do
+std::auto_ptr<std::string> aps(new std::string[10]);
+std::tr1::shared_ptr<int> spi(new int[10]);
+```
+
+## Item-14: Think carefully about copying behaviour in resource-managing classes
