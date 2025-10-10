@@ -391,6 +391,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#item-11-handle-assignment-to-self-in-operator" id="toc-item-11-handle-assignment-to-self-in-operator" class="nav-link" data-scroll-target="#item-11-handle-assignment-to-self-in-operator">Item-11: Handle assignment to self in <code>operator=</code></a></li>
   <li><a href="#item-12-copy-all-parts-of-an-object" id="toc-item-12-copy-all-parts-of-an-object" class="nav-link" data-scroll-target="#item-12-copy-all-parts-of-an-object">Item-12: Copy all parts of an object</a></li>
   </ul></li>
+  <li><a href="#resource-management" id="toc-resource-management" class="nav-link" data-scroll-target="#resource-management">Resource Management</a>
+  <ul class="collapse">
+  <li><a href="#item-13-use-objects-to-manage-resources" id="toc-item-13-use-objects-to-manage-resources" class="nav-link" data-scroll-target="#item-13-use-objects-to-manage-resources">Item-13: Use objects to manage resources</a></li>
+  <li><a href="#item-14-think-carefully-about-copying-behaviour-in-resource-managing-classes" id="toc-item-14-think-carefully-about-copying-behaviour-in-resource-managing-classes" class="nav-link" data-scroll-target="#item-14-think-carefully-about-copying-behaviour-in-resource-managing-classes">Item-14: Think carefully about copying behaviour in resource-managing classes</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -1282,6 +1287,75 @@ Note
 <span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="op">*</span><span class="kw">this</span><span class="op">;</span></span>
 <span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="resource-management" class="level1">
+<h1>Resource Management</h1>
+<section id="item-13-use-objects-to-manage-resources" class="level2">
+<h2 class="anchored" data-anchor-id="item-13-use-objects-to-manage-resources">Item-13: Use objects to manage resources</h2>
+<p>We typically don’t want to rely on user front logic to free the acquired resources since lots of things can go wrong, consider the following example</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Investment <span class="op">{...};</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="co">// suppose a factory function is used to instantiate the Investment</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>Investment<span class="op">*</span> createInvestment<span class="op">();</span> <span class="co">// return ptr to dynamically allocated object</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> f<span class="op">()</span></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>  Investment<span class="op">*</span> pInv <span class="op">=</span> createInvestment<span class="op">();</span></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span> <span class="co">// use pInv</span></span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">delete</span> pInv<span class="op">;</span></span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Its very much possible that something bad can happen in the <code>...</code> area like exception throwm, an imature return statement or anything that can lead the program logic to not encounter the <code>delete</code> statement. It’ll be better in that cases to free the object as it loses from the scope automatically. C++’s <code>auto_ptr</code> does exactly that</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> f<span class="op">()</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>auto_ptr<span class="op">&lt;</span>Investment<span class="op">&gt;</span> pInv<span class="op">(</span>createInvestment<span class="op">());</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">// it is guranteed that the destructor wil run for auto_ptr and free the holding resource as well</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This is often called <strong>RAII (Resource Acquisition is Initialization)</strong> although it is possible that destructing <code>Investment</code> object leads to exception but we already saw in earlier items that this is a bad thing to do.</p>
+<p>The thing to note here is that not more than one <code>auto_ptr</code> can point to the same object as that way they all will try to delete the same memory. To ensure this <code>auto_ptr</code> does an bizzare behaviour of <strong><em>transfering ownership on copy</em></strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>auto_ptr<span class="op">&lt;</span>Investment<span class="op">&gt;</span> pInv1<span class="op">(</span>createInvestment<span class="op">());</span>  <span class="co">// pInv1 owns the object</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>auto_ptr<span class="op">&lt;</span>Investment<span class="op">&gt;</span> pInv2<span class="op">(</span>pInv1<span class="op">);</span>  <span class="co">// Copy constructor called</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="co">// pInv1 is now NULL</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="co">// pInv2 now owns the object</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>pInv1 <span class="op">=</span> pInv2<span class="op">;</span>  <span class="co">// Copy assignment called</span></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>                <span class="co">// pInv2 is now NULL</span></span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>                <span class="co">// pInv1 owns the object again</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This violates the normal C++ copy semantics! After copying both the original and copy shouild be valid and independent. This also makes it incompatible to work with STL</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>vector<span class="op">&lt;</span>auto_ptr<span class="op">&lt;</span>Investment<span class="op">&gt;&gt;</span> vec<span class="op">;</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>vec<span class="op">.</span>push_back<span class="op">(</span>auto_ptr<span class="op">&lt;</span>Investment<span class="op">&gt;(</span>createInvestment<span class="op">()));</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>auto_ptr<span class="op">&lt;</span>Investment<span class="op">&gt;</span> ptr <span class="op">=</span> vec<span class="op">[</span><span class="dv">0</span><span class="op">];</span>  <span class="co">// Copies from vector</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="co">// vec[0] is now NULL!</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>                                    <span class="co">// Vector contains a broken element!</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a><span class="co">// Sorting could destroy elements:</span></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>sort<span class="op">(</span>vec<span class="op">.</span>begin<span class="op">(),</span> vec<span class="op">.</span>end<span class="op">());</span>  <span class="co">// Copying during sort leaves NULLs everywhere!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>So how to solve? We need <strong>Reference-Counting Smart Pointer (RCSP)</strong>. An RCSP is a smart pointer that keeps track of how many objects point to a particular resource and automatically deletes the resource when nobody is pointing to it any longer. As such, RCSPs offer behavior that is similar to that of garbage collection. Unlike garbage collection, however, RCSPs can’t break cycles of references (e.g., two otherwise unused objects that point to one another).</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> f<span class="op">()</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>tr1::shared_ptr<span class="op">&lt;</span>Investment<span class="op">&gt;</span> pInv1<span class="op">(</span>createInvestment<span class="op">());</span> <span class="co">// pInv1 points to the object returned from createInvestment</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>tr1::shared_ptr<span class="op">&lt;</span>Investment<span class="op">&gt;</span> pInv2<span class="op">(</span>pInv1<span class="op">);</span>       <span class="co">// both pInv1 and pInv2 now point to the object</span></span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>  pInv1 <span class="op">=</span> pInv2<span class="op">;</span>                            <span class="co">// ditto — nothing has</span></span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a>                                            <span class="co">// changed</span></span>
+<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span>
+<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="co">// pInv1 and pInv2 are destroyed, and the object they point to is automatically deleted</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Don’t be misled, though. This Item isn’t about <code>auto_ptr</code>, <code>tr1::shared_ptr</code>, or any other kind of smart pointer. It’s about the importance of using objects to manage resources. <code>auto_ptr</code> and <code>tr1::shared_ptr</code> are just examples of objects that do that. Down the line <code>auto_ptr</code> and <code>tr1::shared_tr</code> insid their destructor uses the <code>delete</code> so we cannot free the dynamically allocted arrays and the reason is that <code>vector</code> and <code>string</code> can almost always replace dynamically allocated arrays. Sadly even doing that will get successfully compiled.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co">// following are the bad ideas to do</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>auto_ptr<span class="op">&lt;</span><span class="bu">std::</span>string<span class="op">&gt;</span> aps<span class="op">(</span><span class="kw">new</span> <span class="bu">std::</span>string<span class="op">[</span><span class="dv">10</span><span class="op">]);</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>tr1::shared_ptr<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;</span> spi<span class="op">(</span><span class="kw">new</span> <span class="dt">int</span><span class="op">[</span><span class="dv">10</span><span class="op">]);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="item-14-think-carefully-about-copying-behaviour-in-resource-managing-classes" class="level2">
+<h2 class="anchored" data-anchor-id="item-14-think-carefully-about-copying-behaviour-in-resource-managing-classes">Item-14: Think carefully about copying behaviour in resource-managing classes</h2>
 
 
 </section>
