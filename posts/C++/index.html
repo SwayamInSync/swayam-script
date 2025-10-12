@@ -395,6 +395,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#item-13-use-objects-to-manage-resources" id="toc-item-13-use-objects-to-manage-resources" class="nav-link" data-scroll-target="#item-13-use-objects-to-manage-resources">Item-13: Use objects to manage resources</a></li>
   <li><a href="#item-14-think-carefully-about-copying-behaviour-in-resource-managing-classes" id="toc-item-14-think-carefully-about-copying-behaviour-in-resource-managing-classes" class="nav-link" data-scroll-target="#item-14-think-carefully-about-copying-behaviour-in-resource-managing-classes">Item-14: Think carefully about copying behaviour in resource-managing classes</a></li>
+  <li><a href="#item-15-provide-access-to-raw-resource-in-resource-managing-classes" id="toc-item-15-provide-access-to-raw-resource-in-resource-managing-classes" class="nav-link" data-scroll-target="#item-15-provide-access-to-raw-resource-in-resource-managing-classes">Item-15: Provide access to raw resource in resource-managing classes</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -1356,6 +1357,72 @@ Note
 </section>
 <section id="item-14-think-carefully-about-copying-behaviour-in-resource-managing-classes" class="level2">
 <h2 class="anchored" data-anchor-id="item-14-think-carefully-about-copying-behaviour-in-resource-managing-classes">Item-14: Think carefully about copying behaviour in resource-managing classes</h2>
+<p>Not all resources are heap-based that require deletion and for such resources smart pointers might not always be the best resource handlers. We might need to create our own resource-managing classes from time to time. Consider the following example of <code>Mutex</code>. We need to lock it and ensure it gets unlock after the use.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Lock</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">private</span><span class="op">:</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>    Mutex <span class="op">*</span>mutexPtr<span class="op">;</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">explicit</span> Lock<span class="op">(</span>Mutex <span class="op">*</span>pm<span class="op">)</span> <span class="op">:</span> mutexPtr<span class="op">(</span>pm<span class="op">)</span></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>      lock<span class="op">(</span>mutexPtr<span class="op">);</span></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">~</span>Lock<span class="op">()</span></span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>      unlock<span class="op">(</span>mutexPtr<span class="op">);</span></span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Clients can use <code>Lock</code> in the conventional RAII fashion</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb55"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>Mutex m<span class="op">;</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">// local scope to creating critical section</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  Lock m1<span class="op">(&amp;</span>m<span class="op">);</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span> <span class="co">// do the stuff</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="co">// as scope ends, it'll get unlocked</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>One big question a programmer should ask when developing RAII classes that <strong>what happen if the object is copied?</strong> And there are different answeres to this depending on situations</p>
+<ul>
+<li><p><strong>Prohibit Copying</strong> Many cases it won’t make sense to allow RAII objects to be copied (like in our <code>Lock</code> class) because it rarely make sense to have copies of synchronization primitives.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Lock</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">private</span><span class="op">:</span></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>    Mutex <span class="op">*</span>mutexPtr<span class="op">;</span></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">explicit</span> Lock<span class="op">(</span>Mutex <span class="op">*</span>pm<span class="op">)</span> <span class="op">:</span> mutexPtr<span class="op">(</span>pm<span class="op">)</span></span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>      lock<span class="op">(</span>mutexPtr<span class="op">);</span></span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">~</span>Lock<span class="op">()</span></span>
+<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a>      unlock<span class="op">(</span>mutexPtr<span class="op">);</span></span>
+<span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb56-15"><a href="#cb56-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-16"><a href="#cb56-16" aria-hidden="true" tabindex="-1"></a>    Lock<span class="op">&amp;</span> <span class="kw">operator</span><span class="op">=(</span><span class="at">const</span> Lock <span class="op">&amp;)</span> <span class="op">=</span> <span class="kw">delete</span><span class="op">;</span> <span class="co">// copy assign operator</span></span>
+<span id="cb56-17"><a href="#cb56-17" aria-hidden="true" tabindex="-1"></a>    Lock<span class="op">(</span><span class="at">const</span> Lock <span class="op">&amp;)</span> <span class="op">=</span> <span class="kw">delete</span><span class="op">;</span> <span class="co">// copy constructor</span></span>
+<span id="cb56-18"><a href="#cb56-18" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p><strong>Reference Count the underlying resource</strong> Sometimes it’s desirable to hold on the resource unless the last object holding it gets destroyed. RAII objects should increment the count of the numbers of objects referring to the resource. In <code>tr1::shared_ptr</code> we can pass custom deleter function to change the behaviour of what to do when object goes out of scope.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb57"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Lock</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">private</span><span class="op">:</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>tr1::shared_ptr<span class="op">&lt;</span>Mutex<span class="op">&gt;</span> mutexPtr<span class="op">;</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">explicit</span> Lock<span class="op">(</span>Mutex <span class="op">*</span>pm<span class="op">)</span> <span class="op">:</span> mutexPtr<span class="op">(</span>pm<span class="op">,</span> unlock<span class="op">)</span> <span class="co">// unlock can be the custom function to call</span></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>      lock<span class="op">(</span>mutexPtr<span class="op">.</span>get<span class="op">());</span></span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">~</span>Lock<span class="op">()</span></span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a>      unlock<span class="op">(</span>mutexPtr<span class="op">);</span></span>
+<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p><strong>Copy the underline resource</strong> Sometimes you want this deepcopy to ensure each copy is responsible for freeing the respective resource. Some <code>string</code> implementation follow this i.e.&nbsp;during copy heap memory is allocated, characters are being copied</p></li>
+<li><p><strong>Transfer Ownership of the underlying resource</strong> On rare occasions, we want only one RAII object refer to the raw resource and when it gets copied, the ownership of the resource is transferred from the copied object to the copying one.</p></li>
+</ul>
+</section>
+<section id="item-15-provide-access-to-raw-resource-in-resource-managing-classes" class="level2">
+<h2 class="anchored" data-anchor-id="item-15-provide-access-to-raw-resource-in-resource-managing-classes">Item-15: Provide access to raw resource in resource-managing classes</h2>
 
 
 </section>
