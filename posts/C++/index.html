@@ -397,6 +397,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#item-14-think-carefully-about-copying-behaviour-in-resource-managing-classes" id="toc-item-14-think-carefully-about-copying-behaviour-in-resource-managing-classes" class="nav-link" data-scroll-target="#item-14-think-carefully-about-copying-behaviour-in-resource-managing-classes">Item-14: Think carefully about copying behaviour in resource-managing classes</a></li>
   <li><a href="#item-15-provide-access-to-raw-resource-in-resource-managing-classes" id="toc-item-15-provide-access-to-raw-resource-in-resource-managing-classes" class="nav-link" data-scroll-target="#item-15-provide-access-to-raw-resource-in-resource-managing-classes">Item-15: Provide access to raw resource in resource-managing classes</a></li>
   <li><a href="#item-16-use-the-same-form-in-corresponding-uses-of-new-and-delete" id="toc-item-16-use-the-same-form-in-corresponding-uses-of-new-and-delete" class="nav-link" data-scroll-target="#item-16-use-the-same-form-in-corresponding-uses-of-new-and-delete">Item-16: Use the same form in corresponding uses of <code>new</code> and <code>delete</code></a></li>
+  <li><a href="#item-17-store-newed-objects-in-smart-pointers-in-standalone-statements" id="toc-item-17-store-newed-objects-in-smart-pointers-in-standalone-statements" class="nav-link" data-scroll-target="#item-17-store-newed-objects-in-smart-pointers-in-standalone-statements">Item-17: Store <code>new</code>ed objects in smart pointers in standalone statements</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -1434,6 +1435,54 @@ Note
 </section>
 <section id="item-16-use-the-same-form-in-corresponding-uses-of-new-and-delete" class="level2">
 <h2 class="anchored" data-anchor-id="item-16-use-the-same-form-in-corresponding-uses-of-new-and-delete">Item-16: Use the same form in corresponding uses of <code>new</code> and <code>delete</code></h2>
+<p>Tl;dr the forms of <code>new</code> and <code>delete</code> must stay consistent. i.e.&nbsp;if used <code>[]</code> with <code>new</code> then must use <code>[]</code> with `delete.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>string <span class="op">*</span>ptr1 <span class="op">=</span> <span class="kw">new</span> <span class="bu">std::</span>string<span class="op">;</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>string <span class="op">*</span>ptr2 <span class="op">=</span> <span class="kw">new</span> <span class="bu">std::</span>string<span class="op">[</span><span class="dv">10</span><span class="op">];</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="kw">delete</span> ptr1<span class="op">;</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="kw">delete</span> <span class="op">[]</span> ptr2<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Be cautious using <code>typedef</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="bu">std::</span>string AddressLines<span class="op">[</span><span class="dv">4</span><span class="op">];</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>string <span class="op">*</span>pal <span class="op">=</span> <span class="kw">new</span> AddressLines<span class="op">;</span></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a><span class="kw">delete</span> pal<span class="op">;</span> <span class="co">// undefined</span></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a><span class="kw">delete</span> <span class="op">[]</span> pal<span class="op">;</span> <span class="co">// correct</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="item-17-store-newed-objects-in-smart-pointers-in-standalone-statements" class="level2">
+<h2 class="anchored" data-anchor-id="item-17-store-newed-objects-in-smart-pointers-in-standalone-statements">Item-17: Store <code>new</code>ed objects in smart pointers in standalone statements</h2>
+<p>Consider the following code</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb61"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> priority<span class="op">();</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> processWidget<span class="op">(</span><span class="bu">std::</span>tr1::shared_ptr<span class="op">&lt;</span>Widget<span class="op">&gt;</span> pw<span class="op">,</span> <span class="dt">int</span> priority<span class="op">);</span></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>processWidget<span class="op">(</span><span class="kw">new</span> Widget<span class="op">,</span> priority<span class="op">());</span> <span class="co">// bad</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>It won’t even compile as <code>shared_ptr</code> has an <code>explicit</code> constructor so cannot do implicit conversion of raw pointer to smart shared pointer. But if we do</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>processWidget<span class="op">(</span><span class="bu">std::</span>tr1::shared_ptr<span class="op">&lt;</span>Widget<span class="op">&gt;(</span><span class="kw">new</span> Widget<span class="op">),</span> priority<span class="op">());</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This will compile good <strong>but there are chances that this can leak resource here</strong>. The evaluation of function argument is unspecified and independent. And looking at the current code compiler needs to perform</p>
+<ul>
+<li>call <code>priority</code></li>
+<li>call <code>new Widget</code></li>
+<li>wrap the allocated raw pointer in shared_pointer</li>
+</ul>
+<p>But what if compiler decides the following order of execution:</p>
+<ul>
+<li>Execute <code>new Widget</code>.</li>
+<li>Call <code>priority</code>.</li>
+<li>Call the <code>tr1::shared_ptr</code> constructor</li>
+</ul>
+<p>And here suppose the call to <code>priority</code> raised some exception and now since the raw pointer to newly allocated memory isn’t wrapped within shared pointer so it gets leaked. Hence always a better choice is to compute them first hand.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In modern C++ (C++17 and later), the evaluation order of function arguments is still unspecified—meaning the compiler can choose any order it wants for evaluating the separate arguments (e.g., it might evaluate the second argument before the first, or vice versa). However, the evaluations are indeterminately sequenced, so there’s no interleaving of subexpressions across arguments. Once the evaluation of a particular argument begins, all its subexpressions, side effects, and nested operations must complete fully before the evaluation of another argument can start. This prevents the resource leak scenario from the original example, because the new Widget (a subexpression within the first argument) can’t be left dangling if an exception occurs in priority() (the second argument)—either the whole first argument evaluates safely first, or priority() throws before any part of the first argument even begins.</p>
+</div>
+</div>
 
 
 </section>
