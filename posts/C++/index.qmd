@@ -1172,3 +1172,60 @@ int days = daysHeld(pInv.get());  // Explicitly extract raw pointer
 Going through implicit conversion can be sometimes look good but unknowingly increases the chances of doing mistakes. Recommend is to avoid implicit conversions and be as explicit as needed.
 
 ## Item-16: Use the same form in corresponding uses of `new` and `delete`
+
+Tl;dr the forms of `new` and `delete` must stay consistent. i.e. if used `[]` with `new` then must use `[]` with `delete.
+
+```cpp
+std::string *ptr1 = new std::string;
+std::string *ptr2 = new std::string[10];
+
+delete ptr1;
+delete [] ptr2;
+```
+
+Be cautious using `typedef`
+
+```cpp
+typedef std::string AddressLines[4];
+
+std::string *pal = new AddressLines;
+delete pal; // undefined
+delete [] pal; // correct
+```
+
+## Item-17: Store `new`ed objects in smart pointers in standalone statements
+
+Consider the following code
+
+```cpp
+int priority();
+void processWidget(std::tr1::shared_ptr<Widget> pw, int priority);
+
+processWidget(new Widget, priority()); // bad
+```
+
+It won't even compile as `shared_ptr` has an `explicit` constructor so cannot do implicit conversion of raw pointer to smart shared pointer. But if we do
+
+```cpp
+processWidget(std::tr1::shared_ptr<Widget>(new Widget), priority());
+```
+
+This will compile good **but there are chances that this can leak resource here**. The evaluation of function argument is unspecified and independent. And looking at the current code compiler needs to perform
+
+- call `priority`
+- call `new Widget`
+- wrap the allocated raw pointer in shared_pointer
+
+But what if compiler decides the following order of execution:
+
+- Execute `new Widget`.
+- Call `priority`.
+- Call the `tr1::shared_ptr` constructor
+
+And here suppose the call to `priority` raised some exception and now since the raw pointer to newly allocated memory isn't wrapped within shared pointer so it gets leaked.
+Hence always a better choice is to compute them first hand.
+
+::: {.callout-note}
+In modern C++ (C++17 and later), the evaluation order of function arguments is still unspecified—meaning the compiler can choose any order it wants for evaluating the separate arguments (e.g., it might evaluate the second argument before the first, or vice versa). However, the evaluations are indeterminately sequenced, so there's no interleaving of subexpressions across arguments. Once the evaluation of a particular argument begins, all its subexpressions, side effects, and nested operations must complete fully before the evaluation of another argument can start.
+This prevents the resource leak scenario from the original example, because the new Widget (a subexpression within the first argument) can't be left dangling if an exception occurs in priority() (the second argument)—either the whole first argument evaluates safely first, or priority() throws before any part of the first argument even begins.
+:::
