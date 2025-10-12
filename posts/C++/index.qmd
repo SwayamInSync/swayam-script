@@ -1075,3 +1075,85 @@ std::tr1::shared_ptr<int> spi(new int[10]);
 ```
 
 ## Item-14: Think carefully about copying behaviour in resource-managing classes
+
+Not all resources are heap-based that require deletion and for such resources smart pointers might not always be the best resource handlers. We might need to create our own resource-managing classes from time to time. Consider the following example of `Mutex`. We need to lock it and ensure it gets unlock after the use.
+
+```cpp
+class Lock
+{
+  private:
+    Mutex *mutexPtr;
+  public:
+    explicit Lock(Mutex *pm) : mutexPtr(pm)
+    {
+      lock(mutexPtr);
+    }
+
+    ~Lock()
+    {
+      unlock(mutexPtr);
+    }
+}
+```
+
+Clients can use `Lock` in the conventional RAII fashion
+
+```cpp
+Mutex m;
+{
+  // local scope to creating critical section
+  Lock m1(&m);
+  ... // do the stuff
+} // as scope ends, it'll get unlocked
+```
+
+One big question a programmer should ask when developing RAII classes that **what happen if the object is copied?** And there are different answeres to this depending on situations
+
+- **Prohibit Copying** Many cases it won't make sense to allow RAII objects to be copied (like in our `Lock` class) because it rarely make sense to have copies of synchronization primitives.
+  
+  ```cpp
+  class Lock
+  {
+    private:
+      Mutex *mutexPtr;
+    public:
+      explicit Lock(Mutex *pm) : mutexPtr(pm)
+      {
+        lock(mutexPtr);
+      }
+
+      ~Lock()
+      {
+        unlock(mutexPtr);
+      }
+
+      Lock& operator=(const Lock &) = delete; // copy assign operator
+      Lock(const Lock &) = delete; // copy constructor
+  };
+  ```
+
+- **Reference Count the underlying resource** Sometimes it's desirable to hold on the resource unless the last object holding it gets destroyed. RAII objects should increment the count of the numbers of objects referring to the resource.
+  In `tr1::shared_ptr` we can pass custom deleter function to change the behaviour of what to do when object goes out of scope.
+  
+  ```cpp
+  class Lock
+  {
+    private:
+      std::tr1::shared_ptr<Mutex> mutexPtr;
+    public:
+      explicit Lock(Mutex *pm) : mutexPtr(pm, unlock) // unlock can be the custom function to call
+      {
+        lock(mutexPtr.get());
+      }
+
+      ~Lock()
+      {
+        unlock(mutexPtr);
+      }
+  }
+  ```
+
+- **Copy the underline resource** Sometimes you want this deepcopy to ensure each copy is responsible for freeing the respective resource. Some `string` implementation follow this i.e. during copy heap memory is allocated, characters are being copied
+- **Transfer Ownership of the underlying resource** On rare occasions, we want only one RAII object refer to the raw resource and when it gets copied, the ownership of the resource is transferred from the copied object to the copying one.
+
+## Item-15: Provide access to raw resource in resource-managing classes
