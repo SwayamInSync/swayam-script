@@ -1157,3 +1157,18 @@ One big question a programmer should ask when developing RAII classes that **wha
 - **Transfer Ownership of the underlying resource** On rare occasions, we want only one RAII object refer to the raw resource and when it gets copied, the ownership of the resource is transferred from the copied object to the copying one.
 
 ## Item-15: Provide access to raw resource in resource-managing classes
+
+Sometimes we need to deal with API that uses the raw pointers to the resource. In that case we need a balance between RAII like smart pointers and using raw.
+There can be 2 cases of usage, explicit conversion and implicit. For explicit its straightforward
+
+```cpp
+std::tr1::shared_ptr<Investment> pInv(createInvestment());
+int daysHeld(const Investment *pi);  // wants a raw pointer
+
+int days = daysHeld(pInv);  // ERROR! Can't pass smart pointer directly
+int days = daysHeld(pInv.get());  // Explicitly extract raw pointer
+```
+
+Going through implicit conversion can be sometimes look good but unknowingly increases the chances of doing mistakes. Recommend is to avoid implicit conversions and be as explicit as needed.
+
+## Item-16: Use the same form in corresponding uses of `new` and `delete`
