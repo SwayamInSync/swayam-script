@@ -396,6 +396,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#item-13-use-objects-to-manage-resources" id="toc-item-13-use-objects-to-manage-resources" class="nav-link" data-scroll-target="#item-13-use-objects-to-manage-resources">Item-13: Use objects to manage resources</a></li>
   <li><a href="#item-14-think-carefully-about-copying-behaviour-in-resource-managing-classes" id="toc-item-14-think-carefully-about-copying-behaviour-in-resource-managing-classes" class="nav-link" data-scroll-target="#item-14-think-carefully-about-copying-behaviour-in-resource-managing-classes">Item-14: Think carefully about copying behaviour in resource-managing classes</a></li>
   <li><a href="#item-15-provide-access-to-raw-resource-in-resource-managing-classes" id="toc-item-15-provide-access-to-raw-resource-in-resource-managing-classes" class="nav-link" data-scroll-target="#item-15-provide-access-to-raw-resource-in-resource-managing-classes">Item-15: Provide access to raw resource in resource-managing classes</a></li>
+  <li><a href="#item-16-use-the-same-form-in-corresponding-uses-of-new-and-delete" id="toc-item-16-use-the-same-form-in-corresponding-uses-of-new-and-delete" class="nav-link" data-scroll-target="#item-16-use-the-same-form-in-corresponding-uses-of-new-and-delete">Item-16: Use the same form in corresponding uses of <code>new</code> and <code>delete</code></a></li>
   </ul></li>
   </ul>
 </nav>
@@ -1423,6 +1424,16 @@ Note
 </section>
 <section id="item-15-provide-access-to-raw-resource-in-resource-managing-classes" class="level2">
 <h2 class="anchored" data-anchor-id="item-15-provide-access-to-raw-resource-in-resource-managing-classes">Item-15: Provide access to raw resource in resource-managing classes</h2>
+<p>Sometimes we need to deal with API that uses the raw pointers to the resource. In that case we need a balance between RAII like smart pointers and using raw. There can be 2 cases of usage, explicit conversion and implicit. For explicit its straightforward</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>tr1::shared_ptr<span class="op">&lt;</span>Investment<span class="op">&gt;</span> pInv<span class="op">(</span>createInvestment<span class="op">());</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> daysHeld<span class="op">(</span><span class="at">const</span> Investment <span class="op">*</span>pi<span class="op">);</span>  <span class="co">// wants a raw pointer</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> days <span class="op">=</span> daysHeld<span class="op">(</span>pInv<span class="op">);</span>  <span class="co">// ERROR! Can't pass smart pointer directly</span></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> days <span class="op">=</span> daysHeld<span class="op">(</span>pInv<span class="op">.</span>get<span class="op">());</span>  <span class="co">// Explicitly extract raw pointer</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Going through implicit conversion can be sometimes look good but unknowingly increases the chances of doing mistakes. Recommend is to avoid implicit conversions and be as explicit as needed.</p>
+</section>
+<section id="item-16-use-the-same-form-in-corresponding-uses-of-new-and-delete" class="level2">
+<h2 class="anchored" data-anchor-id="item-16-use-the-same-form-in-corresponding-uses-of-new-and-delete">Item-16: Use the same form in corresponding uses of <code>new</code> and <code>delete</code></h2>
 
 
 </section>
