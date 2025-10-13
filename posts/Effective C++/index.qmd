@@ -1,6 +1,6 @@
 ---
-title: "[WIP] Effective C++ (Complete series)"
-subtitle: "This article summarizes all the items mentioned in Effective C++ (2005), More Effective C++ (1995) and Effective Modern C++ (2015) by Scott Meyers"
+title: "[WIP] Effective C++"
+subtitle: "This article summarizes all the items mentioned in Effective C++ by Scott Meyers"
 author: "Swayam Singh"
 date: "2025-09-19"
 categories: [C++]
@@ -14,7 +14,7 @@ execute:
 image: assets/header.png
 social:
   - image: assets/header.png
-    description: "Header: Effective C++, complete series"
+    description: "Header: Effective C++"
 ---
 
 <img src="assets/header.png" style="zoom:70%;" />
