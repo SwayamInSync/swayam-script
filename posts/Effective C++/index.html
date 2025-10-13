@@ -1481,7 +1481,7 @@ Note
 </div>
 <div class="callout-body-container callout-body">
 <p>In modern C++ (C++17 and later), the evaluation order of function arguments is still unspecified—meaning the compiler can choose any order it wants for evaluating the separate arguments (e.g., it might evaluate the second argument before the first, or vice versa). However, the evaluations are indeterminately sequenced, so there’s no interleaving of subexpressions across arguments. Once the evaluation of a particular argument begins, all its subexpressions, side effects, and nested operations must complete fully before the evaluation of another argument can start.</p>
-<p>This prevents the resource leak scenario from the original example, because the new Widget (a subexpression within the first argument) can’t be left dangling if an exception occurs in priority() (the second argument)—either the whole first argument evaluates safely first, or priority() throws before any part of the first argument even begins.</p>
+<p>This prevents the resource leak scenario from the original example, because the new Widget (a subexpression within the first argument) can’t be left dangling if an exception occurs in <code>priority()</code> (the second argument)—either the whole first argument evaluates safely first, or <code>priority()</code> throws before any part of the first argument even begins.</p>
 </div>
 </div>
 
