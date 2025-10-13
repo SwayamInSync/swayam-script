@@ -17,7 +17,7 @@ social:
     description: "Header: Effective C++"
 ---
 
-<img src="assets/header.png" style="zoom:70%;" />
+<img src="assets/header.png" style="zoom:50%;" />
 
 # Effective C++ (2005)
 
