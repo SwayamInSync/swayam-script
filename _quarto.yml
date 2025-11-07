@@ -17,6 +17,6 @@ website:
 format:
   html:
     theme:
-      dark: cyborg
       light: cosmo
+      dark: cyborg
     css: styles.css

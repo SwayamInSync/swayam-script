@@ -1218,7 +1218,7 @@ This will compile good **but there are chances that this can leak resource here*
 
 But what if compiler decides the following order of execution:
 
-- Execute `new Widget`.
+- ****Execute**** `new Widget`.
 - Call `priority`.
 - Call the `tr1::shared_ptr` constructor
 
@@ -1231,3 +1231,102 @@ However, the evaluations are indeterminately sequenced, so there's no interleavi
 
 This prevents the resource leak scenario from the original example, because the new Widget (a subexpression within the first argument) can't be left dangling if an exception occurs in `priority()` (the second argument)—either the whole first argument evaluates safely first, or `priority()` throws before any part of the first argument even begins.
 :::
+
+# Designs and Declarations
+
+## Item-18: Make interfaces easy to use correctly and hard to use incorrectly
+
+Design C++ interfaces that are easy to use correctly and hard to use incorrectly. If users make mistakes, it’s often the interface’s fault, not theirs. Let's quickly get some example
+
+The goal is more towards not letting the inappropriate handling of interface compile
+
+```cpp
+class Date
+{
+  public:
+    Date(int month, int day, int year);
+    ...
+};
+Date d(30, 3, 1995); // Oops! Should be "3, 30", not "30, 3"
+Date d(2, 20, 1995); // Oops! Should be "3, 30", not "2, 20"
+```
+
+These and many client errors can be prevented by the introduction of new types. The type system is our primary ally
+
+```cpp
+struct Day
+{
+  explicit Day(int d) : val(d);
+  int val;
+};
+struct Month
+{
+  explicit Month(int d) : val(d);
+  int val;
+};
+struct Year
+{
+  explicit Year(int d) : val(d);
+  int val;
+};
+
+class Date
+{
+  public:
+    Date(const Month& month, const Day& day, const Year& year);
+    ...
+};
+
+Date d(30, 3, 1995); // error! wrong types
+
+Date d(Day(30), Month(3), Year(1995));    // error! wrong types
+
+Date d(Month(3), Day(30), Year(1995));    // okay, types are correct
+// what if? Month class is defined in another TU and is not initialized yet?
+```
+
+It can be more reasonable to add some constraints in our types like `Month` can be only between 1-12. One way could be using `enum` but remember `enum` are not as type-safe as we might like (can be used as `int`s). Safer solution is to predefine the set of all valid `Month`s
+
+```cpp
+class Month
+{
+  public:
+    static Month Jan() {return Month(1);}
+    static Month Feb() {return Month(2);}
+    ...
+    static Month Dec() {return Month(12);}
+    ...
+
+  private:
+    int val;
+    explicit Month(int m) : val(m)
+    {}
+};
+
+Date d(Month::Mar(), Day(30), Year(1995));
+```
+
+Better use the local-static `Month` objects to gurantee the initialization.
+
+Tip-2, can be whenever in confusion, follow the behavior of built-in types like int — users already understand them.
+
+## Item-19: Treat class design as type design
+
+Designing good classes is challenging because designing good types is challenging. Good types have a natural syntax, intuitive semantics, and one or more efficient implementations. In C++, a poorly planned class definition can make it impossible to achieve any of these goals. Even the performance characteristics of a class's member functions may be affected by how they are declared.
+
+How, then, do you design effective classes? First, you must understand the issues you face. Virtually every class requires that you confront the following questions, the answers to which often lead to constraints on your design:
+
+- How should objects of your new type be created and destroyed? 
+- How should object initialization differ from object assignment?
+- What it means for objects of your new type to be passed by value?
+- What are the restrictions on legal values for your new type?
+- Does your type fit into an inheritance graph?
+- What type of conversions are allowed for your new type?
+- What operators and functions make sense for the new type?
+- What standard functions should be disallowed?
+- Who should have access to the members of your new type?
+- What is the "undeclared interface" of your new type?
+  
+  > What kind of gurantees does it offer w.r.t. performance, exception safety, resource usage.
+- How general is your new type?
+- Is a new type is really what you need?
