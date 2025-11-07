@@ -1488,3 +1488,198 @@ Why avoid friend?
 1. A friend function can access private data → breaks encapsulation.
 2. More friends = more maintenance risk (changes to private members ripple out).
 3. Friend should be used only when necessary.
+
+## Item-25: Consider support for a non-throwing `swap`
+
+`swap` introduced in STL and now became a mainstay of exception-safe programming. `swap` is so helpful makes it also important to implement properly.
+
+For smaller types 3 copy implementation just works fine
+
+```cpp
+template<typename T>
+void swap(T& a, T& b)
+{
+    T temp(a);
+    a = b;
+    b = temp;
+}
+```
+This works fine as long as your type supports copying and the cost of copying is not much. For some types, copying is expensive (think: large data structures, objects holding large buffers, etc.).
+
+For such types the design can be, a type consisting the pointer to another type that contains real data. A common manifestation of this design approach is the "pimpl idiom" (pointer to implementation)
+
+```cpp
+class WidgetImpl
+{
+  public:
+    ....
+  private:
+    int a, b, c; // possibly lots of data
+    std::vector<double> v; // expensive to copy
+};
+
+class Widget
+{
+  public:
+    Widget(const Widget& rhs);
+    Widget& operator=(const Widget& rhs)
+    {
+      ...
+      *pImpl = *(rhs.pImpl); // just copy the WidgetImpl pointer
+    }
+
+  private:
+    WidgetImpl* pImpl; // ptr pointing to data
+};
+```
+
+But the `std::swap` has no idea to swap the pointers, instead it'll start making copies and also making copies of the Impl. BUT there is a way:
+
+**C++ allows total specialization of standard templates for types you own**
+
+> You can write a custom version of `std::swap` that applies only to your type (`Widget`), as long as you don’t modify anything else inside namespace `std`.
+
+```cpp
+namespace std
+{
+  template<>
+  void swap<Widget>(Widget& a, Widget& b)
+  {
+    swap(a.pImpl, b.pImpl); // just swap the pointers (won't work, they are private)
+  }
+}
+```
+Now the design choice, How to make it compile? We can define the `swap` inside `Widget` class so that it can access
+
+```cpp
+class Widget
+{
+  public:
+    ...
+    void swap(Widget& other) noexcept // must not throw
+    {
+      using std::swap // enables ADL lookup for non-member swaps
+
+      swap(pImpl, other.pImpl); // just swap the pointers
+    }
+    ...
+  private:
+    WidgetImpl* pImpl;
+};
+
+// Now we can specialize the std::swap for Widget
+
+namespace std
+{
+  template<>
+  void swap<Widget>(Widget* a, Widget& b) noexcept
+  {
+    a.swap(b); // call Widget's member swap
+  }
+}
+```
+.::: {.callout-important}
+Why doing `using std::swap` inside the class member `swap` implementation?
+
+Suppose you're writing a function template where you need to swap the values of two objects:
+
+```cpp
+template<typename T>
+void doSomething(T& obj1, T& obj2)
+{
+  ...
+  swap(obj1, obj2);
+  ...
+}
+```
+
+Which swap should this call? The general one in std, which you know exists; a specialization of the general one in std, which may or may not exist; or a T-specific one, which may or may not exist and which may or may not be in a namespace (but should certainly not be in std)? What you desire is to call a T-specific version if there is one, but to fall back on the general version in std if there's not. Here's how you fulfill your desire:
+
+```cpp
+template<typename T>
+void doSomething(T& obj1, T& obj2)
+{
+  using std::swap;           // make std::swap available in this function
+  ...
+  swap(obj1, obj2);          // call the best swap for objects of type T
+  ...
+}
+```
+C++'s name lookup rules ensure that this will find any `T`-specific swap at global scope or in the same namespace as the type `T`. (For example, if `T` is Widget in the namespace `WidgetStuff`, compilers will use argument-dependent lookup to find swap in `WidgetStuff`.) If no `T`-specific swap exists, compilers will use `swap` in `std`, thanks to the `using` declaration that makes `std::swap` visible in this function.
+
+These lookups rules are called **ADL (Argument Dependent LookUp)**
+:::
+
+
+This specialization means:
+When someone writes `std::swap(a, b)` and` a/b` are `Widgets`, call `a.swap(b)`. Not only does this compile, it's also consistent with the STL containers, all of which provide both public `swap` member functions and specializations of std::swap that call these member functions.
+
+Now suppose `Widget` and `WidgetImpl` are **class tempalates**, we may could've done something like
+
+```cpp
+template<typename T>
+class WidgetImpl {...};
+
+template<typename T>
+class Widget {...};
+```
+
+Adding the `swap` member function to `Widget` is still easy as before, but the issues occur when specializing the `std::swap`, you maybe thinking doing something like
+
+```cpp
+namespace std
+{
+  template<typename T>
+  void swap<Widget<T>>(Widget<T>& a, // ERROR, this is illegal code 
+                       Widget<T>&b)
+  {
+    a.swap(b);
+  }
+}
+```
+
+**Here, `swap<Widget<T>>` is not a full specialization, because `T` is still a template parameter. It is a partial specialization, which is illegal for function templates.**
+
+So when we want to "partially specialize" a function template, the usual approach is to simply add an overload
+
+```cpp
+namespace std
+{
+  template<typename T>
+  void swap<Widget<T>& a, Widget<T>& b) // notice it is swap() not swap<T>()
+  {
+    a.swap(b);
+  }
+}
+```
+
+Well still NO! in general overloading function tempaltes is fine, but `std` is a special namespace with strict rules. It is okay to specialize templates in `std` but its **NOT OKAY to overload/add new templates**. It may compile, but the behavior is Undefined.
+
+So WHAT TO DO? We still need a way to let other people call `swap` and get out efficient template-specific version. The answer is simple. We still declare a non-member `swap` that calls the member `swap` we just don't declare the non-member to be a specialization or overloading of `std::swap`
+Example all our `Widget` related functionality is in the namespace `WidgetStuff`
+
+```cpp
+namespace WidgetStuff
+{
+  template<typename T>
+  class Widget {...}; // includes the member swap function
+
+  ....
+
+  template<typename T>
+  void swap(Widget<T>& a, Widget<T>& b)
+  {
+    a.swap(b);
+  }
+}
+```
+
+Now just one thing need to keep in mind is that, We want the fast, type-specific `swap` to be called for our type (`Widget` or `Widget<T>`), not the slow default `std::swap`.
+
+```cpp
+std::swap(obj1, obj2);  // the wrong way to call swap
+
+// The right ✅ way
+using std::swap
+std::swap(obj1, obj2);
+```
