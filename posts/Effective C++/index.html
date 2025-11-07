@@ -411,6 +411,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#item-21-dont-try-to-return-a-reference-when-you-must-return-an-object" id="toc-item-21-dont-try-to-return-a-reference-when-you-must-return-an-object" class="nav-link" data-scroll-target="#item-21-dont-try-to-return-a-reference-when-you-must-return-an-object">Item-21: Don’t try to return a reference when you must return an object</a></li>
   <li><a href="#item-22-declare-data-members-private" id="toc-item-22-declare-data-members-private" class="nav-link" data-scroll-target="#item-22-declare-data-members-private">Item-22: Declare data members <code>private</code></a></li>
   <li><a href="#item-23-prefer-non-member-non-friend-functions-to-member-functions" id="toc-item-23-prefer-non-member-non-friend-functions-to-member-functions" class="nav-link" data-scroll-target="#item-23-prefer-non-member-non-friend-functions-to-member-functions">Item-23: Prefer non-member non-friend functions to member functions</a></li>
+  <li><a href="#item-24-declare-non-member-functions-when-type-conversions-should-apply-to-all-parameters" id="toc-item-24-declare-non-member-functions-when-type-conversions-should-apply-to-all-parameters" class="nav-link" data-scroll-target="#item-24-declare-non-member-functions-when-type-conversions-should-apply-to-all-parameters">Item-24: Declare non-member functions when type conversions should apply to all parameters</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -1671,6 +1672,58 @@ Note
 </section>
 <section id="item-23-prefer-non-member-non-friend-functions-to-member-functions" class="level2">
 <h2 class="anchored" data-anchor-id="item-23-prefer-non-member-non-friend-functions-to-member-functions">Item-23: Prefer non-member non-friend functions to member functions</h2>
+<p>Prefer non-member non-friend functions to member functions. Doing so increases encapsulation, packaging flexibility, and functional extensibility.</p>
+</section>
+<section id="item-24-declare-non-member-functions-when-type-conversions-should-apply-to-all-parameters" class="level2">
+<h2 class="anchored" data-anchor-id="item-24-declare-non-member-functions-when-type-conversions-should-apply-to-all-parameters">Item-24: Declare non-member functions when type conversions should apply to all parameters</h2>
+<p>Assume the same previous <code>Rational</code> example</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb70"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Rational</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>        Rational<span class="op">(</span><span class="dt">int</span> num <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">int</span> denom <span class="op">=</span> <span class="dv">1</span><span class="op">)</span> <span class="op">:</span> n<span class="op">(</span>num<span class="op">),</span> d<span class="op">(</span>denom<span class="op">)</span></span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>        <span class="op">{}</span></span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">const</span> Rational <span class="kw">operator</span><span class="op">*(</span><span class="at">const</span> Rational<span class="op">&amp;</span> rhs<span class="op">)</span></span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>        <span class="op">{</span></span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> Rational<span class="op">(</span><span class="kw">this</span><span class="op">-&gt;</span>n <span class="op">*</span> rhs<span class="op">.</span>n<span class="op">,</span> <span class="kw">this</span><span class="op">-&gt;</span>d <span class="op">*</span> rhs<span class="op">.</span>d<span class="op">);</span></span>
+<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">private</span><span class="op">:</span></span>
+<span id="cb70-11"><a href="#cb70-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">int</span> n<span class="op">,</span> d<span class="op">;</span></span>
+<span id="cb70-12"><a href="#cb70-12" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb70-13"><a href="#cb70-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-14"><a href="#cb70-14" aria-hidden="true" tabindex="-1"></a>Rational r <span class="op">=</span> Rational<span class="op">(</span><span class="dv">1</span><span class="op">,</span><span class="dv">2</span><span class="op">);</span></span>
+<span id="cb70-15"><a href="#cb70-15" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> Rational out <span class="op">=</span> r <span class="op">*</span> <span class="dv">2</span><span class="op">;</span> <span class="co">// this works (since constructor is non-explicit)</span></span>
+<span id="cb70-16"><a href="#cb70-16" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> Rational out <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> r<span class="op">;</span> <span class="co">// ERROR!!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>In C++ implicit type conversions can only happen if arguments that appear explicitly in the function’s parameter list.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb71"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Rational</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>        Rational<span class="op">(</span><span class="dt">int</span> num <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">int</span> denom <span class="op">=</span> <span class="dv">1</span><span class="op">)</span> <span class="op">:</span> n<span class="op">(</span>num<span class="op">),</span> d<span class="op">(</span>denom<span class="op">)</span></span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>        <span class="op">{}</span></span>
+<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">int</span> numerator<span class="op">();</span> <span class="co">// getter for n</span></span>
+<span id="cb71-7"><a href="#cb71-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">int</span> denominator<span class="op">();</span> <span class="co">// getter for d</span></span>
+<span id="cb71-8"><a href="#cb71-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">private</span><span class="op">:</span></span>
+<span id="cb71-9"><a href="#cb71-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">int</span> n<span class="op">,</span> d<span class="op">;</span></span>
+<span id="cb71-10"><a href="#cb71-10" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb71-11"><a href="#cb71-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-12"><a href="#cb71-12" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> Rational <span class="kw">operator</span><span class="op">*(</span><span class="at">const</span> Rational<span class="op">&amp;</span> lhs<span class="op">,</span> <span class="at">const</span> Rational<span class="op">&amp;</span> rhs<span class="op">)</span></span>
+<span id="cb71-13"><a href="#cb71-13" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb71-14"><a href="#cb71-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> Rational<span class="op">(</span>lhs<span class="op">.</span>numerator<span class="op">()</span> <span class="op">*</span> rhs<span class="op">.</span>numerator<span class="op">(),</span> lhs<span class="op">.</span>denominator<span class="op">()</span> <span class="op">*</span> rhs<span class="op">.</span>denominator<span class="op">());</span></span>
+<span id="cb71-15"><a href="#cb71-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb71-16"><a href="#cb71-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-17"><a href="#cb71-17" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> Rational out <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> r<span class="op">;</span> <span class="co">// WORKS NOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>So should we be making this external function the <code>friend</code> function of <code>Rational</code> class? NO! In C++, a function has three possibilities:</p>
+<ol type="1">
+<li>Member function (has access to this, part of the class API)</li>
+<li>Non-member function (outside the class, uses only public APIs)</li>
+<li>Friend function (non-member, but allowed to access private parts)</li>
+</ol>
+<p>Many C++ programmers mistakely think that, “If the function is related to the class but shouldn’t be a member, then it must be a friend.”</p>
+<p>Why avoid friend?</p>
+<ol type="1">
+<li>A friend function can access private data → breaks encapsulation.</li>
+<li>More friends = more maintenance risk (changes to private members ripple out).</li>
+<li>Friend should be used only when necessary.</li>
+</ol>
 
 
 </section>
