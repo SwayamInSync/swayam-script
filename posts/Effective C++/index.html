@@ -77,10 +77,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-95f147d06fdb9f8ce149f95e323965f4.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-95f147d06fdb9f8ce149f95e323965f4.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-95f147d06fdb9f8ce149f95e323965f4.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap-26500bfc55c7891837a911d6d50a6255.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../../site_libs/bootstrap/bootstrap-dark-86dad25fa9976c2602891ca23f775bcb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-26500bfc55c7891837a911d6d50a6255.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -119,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta property="og:image:width" content="1536">
 </head>
 
-<body class="nav-fixed quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -261,8 +263,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         changeGiscusTheme();
       }
     };
-    const authorPrefersDark = true;
+    const authorPrefersDark = false;
     const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
     let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
     // Dark / light mode switch
     window.quartoToggleColorScheme = () => {
@@ -398,6 +402,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#item-15-provide-access-to-raw-resource-in-resource-managing-classes" id="toc-item-15-provide-access-to-raw-resource-in-resource-managing-classes" class="nav-link" data-scroll-target="#item-15-provide-access-to-raw-resource-in-resource-managing-classes">Item-15: Provide access to raw resource in resource-managing classes</a></li>
   <li><a href="#item-16-use-the-same-form-in-corresponding-uses-of-new-and-delete" id="toc-item-16-use-the-same-form-in-corresponding-uses-of-new-and-delete" class="nav-link" data-scroll-target="#item-16-use-the-same-form-in-corresponding-uses-of-new-and-delete">Item-16: Use the same form in corresponding uses of <code>new</code> and <code>delete</code></a></li>
   <li><a href="#item-17-store-newed-objects-in-smart-pointers-in-standalone-statements" id="toc-item-17-store-newed-objects-in-smart-pointers-in-standalone-statements" class="nav-link" data-scroll-target="#item-17-store-newed-objects-in-smart-pointers-in-standalone-statements">Item-17: Store <code>new</code>ed objects in smart pointers in standalone statements</a></li>
+  </ul></li>
+  <li><a href="#designs-and-declarations" id="toc-designs-and-declarations" class="nav-link" data-scroll-target="#designs-and-declarations">Designs and Declarations</a>
+  <ul class="collapse">
+  <li><a href="#item-18-make-interfaces-easy-to-use-correctly-and-hard-to-use-incorrectly" id="toc-item-18-make-interfaces-easy-to-use-correctly-and-hard-to-use-incorrectly" class="nav-link" data-scroll-target="#item-18-make-interfaces-easy-to-use-correctly-and-hard-to-use-incorrectly">Item-18: Make interfaces easy to use correctly and hard to use incorrectly</a></li>
+  <li><a href="#item-19-treat-class-design-as-type-design" id="toc-item-19-treat-class-design-as-type-design" class="nav-link" data-scroll-target="#item-19-treat-class-design-as-type-design">Item-19: Treat class design as type design</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -1465,7 +1474,7 @@ Note
 </ul>
 <p>But what if compiler decides the following order of execution:</p>
 <ul>
-<li>Execute <code>new Widget</code>.</li>
+<li>****Execute**** <code>new Widget</code>.</li>
 <li>Call <code>priority</code>.</li>
 <li>Call the <code>tr1::shared_ptr</code> constructor</li>
 </ul>
@@ -1484,6 +1493,93 @@ Note
 <p>This prevents the resource leak scenario from the original example, because the new Widget (a subexpression within the first argument) can’t be left dangling if an exception occurs in <code>priority()</code> (the second argument)—either the whole first argument evaluates safely first, or <code>priority()</code> throws before any part of the first argument even begins.</p>
 </div>
 </div>
+</section>
+</section>
+<section id="designs-and-declarations" class="level1">
+<h1>Designs and Declarations</h1>
+<section id="item-18-make-interfaces-easy-to-use-correctly-and-hard-to-use-incorrectly" class="level2">
+<h2 class="anchored" data-anchor-id="item-18-make-interfaces-easy-to-use-correctly-and-hard-to-use-incorrectly">Item-18: Make interfaces easy to use correctly and hard to use incorrectly</h2>
+<p>Design C++ interfaces that are easy to use correctly and hard to use incorrectly. If users make mistakes, it’s often the interface’s fault, not theirs. Let’s quickly get some example</p>
+<p>The goal is more towards not letting the inappropriate handling of interface compile</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Date</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>    Date<span class="op">(</span><span class="dt">int</span> month<span class="op">,</span> <span class="dt">int</span> day<span class="op">,</span> <span class="dt">int</span> year<span class="op">);</span></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>Date d<span class="op">(</span><span class="dv">30</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">1995</span><span class="op">);</span> <span class="co">// Oops! Should be "3, 30", not "30, 3"</span></span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>Date d<span class="op">(</span><span class="dv">2</span><span class="op">,</span> <span class="dv">20</span><span class="op">,</span> <span class="dv">1995</span><span class="op">);</span> <span class="co">// Oops! Should be "3, 30", not "2, 20"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>These and many client errors can be prevented by the introduction of new types. The type system is our primary ally</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb64"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> Day</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">explicit</span> Day<span class="op">(</span><span class="dt">int</span> d<span class="op">)</span> <span class="op">:</span> val<span class="op">(</span>d<span class="op">);</span></span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> val<span class="op">;</span></span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> Month</span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">explicit</span> Month<span class="op">(</span><span class="dt">int</span> d<span class="op">)</span> <span class="op">:</span> val<span class="op">(</span>d<span class="op">);</span></span>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> val<span class="op">;</span></span>
+<span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb64-11"><a href="#cb64-11" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> Year</span>
+<span id="cb64-12"><a href="#cb64-12" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb64-13"><a href="#cb64-13" aria-hidden="true" tabindex="-1"></a>  <span class="kw">explicit</span> Year<span class="op">(</span><span class="dt">int</span> d<span class="op">)</span> <span class="op">:</span> val<span class="op">(</span>d<span class="op">);</span></span>
+<span id="cb64-14"><a href="#cb64-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> val<span class="op">;</span></span>
+<span id="cb64-15"><a href="#cb64-15" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb64-16"><a href="#cb64-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-17"><a href="#cb64-17" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Date</span>
+<span id="cb64-18"><a href="#cb64-18" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb64-19"><a href="#cb64-19" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb64-20"><a href="#cb64-20" aria-hidden="true" tabindex="-1"></a>    Date<span class="op">(</span><span class="at">const</span> Month<span class="op">&amp;</span> month<span class="op">,</span> <span class="at">const</span> Day<span class="op">&amp;</span> day<span class="op">,</span> <span class="at">const</span> Year<span class="op">&amp;</span> year<span class="op">);</span></span>
+<span id="cb64-21"><a href="#cb64-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span>
+<span id="cb64-22"><a href="#cb64-22" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb64-23"><a href="#cb64-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-24"><a href="#cb64-24" aria-hidden="true" tabindex="-1"></a>Date d<span class="op">(</span><span class="dv">30</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">1995</span><span class="op">);</span> <span class="co">// error! wrong types</span></span>
+<span id="cb64-25"><a href="#cb64-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-26"><a href="#cb64-26" aria-hidden="true" tabindex="-1"></a>Date d<span class="op">(</span>Day<span class="op">(</span><span class="dv">30</span><span class="op">),</span> Month<span class="op">(</span><span class="dv">3</span><span class="op">),</span> Year<span class="op">(</span><span class="dv">1995</span><span class="op">));</span>    <span class="co">// error! wrong types</span></span>
+<span id="cb64-27"><a href="#cb64-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-28"><a href="#cb64-28" aria-hidden="true" tabindex="-1"></a>Date d<span class="op">(</span>Month<span class="op">(</span><span class="dv">3</span><span class="op">),</span> Day<span class="op">(</span><span class="dv">30</span><span class="op">),</span> Year<span class="op">(</span><span class="dv">1995</span><span class="op">));</span>    <span class="co">// okay, types are correct</span></span>
+<span id="cb64-29"><a href="#cb64-29" aria-hidden="true" tabindex="-1"></a><span class="co">// what if? Month class is defined in another TU and is not initialized yet?</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>It can be more reasonable to add some constraints in our types like <code>Month</code> can be only between 1-12. One way could be using <code>enum</code> but remember <code>enum</code> are not as type-safe as we might like (can be used as <code>int</code>s). Safer solution is to predefine the set of all valid <code>Month</code>s</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb65"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Month</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">static</span> Month Jan<span class="op">()</span> <span class="op">{</span><span class="cf">return</span> Month<span class="op">(</span><span class="dv">1</span><span class="op">);}</span></span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">static</span> Month Feb<span class="op">()</span> <span class="op">{</span><span class="cf">return</span> Month<span class="op">(</span><span class="dv">2</span><span class="op">);}</span></span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">static</span> Month Dec<span class="op">()</span> <span class="op">{</span><span class="cf">return</span> Month<span class="op">(</span><span class="dv">12</span><span class="op">);}</span></span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">private</span><span class="op">:</span></span>
+<span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> val<span class="op">;</span></span>
+<span id="cb65-12"><a href="#cb65-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">explicit</span> Month<span class="op">(</span><span class="dt">int</span> m<span class="op">)</span> <span class="op">:</span> val<span class="op">(</span>m<span class="op">)</span></span>
+<span id="cb65-13"><a href="#cb65-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">{}</span></span>
+<span id="cb65-14"><a href="#cb65-14" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb65-15"><a href="#cb65-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-16"><a href="#cb65-16" aria-hidden="true" tabindex="-1"></a>Date d<span class="op">(</span>Month<span class="op">::</span>Mar<span class="op">(),</span> Day<span class="op">(</span><span class="dv">30</span><span class="op">),</span> Year<span class="op">(</span><span class="dv">1995</span><span class="op">));</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Better use the local-static <code>Month</code> objects to gurantee the initialization.</p>
+<p>Tip-2, can be whenever in confusion, follow the behavior of built-in types like int — users already understand them.</p>
+</section>
+<section id="item-19-treat-class-design-as-type-design" class="level2">
+<h2 class="anchored" data-anchor-id="item-19-treat-class-design-as-type-design">Item-19: Treat class design as type design</h2>
+<p>Designing good classes is challenging because designing good types is challenging. Good types have a natural syntax, intuitive semantics, and one or more efficient implementations. In C++, a poorly planned class definition can make it impossible to achieve any of these goals. Even the performance characteristics of a class’s member functions may be affected by how they are declared.</p>
+<p>How, then, do you design effective classes? First, you must understand the issues you face. Virtually every class requires that you confront the following questions, the answers to which often lead to constraints on your design:</p>
+<ul>
+<li><p>How should objects of your new type be created and destroyed?</p></li>
+<li><p>How should object initialization differ from object assignment?</p></li>
+<li><p>What it means for objects of your new type to be passed by value?</p></li>
+<li><p>What are the restrictions on legal values for your new type?</p></li>
+<li><p>Does your type fit into an inheritance graph?</p></li>
+<li><p>What type of conversions are allowed for your new type?</p></li>
+<li><p>What operators and functions make sense for the new type?</p></li>
+<li><p>What standard functions should be disallowed?</p></li>
+<li><p>Who should have access to the members of your new type?</p></li>
+<li><p>What is the “undeclared interface” of your new type?</p>
+<blockquote class="blockquote">
+<p>What kind of gurantees does it offer w.r.t. performance, exception safety, resource usage.</p>
+</blockquote></li>
+<li><p>How general is your new type?</p></li>
+<li><p>Is a new type is really what you need?</p></li>
+</ul>
 
 
 </section>
@@ -1903,8 +1999,8 @@ Note
     }
   });
   </script>
-<input type="hidden" id="giscus-base-theme" value="dark_dimmed">
-<input type="hidden" id="giscus-alt-theme" value="light">
+<input type="hidden" id="giscus-base-theme" value="light">
+<input type="hidden" id="giscus-alt-theme" value="dark_dimmed">
 <script>
   function loadGiscus() {
     // Function to get the theme based on body class
