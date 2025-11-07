@@ -1427,3 +1427,64 @@ Modern compilers perform Return Value Optimization (RVO), so above example is bo
 
 ## Item-23: Prefer non-member non-friend functions to member functions
 
+Prefer non-member non-friend functions to member functions. Doing so increases encapsulation, packaging flexibility, and functional extensibility.
+
+## Item-24: Declare non-member functions when type conversions should apply to all parameters
+
+Assume the same previous `Rational` example
+
+```cpp
+class Rational
+{
+    public:
+        Rational(int num = 0, int denom = 1) : n(num), d(denom)
+        {}
+        const Rational operator*(const Rational& rhs)
+        {
+            return Rational(this->n * rhs.n, this->d * rhs.d);
+        }
+    private:
+        int n, d;
+};
+
+Rational r = Rational(1,2);
+const Rational out = r * 2; // this works (since constructor is non-explicit)
+const Rational out = 2 * r; // ERROR!!
+```
+
+In C++ implicit type conversions can only happen if arguments that appear explicitly in the function's parameter list.
+
+```cpp
+class Rational
+{
+    public:
+        Rational(int num = 0, int denom = 1) : n(num), d(denom)
+        {}
+        int numerator(); // getter for n
+        int denominator(); // getter for d
+    private:
+        int n, d;
+};
+
+const Rational operator*(const Rational& lhs, const Rational& rhs)
+{
+  return Rational(lhs.numerator() * rhs.numerator(), lhs.denominator() * rhs.denominator());
+}
+
+const Rational out = 2 * r; // WORKS NOW
+```
+
+So should we be making this external function the `friend` function of `Rational` class?
+NO! In C++, a function has three possibilities:
+
+1. Member function (has access to this, part of the class API)
+2. Non-member function (outside the class, uses only public APIs)
+3. Friend function (non-member, but allowed to access private parts)
+
+Many C++ programmers mistakely think that, “If the function is related to the class but shouldn’t be a member, then it must be a friend.”
+
+Why avoid friend?
+
+1. A friend function can access private data → breaks encapsulation.
+2. More friends = more maintenance risk (changes to private members ripple out).
+3. Friend should be used only when necessary.
