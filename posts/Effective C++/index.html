@@ -407,6 +407,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#item-18-make-interfaces-easy-to-use-correctly-and-hard-to-use-incorrectly" id="toc-item-18-make-interfaces-easy-to-use-correctly-and-hard-to-use-incorrectly" class="nav-link" data-scroll-target="#item-18-make-interfaces-easy-to-use-correctly-and-hard-to-use-incorrectly">Item-18: Make interfaces easy to use correctly and hard to use incorrectly</a></li>
   <li><a href="#item-19-treat-class-design-as-type-design" id="toc-item-19-treat-class-design-as-type-design" class="nav-link" data-scroll-target="#item-19-treat-class-design-as-type-design">Item-19: Treat class design as type design</a></li>
+  <li><a href="#item-20-prefer-pass-by-reference-to-const-to-pass-by-value" id="toc-item-20-prefer-pass-by-reference-to-const-to-pass-by-value" class="nav-link" data-scroll-target="#item-20-prefer-pass-by-reference-to-const-to-pass-by-value">Item-20: Prefer pass-by-reference-to-const to pass-by-value</a></li>
+  <li><a href="#item-21-dont-try-to-return-a-reference-when-you-must-return-an-object" id="toc-item-21-dont-try-to-return-a-reference-when-you-must-return-an-object" class="nav-link" data-scroll-target="#item-21-dont-try-to-return-a-reference-when-you-must-return-an-object">Item-21: Don’t try to return a reference when you must return an object</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -419,6 +421,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
+<hr>
 <p><img src="assets/header.png" style="zoom:50%;"></p>
 <section id="effective-c-2005" class="level1">
 <h1>Effective C++ (2005)</h1>
@@ -1580,6 +1583,42 @@ Note
 <li><p>How general is your new type?</p></li>
 <li><p>Is a new type is really what you need?</p></li>
 </ul>
+</section>
+<section id="item-20-prefer-pass-by-reference-to-const-to-pass-by-value" class="level2">
+<h2 class="anchored" data-anchor-id="item-20-prefer-pass-by-reference-to-const-to-pass-by-value">Item-20: Prefer pass-by-reference-to-const to pass-by-value</h2>
+<p>Defult, C++ passes objects to and from functions by value. These copies are produced by object’s copy constructors which can make pass-by-value an expensive operation.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb66"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Person</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>    Person<span class="op">();</span></span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">virtual</span> <span class="op">~</span>Person<span class="op">();</span></span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">private</span><span class="op">:</span></span>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>string name<span class="op">;</span></span>
+<span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>string address<span class="op">;</span></span>
+<span id="cb66-10"><a href="#cb66-10" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb66-11"><a href="#cb66-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-12"><a href="#cb66-12" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Student<span class="op">:</span> <span class="kw">public</span> Person</span>
+<span id="cb66-13"><a href="#cb66-13" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb66-14"><a href="#cb66-14" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb66-15"><a href="#cb66-15" aria-hidden="true" tabindex="-1"></a>    Student<span class="op">();</span></span>
+<span id="cb66-16"><a href="#cb66-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">~</span>Student<span class="op">();</span></span>
+<span id="cb66-17"><a href="#cb66-17" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span>
+<span id="cb66-18"><a href="#cb66-18" aria-hidden="true" tabindex="-1"></a>  <span class="kw">private</span><span class="op">:</span></span>
+<span id="cb66-19"><a href="#cb66-19" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>string schoolName<span class="op">;</span></span>
+<span id="cb66-20"><a href="#cb66-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>string schoolAddress<span class="op">;</span></span>
+<span id="cb66-21"><a href="#cb66-21" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Here imagining passing a <code>Student</code> object to a function will call its copy constructor, which calls the copy constructor of <code>std::string</code> (2x) then calls the copy constructor of the <code>Person</code> which further calls the copy constructor of <code>std::string</code> (2x) now we can see how expensive this is.</p>
+<p>Knowing that the upstream function might not going to modify the object itself we can just pass the const reference</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb67"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="dt">bool</span> validateStudent<span class="op">(</span><span class="at">const</span> Student<span class="op">&amp;</span> s<span class="op">);</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>Student plato<span class="op">;</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a><span class="dt">bool</span> platoIsOK <span class="op">=</span> validateStudent<span class="op">(</span>plato<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>We need to be aware that in pass-by-value, if we are passing an object of derived class but the function parameter stores it in the base class, then the derived component will be stripped as this is a copy made by the base class’s copy constructor. In such cases its almost always better to pass reference.</p>
+<p>Under the hood, C++ compiler implements refernces like pointers, so for builtin types like int, char, float its good to do the pass-by-value as the copy would just require a register but with pointer there is some extra overhead of dereferencing the pointers.</p>
+<p>Even when small objects have inexpensive copy constructors, there can be be performance issues. Some compilers treat built-in and user-defined types differently, even if they have the same underlying representation. Some compilers refuse to put objects consisting of just a <code>double</code> into a register even though they happily place naked <code>double</code> there on regular basis.</p>
+</section>
+<section id="item-21-dont-try-to-return-a-reference-when-you-must-return-an-object" class="level2">
+<h2 class="anchored" data-anchor-id="item-21-dont-try-to-return-a-reference-when-you-must-return-an-object">Item-21: Don’t try to return a reference when you must return an object</h2>
 
 
 </section>
