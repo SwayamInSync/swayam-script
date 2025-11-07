@@ -409,6 +409,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#item-19-treat-class-design-as-type-design" id="toc-item-19-treat-class-design-as-type-design" class="nav-link" data-scroll-target="#item-19-treat-class-design-as-type-design">Item-19: Treat class design as type design</a></li>
   <li><a href="#item-20-prefer-pass-by-reference-to-const-to-pass-by-value" id="toc-item-20-prefer-pass-by-reference-to-const-to-pass-by-value" class="nav-link" data-scroll-target="#item-20-prefer-pass-by-reference-to-const-to-pass-by-value">Item-20: Prefer pass-by-reference-to-const to pass-by-value</a></li>
   <li><a href="#item-21-dont-try-to-return-a-reference-when-you-must-return-an-object" id="toc-item-21-dont-try-to-return-a-reference-when-you-must-return-an-object" class="nav-link" data-scroll-target="#item-21-dont-try-to-return-a-reference-when-you-must-return-an-object">Item-21: Don’t try to return a reference when you must return an object</a></li>
+  <li><a href="#item-22-declare-data-members-private" id="toc-item-22-declare-data-members-private" class="nav-link" data-scroll-target="#item-22-declare-data-members-private">Item-22: Declare data members <code>private</code></a></li>
+  <li><a href="#item-23-prefer-non-member-non-friend-functions-to-member-functions" id="toc-item-23-prefer-non-member-non-friend-functions-to-member-functions" class="nav-link" data-scroll-target="#item-23-prefer-non-member-non-friend-functions-to-member-functions">Item-23: Prefer non-member non-friend functions to member functions</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -1619,6 +1621,56 @@ Note
 </section>
 <section id="item-21-dont-try-to-return-a-reference-when-you-must-return-an-object" class="level2">
 <h2 class="anchored" data-anchor-id="item-21-dont-try-to-return-a-reference-when-you-must-return-an-object">Item-21: Don’t try to return a reference when you must return an object</h2>
+<p>The intent is clear from the title, consider the following example</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb68"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Rational</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>        Rational<span class="op">(</span><span class="dt">int</span> num <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">int</span> denom <span class="op">=</span> <span class="dv">1</span><span class="op">)</span> <span class="op">:</span> n<span class="op">(</span>num<span class="op">),</span> d<span class="op">(</span>denom<span class="op">)</span></span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>        <span class="op">{}</span></span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">private</span><span class="op">:</span></span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">int</span> n<span class="op">,</span> d<span class="op">;</span></span>
+<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a>        <span class="kw">friend</span> </span>
+<span id="cb68-10"><a href="#cb68-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">const</span> Rational <span class="kw">operator</span><span class="op">*(</span><span class="at">const</span> Rational<span class="op">&amp;</span> lhs<span class="op">,</span> <span class="at">const</span> Rational<span class="op">&amp;</span> rhs<span class="op">);</span> </span>
+<span id="cb68-11"><a href="#cb68-11" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb68-12"><a href="#cb68-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-13"><a href="#cb68-13" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> Rational <span class="kw">operator</span><span class="op">*(</span><span class="at">const</span> Rational<span class="op">&amp;</span> lhs<span class="op">,</span> <span class="at">const</span> Rational<span class="op">&amp;</span> rhs<span class="op">)</span></span>
+<span id="cb68-14"><a href="#cb68-14" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb68-15"><a href="#cb68-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Rational<span class="op">(</span>lhs<span class="op">.</span>n <span class="op">*</span> rhs<span class="op">.</span>n<span class="op">,</span> lhs<span class="op">.</span>d <span class="op">*</span> rhs<span class="op">.</span>d<span class="op">);</span></span>
+<span id="cb68-16"><a href="#cb68-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Assuming that you get flow in emotions and dont want to incur the cost of returning by value (makes copy). Returning reference is very messy here 1. Suppose returned the reference of the object, but that is created within the function and its local, there is no use outside of the scope leading to UB 2. Well in that case we create it on heap and then return, OK but who’s gonna delete it? Who’s the owner of the output pointers?</p>
+<p>Overall returning a reference is not a good thing to do here, hence the appropriate thing to do here</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb69"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="at">const</span> Rational <span class="kw">operator</span><span class="op">*(</span><span class="at">const</span> Rational<span class="op">&amp;</span> lhs<span class="op">,</span> <span class="at">const</span> Rational<span class="op">&amp;</span> rhs<span class="op">)</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> Rational<span class="op">(</span>lhs<span class="op">.</span>n <span class="op">*</span> rhs<span class="op">.</span>n<span class="op">,</span> lhs<span class="op">.</span>d <span class="op">*</span> rhs<span class="op">.</span>d<span class="op">);</span></span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Modern compilers perform Return Value Optimization (RVO), so above example is both:</p>
+<ul>
+<li>safe (no shared state)</li>
+<li>efficient (no unnecessary copy)</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="item-22-declare-data-members-private" class="level2">
+<h2 class="anchored" data-anchor-id="item-22-declare-data-members-private">Item-22: Declare data members <code>private</code></h2>
+<ul>
+<li>Declare data members <code>private</code>. It gives clients syntactically uniform access to data, affords fine-grained access control, allows invariants to be enforced, and offers class authors implementation flexibility.</li>
+<li><code>protected</code> is no more encapsulated than <code>public</code></li>
+</ul>
+</section>
+<section id="item-23-prefer-non-member-non-friend-functions-to-member-functions" class="level2">
+<h2 class="anchored" data-anchor-id="item-23-prefer-non-member-non-friend-functions-to-member-functions">Item-23: Prefer non-member non-friend functions to member functions</h2>
 
 
 </section>
