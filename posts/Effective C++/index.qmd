@@ -1378,3 +1378,52 @@ Even when small objects have inexpensive copy constructors, there can be be perf
 Some compilers refuse to put objects consisting of just a `double` into a register even though they happily place naked `double` there on regular basis.
 
 ## Item-21: Don't try to return a reference when you must return an object
+
+The intent is clear from the title, consider the following example
+
+```cpp
+class Rational
+{
+    public:
+        Rational(int num = 0, int denom = 1) : n(num), d(denom)
+        {}
+    private:
+        int n, d;
+
+        friend 
+        const Rational operator*(const Rational& lhs, const Rational& rhs); 
+};
+
+const Rational operator*(const Rational& lhs, const Rational& rhs)
+{
+    return Rational(lhs.n * rhs.n, lhs.d * rhs.d);
+}
+```
+
+Assuming that you get flow in emotions and dont want to incur the cost of returning by value (makes copy). Returning reference is very messy here
+1. Suppose returned the reference of the object, but that is created within the function and its local, there is no use outside of the scope leading to UB
+2. Well in that case we create it on heap and then return, OK but who's gonna delete it? Who's the owner of the output pointers?
+
+Overall returning a reference is not a good thing to do here, hence the appropriate thing to do here
+
+```cpp
+inline const Rational operator*(const Rational& lhs, const Rational& rhs)
+{
+  return Rational(lhs.n * rhs.n, lhs.d * rhs.d);
+}
+```
+
+::: {.callout-note}
+Modern compilers perform Return Value Optimization (RVO), so above example is both:
+
+- safe (no shared state)
+- efficient (no unnecessary copy)
+:::
+
+## Item-22: Declare data members `private`
+
+- Declare data members `private`. It gives clients syntactically uniform access to data, affords fine-grained access control, allows invariants to be enforced, and offers class authors implementation flexibility.
+- `protected` is no more encapsulated than `public`
+
+## Item-23: Prefer non-member non-friend functions to member functions
+
