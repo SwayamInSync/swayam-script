@@ -1683,3 +1683,81 @@ std::swap(obj1, obj2);  // the wrong way to call swap
 using std::swap
 std::swap(obj1, obj2);
 ```
+
+# Implementations
+
+## Item-26: Postpone variable definitions as long as possible
+
+Simple terms define variable only when it is REALLY needed and see if you can optimize that need. This can give some performance benefits.
+
+```cpp
+std::string encryptPassword(const std::string& password)
+{
+  using namespace std;
+  
+  string encrypted;
+  
+  if(password.length() < MinimumPasswordLength)
+    throw logic_error("Too short");
+
+  ... // do encryption
+  return encrypted;
+}
+```
+
+Note that the object `encrypted` isn't completely unused here, but unused if the exception was thrown. So we have to pay for construction, destruction on encrypted even when not using it.
+
+```cpp
+std::string encryptPassword(const std::string& password)
+{
+  using namespace std;
+  
+  if(password.length() < MinimumPasswordLength)
+    throw logic_error("Too short");
+  
+  string encrypted;
+  ... // do encryption
+  return encrypted;
+}
+```
+
+We can do better, suppose there is a helper `encrypt` method that does all the encryption as:
+
+```cpp
+void encrypt(std::string& s); // suppose it does in-place encryption
+```
+
+so the best way can be
+
+```cpp
+std::string encryptPassword(const std::string& password)
+{
+  using namespace std;
+  
+  if(password.length() < MinimumPasswordLength)
+    throw logic_error("Too short");
+  
+  string encrypted(password); // initalize
+  encrypt(encrypted);
+  return encrypted;
+}
+```
+
+But this is a choice, doing this without thinking can give really bad performance, eg:
+
+```cpp
+// CASE-1
+Widget w;
+for(int i = 0; i < 10; i++)
+{
+  w = // something depending i
+}
+
+// CASE-2
+for(int i = 0; i < 10; i++)
+{
+  Widget w(// something with i)
+}
+```
+
+Here you can see if w can be shared across i then initializing it everytime within loop might be too expensive (10 construction + 10 destruction) 
