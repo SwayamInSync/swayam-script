@@ -414,6 +414,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#item-24-declare-non-member-functions-when-type-conversions-should-apply-to-all-parameters" id="toc-item-24-declare-non-member-functions-when-type-conversions-should-apply-to-all-parameters" class="nav-link" data-scroll-target="#item-24-declare-non-member-functions-when-type-conversions-should-apply-to-all-parameters">Item-24: Declare non-member functions when type conversions should apply to all parameters</a></li>
   <li><a href="#item-25-consider-support-for-a-non-throwing-swap" id="toc-item-25-consider-support-for-a-non-throwing-swap" class="nav-link" data-scroll-target="#item-25-consider-support-for-a-non-throwing-swap">Item-25: Consider support for a non-throwing <code>swap</code></a></li>
   </ul></li>
+  <li><a href="#implementations" id="toc-implementations" class="nav-link" data-scroll-target="#implementations">Implementations</a>
+  <ul class="collapse">
+  <li><a href="#item-26-postpone-variable-definitions-as-long-as-possible" id="toc-item-26-postpone-variable-definitions-as-long-as-possible" class="nav-link" data-scroll-target="#item-26-postpone-variable-definitions-as-long-as-possible">Item-26: Postpone variable definitions as long as possible</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -1868,6 +1872,65 @@ Note
 <span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a><span class="co">// The right ✅ way</span></span>
 <span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="bu">std::</span>swap</span>
 <span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a>std::swap<span class="op">(</span>obj1<span class="op">,</span> obj2<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="implementations" class="level1">
+<h1>Implementations</h1>
+<section id="item-26-postpone-variable-definitions-as-long-as-possible" class="level2">
+<h2 class="anchored" data-anchor-id="item-26-postpone-variable-definitions-as-long-as-possible">Item-26: Postpone variable definitions as long as possible</h2>
+<p>Simple terms define variable only when it is REALLY needed and see if you can optimize that need. This can give some performance benefits.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb83"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>string encryptPassword<span class="op">(</span><span class="at">const</span> <span class="bu">std::</span>string<span class="op">&amp;</span> password<span class="op">)</span></span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>  string encrypted<span class="op">;</span></span>
+<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb83-7"><a href="#cb83-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span><span class="op">(</span>password<span class="op">.</span>length<span class="op">()</span> <span class="op">&lt;</span> MinimumPasswordLength<span class="op">)</span></span>
+<span id="cb83-8"><a href="#cb83-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span> logic_error<span class="op">(</span><span class="st">"Too short"</span><span class="op">);</span></span>
+<span id="cb83-9"><a href="#cb83-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-10"><a href="#cb83-10" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span> <span class="co">// do encryption</span></span>
+<span id="cb83-11"><a href="#cb83-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> encrypted<span class="op">;</span></span>
+<span id="cb83-12"><a href="#cb83-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Note that the object <code>encrypted</code> isn’t completely unused here, but unused if the exception was thrown. So we have to pay for construction, destruction on encrypted even when not using it.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb84"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>string encryptPassword<span class="op">(</span><span class="at">const</span> <span class="bu">std::</span>string<span class="op">&amp;</span> password<span class="op">)</span></span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
+<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb84-5"><a href="#cb84-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span><span class="op">(</span>password<span class="op">.</span>length<span class="op">()</span> <span class="op">&lt;</span> MinimumPasswordLength<span class="op">)</span></span>
+<span id="cb84-6"><a href="#cb84-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span> logic_error<span class="op">(</span><span class="st">"Too short"</span><span class="op">);</span></span>
+<span id="cb84-7"><a href="#cb84-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb84-8"><a href="#cb84-8" aria-hidden="true" tabindex="-1"></a>  string encrypted<span class="op">;</span></span>
+<span id="cb84-9"><a href="#cb84-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span> <span class="co">// do encryption</span></span>
+<span id="cb84-10"><a href="#cb84-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> encrypted<span class="op">;</span></span>
+<span id="cb84-11"><a href="#cb84-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>We can do better, suppose there is a helper <code>encrypt</code> method that does all the encryption as:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb85"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> encrypt<span class="op">(</span><span class="bu">std::</span>string<span class="op">&amp;</span> s<span class="op">);</span> <span class="co">// suppose it does in-place encryption</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>so the best way can be</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb86"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>string encryptPassword<span class="op">(</span><span class="at">const</span> <span class="bu">std::</span>string<span class="op">&amp;</span> password<span class="op">)</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span><span class="op">(</span>password<span class="op">.</span>length<span class="op">()</span> <span class="op">&lt;</span> MinimumPasswordLength<span class="op">)</span></span>
+<span id="cb86-6"><a href="#cb86-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span> logic_error<span class="op">(</span><span class="st">"Too short"</span><span class="op">);</span></span>
+<span id="cb86-7"><a href="#cb86-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb86-8"><a href="#cb86-8" aria-hidden="true" tabindex="-1"></a>  string encrypted<span class="op">(</span>password<span class="op">);</span> <span class="co">// initalize</span></span>
+<span id="cb86-9"><a href="#cb86-9" aria-hidden="true" tabindex="-1"></a>  encrypt<span class="op">(</span>encrypted<span class="op">);</span></span>
+<span id="cb86-10"><a href="#cb86-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> encrypted<span class="op">;</span></span>
+<span id="cb86-11"><a href="#cb86-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>But this is a choice, doing this without thinking can give really bad performance, eg:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb87"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="co">// CASE-1</span></span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>Widget w<span class="op">;</span></span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span><span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">10</span><span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a>  w <span class="op">=</span> <span class="co">// something depending i</span></span>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb87-7"><a href="#cb87-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-8"><a href="#cb87-8" aria-hidden="true" tabindex="-1"></a><span class="co">// CASE-2</span></span>
+<span id="cb87-9"><a href="#cb87-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span><span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">10</span><span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb87-10"><a href="#cb87-10" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb87-11"><a href="#cb87-11" aria-hidden="true" tabindex="-1"></a>  Widget w<span class="op">(</span><span class="co">// something with i)</span></span>
+<span id="cb87-12"><a href="#cb87-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Here you can see if w can be shared across i then initializing it everytime within loop might be too expensive (10 construction + 10 destruction)</p>
 
 
 </section>
