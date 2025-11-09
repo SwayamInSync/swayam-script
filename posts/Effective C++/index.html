@@ -417,6 +417,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#implementations" id="toc-implementations" class="nav-link" data-scroll-target="#implementations">Implementations</a>
   <ul class="collapse">
   <li><a href="#item-26-postpone-variable-definitions-as-long-as-possible" id="toc-item-26-postpone-variable-definitions-as-long-as-possible" class="nav-link" data-scroll-target="#item-26-postpone-variable-definitions-as-long-as-possible">Item-26: Postpone variable definitions as long as possible</a></li>
+  <li><a href="#item-27-minimizing-casting" id="toc-item-27-minimizing-casting" class="nav-link" data-scroll-target="#item-27-minimizing-casting">Item-27: Minimizing Casting</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -1804,7 +1805,17 @@ Note
 <span id="cb75-23"><a href="#cb75-23" aria-hidden="true" tabindex="-1"></a>    a<span class="op">.</span>swap<span class="op">(</span>b<span class="op">);</span> <span class="co">// call Widget's member swap</span></span>
 <span id="cb75-24"><a href="#cb75-24" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
 <span id="cb75-25"><a href="#cb75-25" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>.::: {.callout-important} Why doing <code>using std::swap</code> inside the class member <code>swap</code> implementation?</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Why doing <code>using std::swap</code> inside the class member <code>swap</code> implementation?</p>
 <p>Suppose you’re writing a function template where you need to swap the values of two objects:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb76"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">typename</span> T<span class="op">&gt;</span></span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> doSomething<span class="op">(</span>T<span class="op">&amp;</span> obj1<span class="op">,</span> T<span class="op">&amp;</span> obj2<span class="op">)</span></span>
@@ -1823,7 +1834,9 @@ Note
 <span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span>
 <span id="cb77-8"><a href="#cb77-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>C++’s name lookup rules ensure that this will find any <code>T</code>-specific swap at global scope or in the same namespace as the type <code>T</code>. (For example, if <code>T</code> is Widget in the namespace <code>WidgetStuff</code>, compilers will use argument-dependent lookup to find swap in <code>WidgetStuff</code>.) If no <code>T</code>-specific swap exists, compilers will use <code>swap</code> in <code>std</code>, thanks to the <code>using</code> declaration that makes <code>std::swap</code> visible in this function.</p>
-<p>These lookups rules are called <strong>ADL (Argument Dependent LookUp)</strong> :::</p>
+<p>These lookups rules are called <strong>ADL (Argument Dependent LookUp)</strong></p>
+</div>
+</div>
 <p>This specialization means: When someone writes <code>std::swap(a, b)</code> and<code>a/b</code> are <code>Widgets</code>, call <code>a.swap(b)</code>. Not only does this compile, it’s also consistent with the STL containers, all of which provide both public <code>swap</code> member functions and specializations of std::swap that call these member functions.</p>
 <p>Now suppose <code>Widget</code> and <code>WidgetImpl</code> are <strong>class tempalates</strong>, we may could’ve done something like</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb78"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">typename</span> T<span class="op">&gt;</span></span>
@@ -1931,6 +1944,9 @@ Note
 <span id="cb87-11"><a href="#cb87-11" aria-hidden="true" tabindex="-1"></a>  Widget w<span class="op">(</span><span class="co">// something with i)</span></span>
 <span id="cb87-12"><a href="#cb87-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Here you can see if w can be shared across i then initializing it everytime within loop might be too expensive (10 construction + 10 destruction)</p>
+</section>
+<section id="item-27-minimizing-casting" class="level2">
+<h2 class="anchored" data-anchor-id="item-27-minimizing-casting">Item-27: Minimizing Casting</h2>
 
 
 </section>
