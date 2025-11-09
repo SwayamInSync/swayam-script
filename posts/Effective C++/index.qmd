@@ -1578,7 +1578,7 @@ namespace std
   }
 }
 ```
-.::: {.callout-important}
+::: {.callout-important}
 Why doing `using std::swap` inside the class member `swap` implementation?
 
 Suppose you're writing a function template where you need to swap the values of two objects:
@@ -1761,3 +1761,5 @@ for(int i = 0; i < 10; i++)
 ```
 
 Here you can see if w can be shared across i then initializing it everytime within loop might be too expensive (10 construction + 10 destruction) 
+
+## Item-27: Minimizing Casting
