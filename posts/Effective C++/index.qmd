@@ -1763,3 +1763,145 @@ for(int i = 0; i < 10; i++)
 Here you can see if w can be shared across i then initializing it everytime within loop might be too expensive (10 construction + 10 destruction) 
 
 ## Item-27: Minimizing Casting
+
+Casting is unsafe for your strongly typed systems and C casting are very unsafe. 
+
+```c
+(T) expression // cast expression to be of type T
+// or
+T(expression) // functional style casting
+```
+
+C++ offers 4 new cast forms
+- `const_cast<T>(expression)`
+- `dynamic_cast<T>(expression)`
+- `reinterpret_cast<T>(expression)`
+- `static_cast<T>(expression)`
+
+Each serves a distinct purpose, the old C-style casts are still valid but not preferrable. Maybe an okayish reason to use old-style cast is to call an `explicit` constructor to pass an object to a function. For example:
+
+```cpp
+class Widget
+{
+  public:
+    explicit Widget(int size);
+    ...
+};
+
+void someWork(const Widget& w);
+
+doWork(Widget(15)); // functional style cast
+doWork(static_cast<Widget>(15)); // C++ style cast
+```
+
+Many programmers believe that casts do nothing but tell compilers to treat one type as another, but this is mistaken. Type conversions of any kind (either explicit via casts or implicit by compilers) often lead to code that is executed at runtime. For example, in this code fragment,
+
+```cpp
+int x, y;
+
+double d = static_cast<double<(x) / y;
+```
+
+The cast of `int x` to `double` certainly generates code, because on most architectures the underlying representation for an `int` is different from that for a `double`
+
+For better understanding consider the following code:
+
+```cpp
+class Base {
+public:
+    int baseData;
+};
+
+class Other {
+public:
+    int otherData;
+};
+
+class Derived : public Other, public Base {
+public:
+    int derivedData;
+};
+
+/*
+Inside memory it can be
+
++---------------------+  ← address X (pd)
+|  Other part         |
++---------------------+
+|  Base part          |  ← address X + offset (pb)
++---------------------+
+|  Derived part       |
++---------------------+
+*/
+```
+
+If `Derived` inherits from the `Base` the `Base` part usually is stored inside the the `Derived` object.
+Sometimes especially with multiple-inheritance, the `Base` subobject is not at the beginning of the `Derived`. So converting `Derived` to `Base` may require adding an offset.
+
+```cpp
+Derived d;
+Base* pb = &d;
+```
+
+`pb` can't point to the start of `Derived` (address `X`), it must point to the `Base` subobject inside `Derived` which is at `X + sizeof(Other)`, hence `pb != pd`. The compiler automatically applies this offset.
+
+Interesting thing about casting is that, its so easy to write wrong code that looks right.
+Suppose you have a derived class and you want to call the function of the base's class so you might want to do as follows:
+
+```cpp
+class Window
+{
+  public:
+    virtual void onResize();
+};
+
+class SpecialWindow: public Window
+{
+  public:
+    virtual void onResize()
+    {
+      static_cast<Window>(*this).onResize();
+    }
+};
+```
+
+So what will happen here is that it'll compile but the code won't call `Window`'s `onResize` on the current `this` pointer. It'll call on the **copy of the base class part of the current object**. If `Window::Resize` modifies the object on which it is invoked, then those changes won't be visible on our current object. The correct way to do is as:
+
+```cpp
+class SpecialWindow: public Window
+{
+  public:
+    virtual void onResize()
+    {
+      Window::onResize();
+    }
+};
+```
+
+### `const_cast<T>(expression)` 
+
+Typically used to cast away the constness of objects. It is the only C++-style cast that can do this.
+
+```cpp
+void modify(int* p) {
+    *p = 100;
+}
+
+int main() {
+    const int value = 42;
+    modify(&value);   // can't pass const
+
+    // Remove constness using const_cast
+    int* p = const_cast<int*>(&value);
+
+    modify(p);   // works
+
+    cout << "value = " << *p << endl;
+    return 0;
+}
+```
+::: {.callout-note}
+Modifying an object that was originally declared `const` results in UB.
+:::
+
+### `dynamic_cast<T>(expression)`
