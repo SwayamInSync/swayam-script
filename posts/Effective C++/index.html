@@ -417,7 +417,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#implementations" id="toc-implementations" class="nav-link" data-scroll-target="#implementations">Implementations</a>
   <ul class="collapse">
   <li><a href="#item-26-postpone-variable-definitions-as-long-as-possible" id="toc-item-26-postpone-variable-definitions-as-long-as-possible" class="nav-link" data-scroll-target="#item-26-postpone-variable-definitions-as-long-as-possible">Item-26: Postpone variable definitions as long as possible</a></li>
-  <li><a href="#item-27-minimizing-casting" id="toc-item-27-minimizing-casting" class="nav-link" data-scroll-target="#item-27-minimizing-casting">Item-27: Minimizing Casting</a></li>
+  <li><a href="#item-27-minimizing-casting" id="toc-item-27-minimizing-casting" class="nav-link" data-scroll-target="#item-27-minimizing-casting">Item-27: Minimizing Casting</a>
+  <ul class="collapse">
+  <li><a href="#const_casttexpression" id="toc-const_casttexpression" class="nav-link" data-scroll-target="#const_casttexpression"><code>const_cast&lt;T&gt;(expression)</code></a></li>
+  <li><a href="#dynamic_casttexpression" id="toc-dynamic_casttexpression" class="nav-link" data-scroll-target="#dynamic_casttexpression"><code>dynamic_cast&lt;T&gt;(expression)</code></a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -1947,8 +1951,121 @@ Important
 </section>
 <section id="item-27-minimizing-casting" class="level2">
 <h2 class="anchored" data-anchor-id="item-27-minimizing-casting">Item-27: Minimizing Casting</h2>
+<p>Casting is unsafe for your strongly typed systems and C casting are very unsafe.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb88"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="op">(</span>T<span class="op">)</span> expression <span class="co">// cast expression to be of type T</span></span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="co">// or</span></span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>T<span class="op">(</span>expression<span class="op">)</span> <span class="co">// functional style casting</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>C++ offers 4 new cast forms - <code>const_cast&lt;T&gt;(expression)</code> - <code>dynamic_cast&lt;T&gt;(expression)</code> - <code>reinterpret_cast&lt;T&gt;(expression)</code> - <code>static_cast&lt;T&gt;(expression)</code></p>
+<p>Each serves a distinct purpose, the old C-style casts are still valid but not preferrable. Maybe an okayish reason to use old-style cast is to call an <code>explicit</code> constructor to pass an object to a function. For example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb89"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Widget</span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">explicit</span> Widget<span class="op">(</span><span class="dt">int</span> size<span class="op">);</span></span>
+<span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span>
+<span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb89-8"><a href="#cb89-8" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> someWork<span class="op">(</span><span class="at">const</span> Widget<span class="op">&amp;</span> w<span class="op">);</span></span>
+<span id="cb89-9"><a href="#cb89-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb89-10"><a href="#cb89-10" aria-hidden="true" tabindex="-1"></a>doWork<span class="op">(</span>Widget<span class="op">(</span><span class="dv">15</span><span class="op">));</span> <span class="co">// functional style cast</span></span>
+<span id="cb89-11"><a href="#cb89-11" aria-hidden="true" tabindex="-1"></a>doWork<span class="op">(</span><span class="kw">static_cast</span><span class="op">&lt;</span>Widget<span class="op">&gt;(</span><span class="dv">15</span><span class="op">));</span> <span class="co">// C++ style cast</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Many programmers believe that casts do nothing but tell compilers to treat one type as another, but this is mistaken. Type conversions of any kind (either explicit via casts or implicit by compilers) often lead to code that is executed at runtime. For example, in this code fragment,</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb90"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x<span class="op">,</span> y<span class="op">;</span></span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> d <span class="op">=</span> <span class="kw">static_cast</span><span class="op">&lt;</span><span class="dt">double</span><span class="op">&lt;(</span>x<span class="op">)</span> <span class="op">/</span> y<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The cast of <code>int x</code> to <code>double</code> certainly generates code, because on most architectures the underlying representation for an <code>int</code> is different from that for a <code>double</code></p>
+<p>For better understanding consider the following code:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb91"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Base <span class="op">{</span></span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> baseData<span class="op">;</span></span>
+<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb91-5"><a href="#cb91-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-6"><a href="#cb91-6" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Other <span class="op">{</span></span>
+<span id="cb91-7"><a href="#cb91-7" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb91-8"><a href="#cb91-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> otherData<span class="op">;</span></span>
+<span id="cb91-9"><a href="#cb91-9" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb91-10"><a href="#cb91-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-11"><a href="#cb91-11" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Derived <span class="op">:</span> <span class="kw">public</span> Other<span class="op">,</span> <span class="kw">public</span> Base <span class="op">{</span></span>
+<span id="cb91-12"><a href="#cb91-12" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb91-13"><a href="#cb91-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> derivedData<span class="op">;</span></span>
+<span id="cb91-14"><a href="#cb91-14" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb91-15"><a href="#cb91-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-16"><a href="#cb91-16" aria-hidden="true" tabindex="-1"></a><span class="co">/*</span></span>
+<span id="cb91-17"><a href="#cb91-17" aria-hidden="true" tabindex="-1"></a><span class="co">Inside memory it can be</span></span>
+<span id="cb91-18"><a href="#cb91-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-19"><a href="#cb91-19" aria-hidden="true" tabindex="-1"></a><span class="co">+---------------------+  ← address X (pd)</span></span>
+<span id="cb91-20"><a href="#cb91-20" aria-hidden="true" tabindex="-1"></a><span class="co">|  Other part         |</span></span>
+<span id="cb91-21"><a href="#cb91-21" aria-hidden="true" tabindex="-1"></a><span class="co">+---------------------+</span></span>
+<span id="cb91-22"><a href="#cb91-22" aria-hidden="true" tabindex="-1"></a><span class="co">|  Base part          |  ← address X + offset (pb)</span></span>
+<span id="cb91-23"><a href="#cb91-23" aria-hidden="true" tabindex="-1"></a><span class="co">+---------------------+</span></span>
+<span id="cb91-24"><a href="#cb91-24" aria-hidden="true" tabindex="-1"></a><span class="co">|  Derived part       |</span></span>
+<span id="cb91-25"><a href="#cb91-25" aria-hidden="true" tabindex="-1"></a><span class="co">+---------------------+</span></span>
+<span id="cb91-26"><a href="#cb91-26" aria-hidden="true" tabindex="-1"></a><span class="co">*/</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If <code>Derived</code> inherits from the <code>Base</code> the <code>Base</code> part usually is stored inside the the <code>Derived</code> object. Sometimes especially with multiple-inheritance, the <code>Base</code> subobject is not at the beginning of the <code>Derived</code>. So converting <code>Derived</code> to <code>Base</code> may require adding an offset.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb92"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>Derived d<span class="op">;</span></span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>Base<span class="op">*</span> pb <span class="op">=</span> <span class="op">&amp;</span>d<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>pb</code> can’t point to the start of <code>Derived</code> (address <code>X</code>), it must point to the <code>Base</code> subobject inside <code>Derived</code> which is at <code>X + sizeof(Other)</code>, hence <code>pb != pd</code>. The compiler automatically applies this offset.</p>
+<p>Interesting thing about casting is that, its so easy to write wrong code that looks right. Suppose you have a derived class and you want to call the function of the base’s class so you might want to do as follows:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb93"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Window</span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">virtual</span> <span class="dt">void</span> onResize<span class="op">();</span></span>
+<span id="cb93-5"><a href="#cb93-5" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb93-6"><a href="#cb93-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-7"><a href="#cb93-7" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SpecialWindow<span class="op">:</span> <span class="kw">public</span> Window</span>
+<span id="cb93-8"><a href="#cb93-8" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb93-9"><a href="#cb93-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb93-10"><a href="#cb93-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">virtual</span> <span class="dt">void</span> onResize<span class="op">()</span></span>
+<span id="cb93-11"><a href="#cb93-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb93-12"><a href="#cb93-12" aria-hidden="true" tabindex="-1"></a>      <span class="kw">static_cast</span><span class="op">&lt;</span>Window<span class="op">&gt;(*</span><span class="kw">this</span><span class="op">).</span>onResize<span class="op">();</span></span>
+<span id="cb93-13"><a href="#cb93-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb93-14"><a href="#cb93-14" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>So what will happen here is that it’ll compile but the code won’t call <code>Window</code>’s <code>onResize</code> on the current <code>this</code> pointer. It’ll call on the <strong>copy of the base class part of the current object</strong>. If <code>Window::Resize</code> modifies the object on which it is invoked, then those changes won’t be visible on our current object. The correct way to do is as:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb94"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SpecialWindow<span class="op">:</span> <span class="kw">public</span> Window</span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">virtual</span> <span class="dt">void</span> onResize<span class="op">()</span></span>
+<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a>      Window<span class="op">::</span>onResize<span class="op">();</span></span>
+<span id="cb94-7"><a href="#cb94-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb94-8"><a href="#cb94-8" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="const_casttexpression" class="level3">
+<h3 class="anchored" data-anchor-id="const_casttexpression"><code>const_cast&lt;T&gt;(expression)</code></h3>
+<p>Typically used to cast away the constness of objects. It is the only C++-style cast that can do this.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb95"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> modify<span class="op">(</span><span class="dt">int</span><span class="op">*</span> p<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>p <span class="op">=</span> <span class="dv">100</span><span class="op">;</span></span>
+<span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb95-4"><a href="#cb95-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb95-5"><a href="#cb95-5" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb95-6"><a href="#cb95-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> value <span class="op">=</span> <span class="dv">42</span><span class="op">;</span></span>
+<span id="cb95-7"><a href="#cb95-7" aria-hidden="true" tabindex="-1"></a>    modify<span class="op">(&amp;</span>value<span class="op">);</span>   <span class="co">// can't pass const</span></span>
+<span id="cb95-8"><a href="#cb95-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb95-9"><a href="#cb95-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Remove constness using const_cast</span></span>
+<span id="cb95-10"><a href="#cb95-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span><span class="op">*</span> p <span class="op">=</span> <span class="kw">const_cast</span><span class="op">&lt;</span><span class="dt">int</span><span class="op">*&gt;(&amp;</span>value<span class="op">);</span></span>
+<span id="cb95-11"><a href="#cb95-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb95-12"><a href="#cb95-12" aria-hidden="true" tabindex="-1"></a>    modify<span class="op">(</span>p<span class="op">);</span>   <span class="co">// works</span></span>
+<span id="cb95-13"><a href="#cb95-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb95-14"><a href="#cb95-14" aria-hidden="true" tabindex="-1"></a>    cout <span class="op">&lt;&lt;</span> <span class="st">"value = "</span> <span class="op">&lt;&lt;</span> <span class="op">*</span>p <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
+<span id="cb95-15"><a href="#cb95-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb95-16"><a href="#cb95-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Modifying an object that was originally declared <code>const</code> results in UB.</p>
+</div>
+</div>
+</section>
+<section id="dynamic_casttexpression" class="level3">
+<h3 class="anchored" data-anchor-id="dynamic_casttexpression"><code>dynamic_cast&lt;T&gt;(expression)</code></h3>
 
 
+</section>
 </section>
 </section>
 
