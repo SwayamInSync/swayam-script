@@ -419,6 +419,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#const_casttexpression" id="toc-const_casttexpression" class="nav-link" data-scroll-target="#const_casttexpression"><code>const_cast&lt;T&gt;(expression)</code></a></li>
   <li><a href="#dynamic_casttexpression" id="toc-dynamic_casttexpression" class="nav-link" data-scroll-target="#dynamic_casttexpression"><code>dynamic_cast&lt;T&gt;(expression)</code></a></li>
+  <li><a href="#static_casttexpression" id="toc-static_casttexpression" class="nav-link" data-scroll-target="#static_casttexpression"><code>static_cast&lt;T&gt;(expression)</code></a></li>
+  <li><a href="#reinterpret_casttexpression" id="toc-reinterpret_casttexpression" class="nav-link" data-scroll-target="#reinterpret_casttexpression"><code>reinterpret_cast&lt;T&gt;(expression)</code></a></li>
   </ul></li>
   <li><a href="#item-28-avoid-returning-handles-to-object-internals." id="toc-item-28-avoid-returning-handles-to-object-internals." class="nav-link" data-scroll-target="#item-28-avoid-returning-handles-to-object-internals.">Item-28: Avoid returning “handles” to object internals.</a></li>
   </ul></li>
@@ -2111,6 +2113,12 @@ Note
 <li>Walk up or across the inheritance tree to see if conversion to the target type (Derived) is valid.</li>
 </ul>
 <p>In some older compiler’s implementation of <code>dynamic_cast</code> it performs string comparison between classes while travelling the inheritance tree, which is even more expensive operation. Overall avoid it as much as possible in the code-design.</p>
+</section>
+<section id="static_casttexpression" class="level3">
+<h3 class="anchored" data-anchor-id="static_casttexpression"><code>static_cast&lt;T&gt;(expression)</code></h3>
+</section>
+<section id="reinterpret_casttexpression" class="level3">
+<h3 class="anchored" data-anchor-id="reinterpret_casttexpression"><code>reinterpret_cast&lt;T&gt;(expression)</code></h3>
 </section>
 </section>
 <section id="item-28-avoid-returning-handles-to-object-internals." class="level2">
