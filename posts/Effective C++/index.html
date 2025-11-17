@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.8.26">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -75,9 +75,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-95f147d06fdb9f8ce149f95e323965f4.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-95f147d06fdb9f8ce149f95e323965f4.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-95f147d06fdb9f8ce149f95e323965f4.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-68c8bffd90dad8f2b55c52d7b6410dc0.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-68c8bffd90dad8f2b55c52d7b6410dc0.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-68c8bffd90dad8f2b55c52d7b6410dc0.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap-26500bfc55c7891837a911d6d50a6255.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
@@ -290,8 +290,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
-    </a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Swayam’s Scripts</span>
     </a>
@@ -422,6 +420,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#const_casttexpression" id="toc-const_casttexpression" class="nav-link" data-scroll-target="#const_casttexpression"><code>const_cast&lt;T&gt;(expression)</code></a></li>
   <li><a href="#dynamic_casttexpression" id="toc-dynamic_casttexpression" class="nav-link" data-scroll-target="#dynamic_casttexpression"><code>dynamic_cast&lt;T&gt;(expression)</code></a></li>
   </ul></li>
+  <li><a href="#item-28-avoid-returning-handles-to-object-internals." id="toc-item-28-avoid-returning-handles-to-object-internals." class="nav-link" data-scroll-target="#item-28-avoid-returning-handles-to-object-internals.">Item-28: Avoid returning “handles” to object internals.</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -2063,9 +2062,61 @@ Note
 </section>
 <section id="dynamic_casttexpression" class="level3">
 <h3 class="anchored" data-anchor-id="dynamic_casttexpression"><code>dynamic_cast&lt;T&gt;(expression)</code></h3>
-
-
+<p><code>dynamic_cast</code> is use to safely convert a pointer or reference of a base class to a derived class, at runtime. It performs runtime type checking, using information from polymorphism (<code>virtual</code> functions).</p>
+<p>Think of it as a way to ask:</p>
+<blockquote class="blockquote">
+<p>“Is this Base* actually pointing to a Derived object?”</p>
+</blockquote>
+<p>If it is, you get a valid pointer/reference. If not, you get nullptr (for pointers) or an exception (for references).</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb96"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Base <span class="op">{</span></span>
+<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">virtual</span> <span class="dt">void</span> speak<span class="op">()</span> <span class="op">{</span> cout <span class="op">&lt;&lt;</span> <span class="st">"Base speaking</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb96-7"><a href="#cb96-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">virtual</span> <span class="op">~</span>Base<span class="op">()</span> <span class="op">{}</span>  <span class="co">// Always make base destructor virtual for polymorphism</span></span>
+<span id="cb96-8"><a href="#cb96-8" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb96-9"><a href="#cb96-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-10"><a href="#cb96-10" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Derived <span class="op">:</span> <span class="kw">public</span> Base <span class="op">{</span></span>
+<span id="cb96-11"><a href="#cb96-11" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb96-12"><a href="#cb96-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> speak<span class="op">()</span> <span class="kw">override</span> <span class="op">{</span> cout <span class="op">&lt;&lt;</span> <span class="st">"Derived speaking</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb96-13"><a href="#cb96-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> derivedFunction<span class="op">()</span> <span class="op">{</span> cout <span class="op">&lt;&lt;</span> <span class="st">"Derived-specific behavior</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb96-14"><a href="#cb96-14" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb96-15"><a href="#cb96-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-16"><a href="#cb96-16" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb96-17"><a href="#cb96-17" aria-hidden="true" tabindex="-1"></a>    Base<span class="op">*</span> basePtr <span class="op">=</span> <span class="kw">new</span> Derived<span class="op">();</span>  <span class="co">// Actually pointing to a Derived object</span></span>
+<span id="cb96-18"><a href="#cb96-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-19"><a href="#cb96-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Try to cast Base* -&gt; Derived*</span></span>
+<span id="cb96-20"><a href="#cb96-20" aria-hidden="true" tabindex="-1"></a>    Derived<span class="op">*</span> derivedPtr <span class="op">=</span> <span class="kw">dynamic_cast</span><span class="op">&lt;</span>Derived<span class="op">*&gt;(</span>basePtr<span class="op">);</span></span>
+<span id="cb96-21"><a href="#cb96-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-22"><a href="#cb96-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>derivedPtr<span class="op">)</span> <span class="op">{</span>               <span class="co">// dynamic_cast succeeded</span></span>
+<span id="cb96-23"><a href="#cb96-23" aria-hidden="true" tabindex="-1"></a>        derivedPtr<span class="op">-&gt;</span>speak<span class="op">();</span></span>
+<span id="cb96-24"><a href="#cb96-24" aria-hidden="true" tabindex="-1"></a>        derivedPtr<span class="op">-&gt;</span>derivedFunction<span class="op">();</span> <span class="co">// We can use Derived-only features</span></span>
+<span id="cb96-25"><a href="#cb96-25" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb96-26"><a href="#cb96-26" aria-hidden="true" tabindex="-1"></a>        cout <span class="op">&lt;&lt;</span> <span class="st">"Cast failed</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb96-27"><a href="#cb96-27" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb96-28"><a href="#cb96-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-29"><a href="#cb96-29" aria-hidden="true" tabindex="-1"></a>    <span class="kw">delete</span> basePtr<span class="op">;</span></span>
+<span id="cb96-30"><a href="#cb96-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb96-31"><a href="#cb96-31" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>In practice <code>dynamic_casts</code> are slow, whenever a class contains the virtual functions, the compiler attachs a <strong>vtable pointer</strong> at every object. That table contains:</p>
+<ul>
+<li>Addresses of virtual functions, and</li>
+<li>A pointer to the <code>type_info</code> object representing the class.</li>
+</ul>
+<p>So when you do a <code>dynamic_cast</code>, the runtime can:</p>
+<ul>
+<li>Look at the object’s <code>vtable</code>.</li>
+<li>Get the <code>type_info</code> of the actual type.</li>
+<li>Walk up or across the inheritance tree to see if conversion to the target type (Derived) is valid.</li>
+</ul>
+<p>In some older compiler’s implementation of <code>dynamic_cast</code> it performs string comparison between classes while travelling the inheritance tree, which is even more expensive operation. Overall avoid it as much as possible in the code-design.</p>
 </section>
+</section>
+<section id="item-28-avoid-returning-handles-to-object-internals." class="level2">
+<h2 class="anchored" data-anchor-id="item-28-avoid-returning-handles-to-object-internals.">Item-28: Avoid returning “handles” to object internals.</h2>
+
+
 </section>
 </section>
 
