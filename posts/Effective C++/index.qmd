@@ -1878,6 +1878,8 @@ class SpecialWindow: public Window
 };
 ```
 
+
+
 ### `const_cast<T>(expression)` 
 
 Typically used to cast away the constness of objects. It is the only C++-style cast that can do this.
@@ -1905,3 +1907,63 @@ Modifying an object that was originally declared `const` results in UB.
 :::
 
 ### `dynamic_cast<T>(expression)`
+
+`dynamic_cast` is use to safely convert a pointer or reference of a base class to a derived class, at runtime.
+It performs runtime type checking, using information from polymorphism (`virtual` functions).
+
+Think of it as a way to ask:
+
+> “Is this Base* actually pointing to a Derived object?”
+
+If it is, you get a valid pointer/reference.
+If not, you get nullptr (for pointers) or an exception (for references).
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Base {
+public:
+    virtual void speak() { cout << "Base speaking\n"; }
+    virtual ~Base() {}  // Always make base destructor virtual for polymorphism
+};
+
+class Derived : public Base {
+public:
+    void speak() override { cout << "Derived speaking\n"; }
+    void derivedFunction() { cout << "Derived-specific behavior\n"; }
+};
+
+int main() {
+    Base* basePtr = new Derived();  // Actually pointing to a Derived object
+
+    // Try to cast Base* -> Derived*
+    Derived* derivedPtr = dynamic_cast<Derived*>(basePtr);
+
+    if (derivedPtr) {               // dynamic_cast succeeded
+        derivedPtr->speak();
+        derivedPtr->derivedFunction(); // We can use Derived-only features
+    } else {
+        cout << "Cast failed\n";
+    }
+
+    delete basePtr;
+    return 0;
+}
+```
+
+In practice `dynamic_casts` are slow, whenever a class contains the virtual functions, the compiler attachs a **vtable pointer** at every object.
+That table contains:
+
+- Addresses of virtual functions, and
+- A pointer to the `type_info` object representing the class.
+
+So when you do a `dynamic_cast`, the runtime can:
+
+- Look at the object’s `vtable`.
+- Get the `type_info` of the actual type.
+- Walk up or across the inheritance tree to see if conversion to the target type (Derived) is valid.
+
+In some older compiler's implementation of `dynamic_cast` it performs string comparison between classes while travelling the inheritance tree, which is even more expensive operation. Overall avoid it as much as possible in the code-design.
+
+## Item-28: Avoid returning "handles" to object internals.
