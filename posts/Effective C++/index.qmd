@@ -1966,4 +1966,9 @@ So when you do a `dynamic_cast`, the runtime can:
 
 In some older compiler's implementation of `dynamic_cast` it performs string comparison between classes while travelling the inheritance tree, which is even more expensive operation. Overall avoid it as much as possible in the code-design.
 
+### `static_cast<T>(expression)`
+
+
+### `reinterpret_cast<T>(expression)`
+
 ## Item-28: Avoid returning "handles" to object internals.
