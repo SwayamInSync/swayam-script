@@ -2053,3 +2053,47 @@ float4* vec = reinterpret_cast<float4*>(data);
 ```
 
 ## Item-28: Avoid returning "handles" to object internals.
+
+Tl;dr don't allow any object member function to return reference to the hidden internal. For example:
+
+```cpp
+class Point
+{
+  public:
+    Point(int x, int y);
+    void setX(int val);
+    void setY(int val);
+  private:
+    int x, y;
+};
+
+struct RectData
+{
+  Point ulhc; // upper left hand corner
+  Point lrhc; // lower right hanc corner
+};
+
+class Rectangle
+{
+  public:
+    Point& upperLeft() const { return pData->ulhc; }
+    Point& lowerRight() const { return pData->lrhc; }
+  private:
+    std::shared_ptr<RectData> pData;
+}
+```
+
+Here the public getter function returns a refernce to the private `Point` object, which can allow user to modify it, this is self contradictory. Instead follow:
+
+```cpp
+class Rectangle
+{
+  public:
+    const Point& upperLeft() const { return pData->ulhc; }
+    const Point& lowerRight() const { return pData->lrhc; }
+  private:
+    std::shared_ptr<RectData> pData;
+}
+```
+
+## Item-29: Strive for exception-safe code.
