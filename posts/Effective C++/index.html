@@ -423,6 +423,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#reinterpret_casttexpression" id="toc-reinterpret_casttexpression" class="nav-link" data-scroll-target="#reinterpret_casttexpression"><code>reinterpret_cast&lt;T&gt;(expression)</code></a></li>
   </ul></li>
   <li><a href="#item-28-avoid-returning-handles-to-object-internals." id="toc-item-28-avoid-returning-handles-to-object-internals." class="nav-link" data-scroll-target="#item-28-avoid-returning-handles-to-object-internals.">Item-28: Avoid returning “handles” to object internals.</a></li>
+  <li><a href="#item-29-strive-for-exception-safe-code." id="toc-item-29-strive-for-exception-safe-code." class="nav-link" data-scroll-target="#item-29-strive-for-exception-safe-code.">Item-29: Strive for exception-safe code.</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -2184,6 +2185,43 @@ Note
 </section>
 <section id="item-28-avoid-returning-handles-to-object-internals." class="level2">
 <h2 class="anchored" data-anchor-id="item-28-avoid-returning-handles-to-object-internals.">Item-28: Avoid returning “handles” to object internals.</h2>
+<p>Tl;dr don’t allow any object member function to return reference to the hidden internal. For example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb102"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Point</span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb102-4"><a href="#cb102-4" aria-hidden="true" tabindex="-1"></a>    Point<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> y<span class="op">);</span></span>
+<span id="cb102-5"><a href="#cb102-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> setX<span class="op">(</span><span class="dt">int</span> val<span class="op">);</span></span>
+<span id="cb102-6"><a href="#cb102-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> setY<span class="op">(</span><span class="dt">int</span> val<span class="op">);</span></span>
+<span id="cb102-7"><a href="#cb102-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">private</span><span class="op">:</span></span>
+<span id="cb102-8"><a href="#cb102-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> x<span class="op">,</span> y<span class="op">;</span></span>
+<span id="cb102-9"><a href="#cb102-9" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb102-10"><a href="#cb102-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-11"><a href="#cb102-11" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> RectData</span>
+<span id="cb102-12"><a href="#cb102-12" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb102-13"><a href="#cb102-13" aria-hidden="true" tabindex="-1"></a>  Point ulhc<span class="op">;</span> <span class="co">// upper left hand corner</span></span>
+<span id="cb102-14"><a href="#cb102-14" aria-hidden="true" tabindex="-1"></a>  Point lrhc<span class="op">;</span> <span class="co">// lower right hanc corner</span></span>
+<span id="cb102-15"><a href="#cb102-15" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb102-16"><a href="#cb102-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-17"><a href="#cb102-17" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Rectangle</span>
+<span id="cb102-18"><a href="#cb102-18" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb102-19"><a href="#cb102-19" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb102-20"><a href="#cb102-20" aria-hidden="true" tabindex="-1"></a>    Point<span class="op">&amp;</span> upperLeft<span class="op">()</span> <span class="at">const</span> <span class="op">{</span> <span class="cf">return</span> pData<span class="op">-&gt;</span>ulhc<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb102-21"><a href="#cb102-21" aria-hidden="true" tabindex="-1"></a>    Point<span class="op">&amp;</span> lowerRight<span class="op">()</span> <span class="at">const</span> <span class="op">{</span> <span class="cf">return</span> pData<span class="op">-&gt;</span>lrhc<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb102-22"><a href="#cb102-22" aria-hidden="true" tabindex="-1"></a>  <span class="kw">private</span><span class="op">:</span></span>
+<span id="cb102-23"><a href="#cb102-23" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>shared_ptr<span class="op">&lt;</span>RectData<span class="op">&gt;</span> pData<span class="op">;</span></span>
+<span id="cb102-24"><a href="#cb102-24" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Here the public getter function returns a refernce to the private <code>Point</code> object, which can allow user to modify it, this is self contradictory. Instead follow:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb103"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Rectangle</span>
+<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb103-4"><a href="#cb103-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> Point<span class="op">&amp;</span> upperLeft<span class="op">()</span> <span class="at">const</span> <span class="op">{</span> <span class="cf">return</span> pData<span class="op">-&gt;</span>ulhc<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb103-5"><a href="#cb103-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> Point<span class="op">&amp;</span> lowerRight<span class="op">()</span> <span class="at">const</span> <span class="op">{</span> <span class="cf">return</span> pData<span class="op">-&gt;</span>lrhc<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb103-6"><a href="#cb103-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">private</span><span class="op">:</span></span>
+<span id="cb103-7"><a href="#cb103-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>shared_ptr<span class="op">&lt;</span>RectData<span class="op">&gt;</span> pData<span class="op">;</span></span>
+<span id="cb103-8"><a href="#cb103-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="item-29-strive-for-exception-safe-code." class="level2">
+<h2 class="anchored" data-anchor-id="item-29-strive-for-exception-safe-code.">Item-29: Strive for exception-safe code.</h2>
 
 
 </section>
