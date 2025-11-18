@@ -2116,9 +2116,70 @@ Note
 </section>
 <section id="static_casttexpression" class="level3">
 <h3 class="anchored" data-anchor-id="static_casttexpression"><code>static_cast&lt;T&gt;(expression)</code></h3>
+<p><code>static_cast&lt;T&gt;(expression)</code> performs a <strong>compile time checked</strong> conversion. It does not use RTTI (Run Time Type Info), does not do runtime checks, and does not cost anything extra at runtime.</p>
+<p>It tells the compiler:</p>
+<blockquote class="blockquote">
+<p>“Convert this expression to type T, as long as the compiler can verify that the conversion makes sense.”</p>
+</blockquote>
+<p>So <code>static_cast</code> is safe only when the conversion is logically valid. If the programmer gets it wrong, C++ will not stop you, it’ll be undefined behavior though. Some valid usecases are as:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb97"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="co">// numeric conversions</span></span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> x <span class="op">=</span> <span class="fl">3.14</span><span class="op">;</span></span>
+<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> y <span class="op">=</span> <span class="kw">static_cast</span><span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;(</span>x<span class="op">);</span></span>
+<span id="cb97-4"><a href="#cb97-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb97-5"><a href="#cb97-5" aria-hidden="true" tabindex="-1"></a><span class="co">// Upcasting (Derived =&gt; Base)</span></span>
+<span id="cb97-6"><a href="#cb97-6" aria-hidden="true" tabindex="-1"></a>Derived d<span class="op">;</span></span>
+<span id="cb97-7"><a href="#cb97-7" aria-hidden="true" tabindex="-1"></a>Base <span class="op">*</span>base <span class="op">=</span> <span class="kw">static_cast</span><span class="op">&lt;</span>Base <span class="op">*&gt;(&amp;</span>d<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Remember, downcasting (Base =&gt; Derived) is allowed but not safe, as <code>static_cast</code> can’t do the runtime checking so bette use <code>dynamic_cast</code> or avoid such scenarios at all.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb98"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="co">// void conversions</span></span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a><span class="co">// void* is C’s typeless pointer; static_cast can convert to/from it safely (this is well defined)</span></span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> n <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span><span class="op">*</span> vp <span class="op">=</span> <span class="kw">static_cast</span><span class="op">&lt;</span><span class="dt">void</span><span class="op">*&gt;(&amp;</span>n<span class="op">);</span></span>
+<span id="cb98-5"><a href="#cb98-5" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span><span class="op">*</span> ip <span class="op">=</span> <span class="kw">static_cast</span><span class="op">&lt;</span><span class="dt">int</span><span class="op">*&gt;(</span>vp<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb99"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> Meter <span class="op">{</span></span>
+<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">explicit</span> Meter<span class="op">(</span><span class="dt">double</span> v<span class="op">)</span> <span class="op">:</span> value<span class="op">(</span>v<span class="op">)</span> <span class="op">{}</span></span>
+<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">double</span> value<span class="op">;</span></span>
+<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-6"><a href="#cb99-6" aria-hidden="true" tabindex="-1"></a>Meter m <span class="op">=</span> <span class="kw">static_cast</span><span class="op">&lt;</span>Meter<span class="op">&gt;(</span><span class="fl">3.5</span><span class="op">);</span>  <span class="co">// required</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb100"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Enum conversions</span></span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="co">// From enum → int, or int → enum (but int → enum is risky).</span></span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> Color <span class="op">{</span> RED<span class="op">,</span> GREEN<span class="op">,</span> BLUE <span class="op">};</span></span>
+<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x <span class="op">=</span> <span class="kw">static_cast</span><span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;(</span>RED<span class="op">);</span>  <span class="co">// OK</span></span>
+<span id="cb100-6"><a href="#cb100-6" aria-hidden="true" tabindex="-1"></a>Color c <span class="op">=</span> <span class="kw">static_cast</span><span class="op">&lt;</span>Color<span class="op">&gt;(</span><span class="dv">2</span><span class="op">);</span> <span class="co">// allowed but may be invalid logically</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>What <code>static_cast</code> Cannot Do</strong>:</p>
+<ul>
+<li>It cannot remove constness (must use <code>const_cast</code>).</li>
+<li>It cannot cast between unrelated pointer types (use <code>reinterpret_cast</code> instead).</li>
+<li>It cannot perform runtime type checking (use <code>dynamic_cast</code>).</li>
+<li>It cannot do “magic type gymnastics” like in C-style casts.</li>
+</ul>
 </section>
 <section id="reinterpret_casttexpression" class="level3">
 <h3 class="anchored" data-anchor-id="reinterpret_casttexpression"><code>reinterpret_cast&lt;T&gt;(expression)</code></h3>
+<p><code>reinterpret_cast</code> performs a pure bit reinterpretation.</p>
+<ul>
+<li>It does NOT change the actual value</li>
+<li>It does NOT check the safety</li>
+<li>It does NOT perform conversion</li>
+<li>It does NOT guarantee round-trip correctness.</li>
+</ul>
+<p>It simply tells the compiler:</p>
+<blockquote class="blockquote">
+<p>“Treat these bits as if they represent another unrelated type T.”</p>
+</blockquote>
+<p>Because of this, the standard says its behavior is mostly implementation-defined, and many uses lead to undefined behavior. So this cast is the most dangerous one.</p>
+<p>Here is an example of how to view and use this</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb101"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> <span class="kw">alignas</span><span class="op">(</span><span class="dv">16</span><span class="op">)</span> float4 <span class="op">{</span></span>
+<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">float</span> x<span class="op">,</span> y<span class="op">,</span> z<span class="op">,</span> w<span class="op">;</span></span>
+<span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb101-4"><a href="#cb101-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb101-5"><a href="#cb101-5" aria-hidden="true" tabindex="-1"></a><span class="dt">float</span><span class="op">*</span> data <span class="op">=</span> <span class="kw">static_cast</span><span class="op">&lt;</span><span class="dt">float</span><span class="op">*&gt;(</span><span class="bu">std::</span>aligned_alloc<span class="op">(</span><span class="dv">16</span><span class="op">,</span> <span class="dv">8</span> <span class="op">*</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">float</span><span class="op">)));</span></span>
+<span id="cb101-6"><a href="#cb101-6" aria-hidden="true" tabindex="-1"></a><span class="co">// OR</span></span>
+<span id="cb101-7"><a href="#cb101-7" aria-hidden="true" tabindex="-1"></a><span class="co">// float* data = new (std::align_val_t(16)) float[8];</span></span>
+<span id="cb101-8"><a href="#cb101-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb101-9"><a href="#cb101-9" aria-hidden="true" tabindex="-1"></a><span class="co">// Safe reinterpret</span></span>
+<span id="cb101-10"><a href="#cb101-10" aria-hidden="true" tabindex="-1"></a>float4<span class="op">*</span> vec <span class="op">=</span> <span class="kw">reinterpret_cast</span><span class="op">&lt;</span>float4<span class="op">*&gt;(</span>data<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 <section id="item-28-avoid-returning-handles-to-object-internals." class="level2">
