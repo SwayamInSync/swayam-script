@@ -1968,7 +1968,88 @@ In some older compiler's implementation of `dynamic_cast` it performs string com
 
 ### `static_cast<T>(expression)`
 
+`static_cast<T>(expression)` performs a **compile time checked** conversion. It does not use RTTI (Run Time Type Info), does not do runtime checks, and does not cost anything extra at runtime.
+
+It tells the compiler:
+
+> “Convert this expression to type T, as long as the compiler can verify that the conversion makes sense.”
+
+So `static_cast` is safe only when the conversion is logically valid.
+If the programmer gets it wrong, C++ will not stop you, it'll be undefined behavior though. Some valid usecases are as:
+
+```cpp
+// numeric conversions
+double x = 3.14;
+int y = static_cast<int>(x);
+
+// Upcasting (Derived => Base)
+Derived d;
+Base *base = static_cast<Base *>(&d);
+```
+
+Remember, downcasting (Base => Derived) is allowed but not safe, as `static_cast` can't do the runtime checking so bette use `dynamic_cast` or avoid such scenarios at all.
+
+```cpp
+// void conversions
+// void* is C’s typeless pointer; static_cast can convert to/from it safely (this is well defined)
+int n = 10;
+void* vp = static_cast<void*>(&n);
+int* ip = static_cast<int*>(vp);
+```
+
+```cpp
+struct Meter {
+    explicit Meter(double v) : value(v) {}
+    double value;
+};
+
+Meter m = static_cast<Meter>(3.5);  // required
+```
+
+```cpp
+// Enum conversions
+// From enum → int, or int → enum (but int → enum is risky).
+enum Color { RED, GREEN, BLUE };
+
+int x = static_cast<int>(RED);  // OK
+Color c = static_cast<Color>(2); // allowed but may be invalid logically
+```
+
+**What `static_cast` Cannot Do**:
+
+- It cannot remove constness (must use `const_cast`).
+- It cannot cast between unrelated pointer types (use `reinterpret_cast` instead).
+- It cannot perform runtime type checking (use `dynamic_cast`).
+- It cannot do “magic type gymnastics” like in C-style casts.
 
 ### `reinterpret_cast<T>(expression)`
+
+`reinterpret_cast` performs a pure bit reinterpretation.
+
+- It does NOT change the actual value
+- It does NOT check the safety
+- It does NOT perform conversion
+- It does NOT guarantee round-trip correctness.
+
+It simply tells the compiler:
+
+> “Treat these bits as if they represent another unrelated type T.”
+
+Because of this, the standard says its behavior is mostly implementation-defined, and many uses lead to undefined behavior. So this cast is the most dangerous one.
+
+Here is an example of how to view and use this
+
+```cpp
+struct alignas(16) float4 {
+    float x, y, z, w;
+};
+
+float* data = static_cast<float*>(std::aligned_alloc(16, 8 * sizeof(float)));
+// OR
+// float* data = new (std::align_val_t(16)) float[8];
+
+// Safe reinterpret
+float4* vec = reinterpret_cast<float4*>(data);
+```
 
 ## Item-28: Avoid returning "handles" to object internals.
