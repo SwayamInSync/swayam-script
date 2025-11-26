@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/A&DS/index.html",
       "/posts/Effective C++/index.html",
       "/posts/Cooperative Groups/index.html",
       "/posts/A Hitchhiker's Guide to LLVM/index.html",

@@ -308,20 +308,6 @@
     "text": "Modules:\nA module is essentially the container for everything the compiler is working on at a given time. Think of it as:\nInput File (e.g., main.c) → LLVM Module\nThe module contains:\n\nAll function definitions (main(), foo(), etc.)\nGlobal variables\nMetadata\nEverything else needed to compile that input\n\nIt is also known as Translation Unit or Compilation Unit, all refer to same concept - the unit of compilation."
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Swayam’s Scripts",
-    "section": "",
-    "text": "[WIP] Effective C++\n\n\nThis article summarizes all the items mentioned in Effective C++ by Scott Meyers\n\n\n\nC++\n\n\n\n\n\n\n\n\n\nSep 19, 2025\n\n\nSwayam Singh\n\n58 min\n\n11,511 words\n\n\n\n\n\n\n\n\n\n\n\n\nCUDA Notes: Cooperative Groups\n\n\nBeyond Block Barriers, Flexible Thread Synchronization from Warps to Grids\n\n\n\nCUDA\n\n\n\n\n\n\n\n\n\nAug 15, 2025\n\n\nSwayam Singh\n\n13 min\n\n2,508 words\n\n\n\n\n\n\n\n\n\n\n\n\n[WIP] A Hitchhiker’s Guide to LLVM\n\n\nJust Another Day in the Life of a SSA Variable\n\n\n\nCompilers\n\nLLVM\n\n\n\n\n\n\n\n\n\nJun 3, 2025\n\n\nSwayam Singh\n\n9 min\n\n1,796 words\n\n\n\n\n\n\n\n\n\n\n\n\nGradient Flow and Variance Propogation Analysis of Dynamic Tanh Layer\n\n\nA Mathematical Investigation into DyT’s Potential to Mitigate the Curse of Depth in Pre-LN Transformers\n\n\n\nML-Theory\n\nTransformers\n\n\n\n\n\n\n\n\n\nMar 21, 2025\n\n\nSwayam Singh\n\n9 min\n\n1,625 words\n\n\n\n\n\n\n\n\n\n\n\n\n[WIP] The Transparent Algorithm\n\n\nA bridge between formal mathematical proofs and intuitive understanding, guiding readers through the theoretical foundations of machine learning with clarity and precision.\n\n\n\nML\n\nTheory\n\nBook\n\n\n\n\n\n\n\n\n\nMar 15, 2025\n\n\nSwayam Singh\n\n1 min\n\n35 words\n\n\n\n\n\n\n\n\n\n\n\n\nConcurrent C++ A Practical Guide\n\n\nA concise and practical guide to mastering C++ concurrency, covering threads, synchronization, parallelism, and debugging—all in one place.\n\n\n\nC++\n\nBook\n\n\n\n\n\n\n\n\n\nFeb 9, 2025\n\n\nSwayam Singh\n\n1 min\n\n5 words\n\n\n\n\n\n\n\n\n\n\n\n\nInformation Theory in Machine Learning: A Fun Approach\n\n\nTeaching Neural Networks to Handle Their Trust Issues\n\n\n\nML\n\nInformation-Theory\n\n\n\n\n\n\n\n\n\nJan 9, 2025\n\n\nSwayam Singh\n\n14 min\n\n2,650 words\n\n\n\n\n\n\n\n\n\n\n\n\nUnderstanding Perplexity\n\n\nA New Perspective on Model Uncertainty\n\n\n\nLLM\n\n\n\n\n\n\n\n\n\nOct 10, 2024\n\n\nSwayam Singh\n\n3 min\n\n595 words\n\n\n\n\n\n\n\n\n\n\n\n\nNumpy QuadDType: Quadruple Precision for Everyone\n\n\nQuad Precision for All: Simplifying High-Accuracy Computing with numpy_quaddtype\n\n\n\nNumPy\n\nOpen-Source\n\n\n\n\n\n\n\n\n\nSep 30, 2024\n\n\nSwayam Singh\n\n1 min\n\n5 words\n\n\n\n\n\n\n\n\n\n\n\n\nSelf-Attention Mimicking Gradient Descent\n\n\n\n\n\n\nNLP\n\nTransformers\n\n\n\n\n\n\n\n\n\nOct 14, 2023\n\n\nSwayam Singh\n\n9 min\n\n1,671 words\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "pages/A Hitchhiker's Guide to LLVM/chapter-1.html",
-    "href": "pages/A Hitchhiker's Guide to LLVM/chapter-1.html",
-    "title": "Chapter 1: Introduction to LLVM",
-    "section": "",
-    "text": "Chapter 1: Introduction to LLVM"
-  },
-  {
     "objectID": "pages/The Transparent Algorithm/chapter-1.html",
     "href": "pages/The Transparent Algorithm/chapter-1.html",
     "title": "Chapter 1: The Mathematics of Learning Guarantees",
@@ -369,6 +355,34 @@
     "title": "Chapter 1: The Mathematics of Learning Guarantees",
     "section": "",
     "text": "In this chapter, we developed the fundamental mathematics that allow us to provide guarantees about learning algorithms. Rather than relying on intuition or empirical evidence alone, we now have precise tools to analyze when and why learning succeeds.\nLet’s review the key insights we’ve gained:\n\nWe formalized the learning problem through precise definitions of hypotheses, errors, and learning algorithms.\nWe identified that learning failure occurs when our algorithm outputs a hypothesis with high true error.\nWe discovered that such failure can only happen when our training sample is “misleading” - making a bad hypothesis look perfect.\nWe derived tight bounds on the probability of drawing misleading samples, leading to our fundamental inequality: \\[\\mathcal{D}^m(\\{S|_x : L_{(D,f)}(h_S) &gt; \\epsilon\\}) \\leq |\\mathcal{H}| \\cdot e^{-\\epsilon m}\\]\nWe established the sample complexity of learning: \\[m \\geq \\frac{\\ln(|\\mathcal{H}|/\\delta)}{\\epsilon}\\] This tells us exactly how many examples we need to ensure our learning algorithm succeeds with high probability.\n\nThese results provide a solid mathematical foundation for understanding learning guarantees, but they rely on several assumptions that limit their direct application to many real-world scenarios. Most notably, we’ve worked under the realizability assumption (that a perfect hypothesis exists in our class), and we’ve assumed that our hypothesis class is finite.\nIn the next chapter, we’ll formalize and extend these insights by developing the Probably Approximately Correct (PAC) learning model. This model provides a comprehensive framework for analyzing learnability across different problem domains and algorithm types. We’ll remove the restrictive assumptions of this chapter, explore how to handle infinite hypothesis classes, and investigate learning without the realizability assumption.\nBy building on the mathematical foundations established here, we’ll develop a more complete understanding of what makes learning possible and what fundamental limitations exist in machine learning. This will ultimately help us answer one of the most profound questions in the field: What is learnable and what is not?"
+  },
+  {
+    "objectID": "pages/A Hitchhiker's Guide to LLVM/chapter-1.html",
+    "href": "pages/A Hitchhiker's Guide to LLVM/chapter-1.html",
+    "title": "Chapter 1: Introduction to LLVM",
+    "section": "",
+    "text": "Chapter 1: Introduction to LLVM"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Swayam’s Scripts",
+    "section": "",
+    "text": "[WIP] Algorithms and Data Structures\n\n\nJust some personal writings\n\n\n\nTheory\n\nDSA\n\n\n\n\n\n\n\n\n\nNov 26, 2025\n\n\nSwayam Singh\n\n1 min\n\n35 words\n\n\n\n\n\n\n\n\n\n\n\n\n[WIP] Effective C++\n\n\nThis article summarizes all the items mentioned in Effective C++ by Scott Meyers\n\n\n\nC++\n\n\n\n\n\n\n\n\n\nSep 19, 2025\n\n\nSwayam Singh\n\n58 min\n\n11,511 words\n\n\n\n\n\n\n\n\n\n\n\n\nCUDA Notes: Cooperative Groups\n\n\nBeyond Block Barriers, Flexible Thread Synchronization from Warps to Grids\n\n\n\nCUDA\n\n\n\n\n\n\n\n\n\nAug 15, 2025\n\n\nSwayam Singh\n\n13 min\n\n2,508 words\n\n\n\n\n\n\n\n\n\n\n\n\n[WIP] A Hitchhiker’s Guide to LLVM\n\n\nJust Another Day in the Life of a SSA Variable\n\n\n\nCompilers\n\nLLVM\n\n\n\n\n\n\n\n\n\nJun 3, 2025\n\n\nSwayam Singh\n\n9 min\n\n1,796 words\n\n\n\n\n\n\n\n\n\n\n\n\nGradient Flow and Variance Propogation Analysis of Dynamic Tanh Layer\n\n\nA Mathematical Investigation into DyT’s Potential to Mitigate the Curse of Depth in Pre-LN Transformers\n\n\n\nML-Theory\n\nTransformers\n\n\n\n\n\n\n\n\n\nMar 21, 2025\n\n\nSwayam Singh\n\n9 min\n\n1,625 words\n\n\n\n\n\n\n\n\n\n\n\n\n[WIP] The Transparent Algorithm\n\n\nA bridge between formal mathematical proofs and intuitive understanding, guiding readers through the theoretical foundations of machine learning with clarity and precision.\n\n\n\nML\n\nTheory\n\nBook\n\n\n\n\n\n\n\n\n\nMar 15, 2025\n\n\nSwayam Singh\n\n1 min\n\n24 words\n\n\n\n\n\n\n\n\n\n\n\n\nConcurrent C++ A Practical Guide\n\n\nA concise and practical guide to mastering C++ concurrency, covering threads, synchronization, parallelism, and debugging—all in one place.\n\n\n\nC++\n\nBook\n\n\n\n\n\n\n\n\n\nFeb 9, 2025\n\n\nSwayam Singh\n\n1 min\n\n5 words\n\n\n\n\n\n\n\n\n\n\n\n\nInformation Theory in Machine Learning: A Fun Approach\n\n\nTeaching Neural Networks to Handle Their Trust Issues\n\n\n\nML\n\nInformation-Theory\n\n\n\n\n\n\n\n\n\nJan 9, 2025\n\n\nSwayam Singh\n\n14 min\n\n2,650 words\n\n\n\n\n\n\n\n\n\n\n\n\nUnderstanding Perplexity\n\n\nA New Perspective on Model Uncertainty\n\n\n\nLLM\n\n\n\n\n\n\n\n\n\nOct 10, 2024\n\n\nSwayam Singh\n\n3 min\n\n595 words\n\n\n\n\n\n\n\n\n\n\n\n\nNumpy QuadDType: Quadruple Precision for Everyone\n\n\nQuad Precision for All: Simplifying High-Accuracy Computing with numpy_quaddtype\n\n\n\nNumPy\n\nOpen-Source\n\n\n\n\n\n\n\n\n\nSep 30, 2024\n\n\nSwayam Singh\n\n1 min\n\n5 words\n\n\n\n\n\n\n\n\n\n\n\n\nSelf-Attention Mimicking Gradient Descent\n\n\n\n\n\n\nNLP\n\nTransformers\n\n\n\n\n\n\n\n\n\nOct 14, 2023\n\n\nSwayam Singh\n\n9 min\n\n1,671 words\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "pages/A&DS/chapter-1.html",
+    "href": "pages/A&DS/chapter-1.html",
+    "title": "Chapter-1: Algorithms, Time Complexity and Merge Sort",
+    "section": "",
+    "text": "Chapter-1: Algorithms, Time Complexity and Merge Sort"
+  },
+  {
+    "objectID": "posts/A&DS/index.html#table-of-content",
+    "href": "posts/A&DS/index.html#table-of-content",
+    "title": "[WIP] Algorithms and Data Structures",
+    "section": "Table of Content",
+    "text": "Table of Content\n\n\n\n#\nTitle\nDescription\n\n\n\n\n1\nAlgorithms, Time Complexity, Merge Sort\nFoundations of learning theory, error bounds, and the concept of misleading samples"
   },
   {
     "objectID": "posts/Understanding Perplexity/index.html",
@@ -438,7 +452,7 @@
     "href": "posts/The Transparent Algorithm/index.html#table-of-content",
     "title": "[WIP] The Transparent Algorithm",
     "section": "Table of Content",
-    "text": "Table of Content\n\n\n\n#\nTitle\nDescription\n\n\n\n\n1\nThe Mathematics of Learning Guarantees\nFoundations of learning theory, error bounds, and the concept of misleading samples"
+    "text": "Table of Content\n\n\n\n#\nTitle\nDescription\n\n\n\n\n1\nThe Mathematics of Learning Guarantees\nTBA"
   },
   {
     "objectID": "posts/Self-Attention Mimicking Gradient Descent/index.html",
