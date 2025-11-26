@@ -25,5 +25,5 @@ comments: false
 
 | # | Title | Description |
 |---------|-------|-------------|
-| 1 | [The Mathematics of Learning Guarantees](../../pages/The%20Transparent%20Algorithm/chapter-1.qmd) | Foundations of learning theory, error bounds, and the concept of misleading samples |
+| 1 | [The Mathematics of Learning Guarantees](../../pages/A%26DS/chapter-1.qmd) | TBA |
 
