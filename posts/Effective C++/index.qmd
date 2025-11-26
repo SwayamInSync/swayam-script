@@ -3,7 +3,7 @@ title: "[WIP] Effective C++"
 subtitle: "This article summarizes all the items mentioned in Effective C++ by Scott Meyers"
 author: "Swayam Singh"
 date: "2025-09-19"
-categories: [C++]
+categories: [C++, Ongoing]
 format:
   html:
     code-fold: false

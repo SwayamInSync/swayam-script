@@ -3,7 +3,7 @@ title: "[WIP] The Transparent Algorithm"
 subtitle: "A bridge between formal mathematical proofs and intuitive understanding, guiding readers through the theoretical foundations of machine learning with clarity and precision."
 author: "Swayam Singh"
 date: "2025-03-15"
-categories: [ML, Theory, Book]
+categories: [ML, Theory, Book, ongoing]
 format:
   html:
     code-fold: false

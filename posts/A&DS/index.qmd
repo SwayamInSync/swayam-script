@@ -3,7 +3,7 @@ title: "[WIP] Algorithms and Data Structures"
 subtitle: "Just some personal writings"
 author: "Swayam Singh"
 date: "2025-11-26"
-categories: [Theory, DSA]
+categories: [Theory, DSA, ongoing]
 format:
   html:
     code-fold: false
