@@ -1,1 +1,22 @@
 /* css styles */
+
+/* Ongoing Posts Toggle Button */
+.ongoing-toggle {
+  cursor: pointer;
+  text-decoration: none !important;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.ongoing-toggle:hover {
+  opacity: 1;
+}
+
+.ongoing-toggle.active {
+  opacity: 1;
+  color: var(--bs-primary, #0d6efd);
+}
+
+.ongoing-toggle i::before {
+  font-size: 1.1rem;
+}
