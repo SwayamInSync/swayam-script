@@ -1,0 +1,243 @@
+---
+title: "C++ Tips"
+subtitle: "This article summarizes some items I often keep forgetting"
+author: "Swayam Singh"
+date: "2025-12-05"
+categories: [C++, Ongoing]
+format:
+  html:
+    code-fold: false
+toc: true
+highlight-style: pygments
+execute:
+  freeze: auto
+image: assets/header.png
+social:
+  - image: assets/header.png
+    description: "C++ tips"
+---
+
+# Quick Tips
+
+- `constexpr` to if statements must need to evaluated at compile time, else error while `constexpr` functions are allowed to be compile-time evaluation if function logic allows else lowered to runtime evaluation
+- `inline` a function allows different TU can have the same definition, linker will do the required optimizations such that either all calls map to single location or whatever is the best.
+   - any **local static** variable inside such functions is also shared among the definitions/TUs
+
+- `static` a function makes it **internal linkage** i.e. only visible in current TU. Also in case if multiple TUs include the same header having `static` declared function then each of them get a differnt copy, and linker will call their own corresponding.
+   - any **local static** variable inside such functions is **NOT** shared across the definitions/TUs
+
+- functions marked as `noexcept` make a promise to compiler that they won't throw any error, still if error is thrown by the function or by any function called within `noexcept` function, it'll tigger `std::terminate` which immediately kill the program without unwinding of any resources, no catch blocks.
+
+- `std::string` are mutable while string literals `const char *` are immutable.
+
+- While designing classes focus on 6 aspects the most, 
+  ```cpp
+  class A
+  {
+    explicit A(...) // constructor
+    A(const A& lhs) // copy constructor
+    A& operator=(const A& lhs) // copy assignment operator
+    Person(Person &&) // move constructor
+    Person& operator=(Person&&) // move assignment operator
+    virtual ~Person() // destructor (virtual or not depends on inheritence)
+  }
+  ```
+
+-  When a class manages a resource (raw pointer, file handle, socket, etc.), if you define **any** of these five special member functions, you should probably define **all five**:
+
+  1. **Destructor** — `~T()`
+  2. **Copy constructor** — `T(const T&)`
+  3. **Copy assignment operator** — `T& operator=(const T&)`
+  4. **Move constructor** — `T(T&&) noexcept`
+  5. **Move assignment operator** — `T& operator=(T&&) noexcept`
+
+
+  | Rule | When to use |
+  |------|-------------|
+  | **Rule of Zero** | Class only contains RAII members — let the compiler do everything |
+  | **Rule of Five** | Class manages raw resources directly |
+  | **Rule of "Three and Two Deleted"** | Resource can't be meaningfully copied |
+
+- A `friend` function have access to everything within the class, public, private or protected doesn't matters.
+- Polymorphism, in practice is that derived class objects can be manipulated through a pointer or reference to a base class type, with member function selection being resolved at run-time. 
+  ```cpp
+  class Virtual {
+  public:
+      virtual void f();
+      virtual void g() = 0;
+      virtual void h() override;
+      virtual void k() override final;
+  };
+  ```
+
+- In template programming, a default type for the generic type `T` is required in order to make use of the default constructors
+- `rvalue reference` is a reference introduced in C++11 that binds to **temporaries** (rvalues) i.e. objects that are about to be destroyed or don't have a persistent identity (they do have storage but not a named one that can be referred). They can usually be huge resources and hence copying is not a good option so use the `move`, it steals the pointer to temporary (no new allocation or copying)
+  
+  ```cpp
+  int &&r = 10;
+  // or
+  class Stringy {
+    string str;
+  public:
+      template <typename T> explicit Stringy(T&& str)
+          : str{ str } {}
+      string get() const { return str; }
+  };
+   
+  Stringy sy1{ "Star" };       // initialize from const char *
+  Stringy sy2{ "Wars"s };      // initialize from std::string
+  Stringy sy3{ "Trilogy"sv };  // initialize from std::string_view
+  Stringy sy4{ 'V' };          // initialize from char
+  Stringy sy5{ 5 };            // Error! Attempt to narrow from int to char
+  ```
+
+## MRO
+MRO (Method Resolution Order) as a specific concept is Python's way of handling multiple inheritance, but C++ absolutely deals with the same underlying problem — it just handles it differently.
+
+## Python's MRO
+
+Python uses the **C3 linearization algorithm** at runtime to create a deterministic, single order in which base classes are searched:
+
+```python
+class A:
+    def foo(self): print("A")
+
+class B(A):
+    def foo(self): print("B")
+
+class C(A):
+    def foo(self): print("C")
+
+class D(B, C):
+    pass
+
+D().foo()  # Prints "B"
+print(D.__mro__)  # (D, B, C, A, object)
+```
+
+Python linearizes the hierarchy into one searchable list.
+
+## C++ — No MRO, but similar problems
+
+C++ resolves methods at **compile time** (for non-virtual) or via **vtables** (for virtual), but it does **not** linearize the hierarchy. Instead:
+
+### 1. Ambiguity is a compile error
+
+```cpp
+struct A {
+    void foo() { std::cout << "A\n"; }
+};
+
+struct B : A {
+    void foo() { std::cout << "B\n"; }
+};
+
+struct C : A {
+    void foo() { std::cout << "C\n"; }
+};
+
+struct D : B, C {};
+
+int main() {
+    D d;
+    d.foo();  // ERROR: ambiguous — compiler won't guess
+}
+```
+
+You must explicitly disambiguate:
+
+```cpp
+d.B::foo();  // OK: calls B's foo
+d.C::foo();  // OK: calls C's foo
+```
+
+### 2. The Diamond Problem
+
+Without care, you get **two copies** of the base class:
+
+```cpp
+struct A { int x = 0; };
+
+struct B : A {};
+struct C : A {};
+struct D : B, C {};
+
+int main() {
+    D d;
+    d.x = 5;      // ERROR: ambiguous — which A::x?
+    d.B::x = 5;   // OK
+    d.C::x = 5;   // OK — but this is a different x!
+}
+```
+
+Memory layout:
+```
+D contains:
+  B contains: A { x }
+  C contains: A { x }   // second copy!
+```
+
+### 3. Virtual Inheritance — C++'s solution
+
+```cpp
+struct A { int x = 0; };
+
+struct B : virtual A {};
+struct C : virtual A {};
+struct D : B, C {};
+
+int main() {
+    D d;
+    d.x = 5;  // OK — only one A exists
+}
+```
+
+Now there's a **single shared** `A` subobject. This is similar in spirit to what Python's MRO achieves — ensuring each base appears once.
+
+## Key Differences
+
+| Aspect | Python | C++ |
+|--------|--------|-----|
+| Resolution time | Runtime | Compile time (mostly) |
+| Algorithm | C3 linearization | No linearization — graph-based |
+| Ambiguity handling | MRO picks a winner | Compile error, manual disambiguation |
+| Diamond problem | Automatic (MRO) | Manual (`virtual` inheritance) |
+| Introspection | `__mro__` attribute | No runtime equivalent |
+
+## Virtual functions add complexity
+
+With `virtual` methods, C++ uses vtables, and the "most derived" override wins — but ambiguity can still occur:
+
+```cpp
+struct A {
+    virtual void foo() { std::cout << "A\n"; }
+};
+
+struct B : virtual A {
+    void foo() override { std::cout << "B\n"; }
+};
+
+struct C : virtual A {
+    void foo() override { std::cout << "C\n"; }
+};
+
+struct D : B, C {};  // ERROR: ambiguous override
+```
+
+You'd need to override in `D` to resolve it:
+
+```cpp
+struct D : B, C {
+    void foo() override { B::foo(); }  // or C::foo(), or something new
+};
+```
+
+## Summary
+
+The **problem** MRO solves (method lookup in multiple inheritance) exists in both languages. But:
+
+- Python automates it with a linearization algorithm
+- C++ requires you to be explicit and uses `virtual` inheritance for shared bases
+
+C++ philosophy: don't pay for what you don't use, and don't hide complexity — if there's ambiguity, the programmer must resolve it.
+
