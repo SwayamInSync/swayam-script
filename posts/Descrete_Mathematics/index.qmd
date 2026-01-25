@@ -1,0 +1,29 @@
+---
+title: "[WIP] Discrete Mathematics"
+subtitle: ""
+author: "Swayam Singh"
+date: "2026-01-26"
+categories: [Mathematics, ongoing]
+format:
+  html:
+    code-fold: false
+toc: false
+highlight-style: pygments
+execute: 
+  freeze: auto
+image: assets/header.png
+social:
+  - image: assets/header.png
+    description: "Homepage"
+comments: false
+---
+![](assets/header.png){fig-alt="Cover Image" fig-align="center" .preview-image}
+
+# Discrete Mathematics
+
+## Table of Content
+
+| # | Title | Description |
+|---------|-------|-------------|
+| 1 | [Foundations: Logic and Proofs](../../pages/Descrete_Mathematics/chapter-1.qmd) | TBA |
+

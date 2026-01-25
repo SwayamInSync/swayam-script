@@ -1,0 +1,105 @@
+# Foundations: Logic and Proofs
+
+## Propositional Logic
+
+- **Proposition**: A declarative sentence (a sentence that declares a fact) that is either true or false, not both.
+
+**Some basic logical operators**
+
+|   Operator   |  Symbol  |                           Meaning                            |
+| :----------: | :------: | :----------------------------------------------------------: |
+|  Conjuction  | $\wedge$ |    True if both P and Q propositions are true, else False    |
+| disjunction  |  $\vee$  |    True if either of P and Q is true or both, else False     |
+|   negation   |  $\neg$  |                    Negates the prposition                    |
+| exclusive or | $\oplus$ | True when exactly one of P and Q is true, false otherwise (removes the "both true" property from OR) |
+
+> $p \oplus q \equiv (p \wedge \lnot q) \vee (\lnot p \wedge q)$(true if exactly one of P or Q is true, but not both.) 
+
+**De Morgan Law**
+
+- $\lnot (p_1 \wedge p_2 \wedge p_3 \wedge ..) \equiv (\lnot p_1 \vee \lnot p_2 \vee \lnot p_4 \vee ...)$
+- $\lnot (p_1 \vee p_2 \vee p_3 \vee ...) \equiv (\lnot p_1 \wedge \lnot p_2 \wedge \lnot p_3 \wedge ...)$
+
+### Conditional Statements
+
+- **Implication** Let *p* anmd *q* be propositions. The conditional statement $p \implies q$ is the proposition **"if p, then q"**, it is false when *p* is true and *q* is false and true otherwise. In the conditional statement $p \implies q$, *p* is called **hypothesis** (or antecedent or premise) and *q* is called the **conclusion** (or consequence).
+
+  - "if $p$, then $q$", "$p$ implies $q$", "if $p$, $q$", "$p$ is sufficient for $q$", "$q$ if $p$", "$q$ whenever $p$", "$q$ is necessary for $p$", "a necessary condition for $p$ is $q$", "$q$ follows from $p$", "$q$ unless $\lnot p$"
+
+  - Above them **"$q$ unless $\lnot p$"** might not be obvious, but it make sense if we treat "unless" with "or" (these are interchangeable). In langauge it means if $\lnot p$ is false, then $q$ must be true. That is same as saying if $p$ is true then $q$ has to be true to affirmate the proposition.
+
+  - **Contraverse**: The conditional statement $q \implies p$ is called contraverse.
+
+  - **Contrapositive**: The conditional statement $\lnot q \implies \lnot p$ is called contrapositive.
+
+  - **Inverse**: The conditional statement $\lnot p \implies \lnot q$ is the called the inverse.
+
+  - > Note:
+    >
+    > $p \implies q \equiv \lnot p \vee q$
+    >
+    > $p \implies q \equiv \lnot q \implies \lnot p$ (implication and its contrapositive are equivalent)
+    >
+    > $q \implies p \equiv \lnot p \implies \lnot q$  (converse of implication and its inverse are equivalent)
+
+- **Biconditional Statement** Let $p$ and $q$ are propositions then biconditional statement is, $ p \iff q$ means "$p$ if and only if $q$". This is true when $p$ and $q$ both have true values else false
+
+  - "$p$ is necessary and sufficient for $q$", "if $p$ then $q$ and conversely", "$p$ iff $q$", "$p$ exactly when $q$"
+
+  - > $p \iff q \equiv (p \implies q) \wedge(q \implies p)$
+    >
+    > $p \iff q \equiv (\lnot p \vee q) \wedge (\lnot q \vee p) \equiv \lnot ((p \wedge \lnot q) \vee (\lnot p \wedge q)) \equiv \lnot (p \oplus q)$
+
+#### Precedence of logical operators
+
+|  Operator  | Precedence (decreasing order) |
+| :--------: | :---------------------------: |
+|  $\lnot$   |               1               |
+|  $\wedge$  |               2               |
+|   $\vee$   |               3               |
+| $\implies$ |               4               |
+|   $\iff$   |               5               |
+
+## Propositional Equivalences
+
+-  **Tatuology**: A compound prposition that is always true
+  - $p \vee \lnot p$
+  
+- **Contradiction**: A compound proposition that is always false.
+  - $p \wedge \lnot p$
+
+- **Contingency**: A compound proposition that is neither a tautology nor a contradiction
+
+- **Logically Equivalent**: Compound propositions that have same truth values in all possible cases, denoted by $\equiv$
+
+  - > The compound propositions $p$ and $q$ are called logically equivalent if $p \iff q$ is a **tautology**
+  
+- **Some useful equivalence laws**
+
+| Law | Expressions |
+|---|---|
+| **Identity** | $p \wedge T \equiv p,\; p \vee F \equiv p$ |
+| **Domination** | $p \vee T \equiv T,\; p \wedge F \equiv F$ |
+| **Idempotent** | $p \vee p \equiv p,\; p \wedge p \equiv p$ |
+| **Commutative** | $p \vee q \equiv q \vee p,\; p \wedge q \equiv q \wedge p$ |
+| **Associative** | $(p \vee q) \vee r \equiv p \vee (q \vee r),\; (p \wedge q) \wedge r \equiv p \wedge (q \wedge r)$ |
+| **Distributive** | $p \vee (q \wedge r) \equiv (p \vee q) \wedge (p \vee r),\; p \wedge (q \vee r) \equiv (p \wedge q) \vee (p \wedge r)$ |
+| **Absorption** | $p \vee (p \wedge q) \equiv p,\; p \wedge (p \vee q) \equiv p$ |
+| **Negation** | $p \vee \lnot p \equiv T,\; p \wedge \lnot p \equiv F$ |
+
+- **Some logical equivalnce involving conditional statements**
+  - $(p \implies q) \wedge / \vee (p \implies r) \equiv p \implies (q \wedge / \vee r)$
+  - $(p \implies r) \wedge / \vee (q \implies r) \equiv (p \wedge / \vee q) \implies r$
+- **Some logical equivalnce involving Biconditional statements**
+  - $p \iff q \equiv \lnot p \iff \lnot q$
+  - $p \iff q \equiv (p \wedge q) \vee (\lnot p \wedge \lnot q)$
+  - $\lnot(p \iff q) \equiv (p \wedge \lnot q) \vee (\lnot p \wedge q) \equiv p \oplus q \equiv p \iff \lnot q$
+
+### Satisfiability
+
+A compound proposition is **satisfiable** if there is an assignment of truth values to its variables that makes it true. If no such assigment is possible and proposition is false for every input it becomes **unsatisfiable**.
+
+#### The n-queen problem
+
+<todo>
+
