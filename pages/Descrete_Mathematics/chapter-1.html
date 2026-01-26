@@ -519,6 +519,216 @@ window.Quarto = {
 <section id="the-n-queen-problem" class="level4">
 <h4 class="anchored" data-anchor-id="the-n-queen-problem">The n-queen problem</h4>
 <p><todo></todo></p>
+</section>
+<section id="sudoku-problem" class="level4">
+<h4 class="anchored" data-anchor-id="sudoku-problem">Sudoku problem</h4>
+<p><todo></todo></p>
+</section>
+</section>
+</section>
+<section id="predicates-and-quantifiers" class="level2">
+<h2 class="anchored" data-anchor-id="predicates-and-quantifiers">Predicates and Quantifiers</h2>
+<ul>
+<li><strong>Predicate</strong>: A proposition with variables.</li>
+<li><strong>Universal Quantifier</strong>: The universal quantification of <span class="math inline">\(P(x)\)</span> is the statement “<span class="math inline">\(P(x)\)</span> for all values of <span class="math inline">\(x\)</span> in domain”. The notation <span class="math inline">\(\forall{x}P(x)\)</span>. An element for which <span class="math inline">\(P(x)\)</span> is false is called the <strong>counterexample</strong> to <span class="math inline">\(\forall{x}P(x)\)</span>.</li>
+<li><strong>Existential Quantifier</strong>: The existential quantification of <span class="math inline">\(P(x)\)</span> is the statement “There exists an element <span class="math inline">\(x\)</span> in the domain such that <span class="math inline">\(P(x)\)</span>”. The notation <span class="math inline">\(\exists{x}P(x)\)</span>.
+<ul>
+<li><strong>Uniqueness quantifier</strong>: <span class="math inline">\(\exists_{1}P(x)\)</span> or <span class="math inline">\(\exists{!x}P(x)\)</span></li>
+</ul></li>
+</ul>
+<blockquote class="blockquote">
+<p>The quantifiers <span class="math inline">\(\forall\)</span> and <span class="math inline">\(\exists\)</span> have higher precedence than all logical operators from propositional calculus.</p>
+</blockquote>
+<p><strong><em>NOTE: We can distribute <span class="math inline">\(\forall\)</span> over conjugation and <span class="math inline">\(\exists\)</span> over disjunction, however we cannot distribute <span class="math inline">\(\forall\)</span> over disjunction now can distribute <span class="math inline">\(\exists\)</span> over conjuction</em></strong></p>
+<blockquote class="blockquote">
+<p>Example:</p>
+<p>Suppose <span class="math inline">\(P(x)\)</span>: x integer is even; <span class="math inline">\(Q(x)\)</span>: x integer is odd</p>
+<p><span class="math inline">\(\forall{x}(P(x) \vee Q(x))\)</span>: “all integer is even or odd”, now if we even go ahead and distribute the universal quantifier over disjunction then we get <span class="math inline">\(\forall{x}P(x) \vee \forall{x}Q(x)\)</span> means “all integer is even or all integers is odd”, now this is an incorrect statement as an integer can be even or odd, not both.</p>
+<p>We can say the distributed statement here is more stronger.</p>
+</blockquote>
+<ul>
+<li><strong>Negation of Quantifiers</strong>
+<ul>
+<li><span class="math inline">\(\lnot \forall{x}P(x) \equiv \exists{x} \lnot P(x)\)</span></li>
+<li><span class="math inline">\(\lnot \exists P(x) \equiv \forall{x} \lnot P(x)\)</span></li>
+</ul></li>
+</ul>
+</section>
+<section id="nested-quantifiers" class="level2">
+<h2 class="anchored" data-anchor-id="nested-quantifiers">Nested Quantifiers</h2>
+<p>We can nest the quantifiers such that one quantifier is within the scope of the other, example: <span class="math inline">\(\forall{x}\exists{y}(x + y = 0)\)</span></p>
+<p><em>The order of the quantifiers used matters unless all are universal or all are existential quantifiers</em></p>
+<blockquote class="blockquote">
+<p>Example:</p>
+<p><strong>Statement:</strong> Every real number except zero has a multiplicative inverse</p>
+<p><span class="math inline">\(\forall{x}((x \ne 0) \to \exists{y}(xy = 1))\)</span></p>
+</blockquote>
+</section>
+<section id="rules-of-inference" class="level2">
+<h2 class="anchored" data-anchor-id="rules-of-inference">Rules of Inference</h2>
+<p>Following are the rules to perform inference, read them as seeing if the LHS is True then what to the RHS</p>
+<ol type="1">
+<li><span class="math inline">\((p \wedge (p \implies q)) \implies q\)</span></li>
+<li><span class="math inline">\((\lnot q \wedge (p \implies q)) \implies \lnot p\)</span></li>
+<li><span class="math inline">\(((p \implies q) \wedge (q \implies r)) \implies (p \implies r)\)</span></li>
+<li><span class="math inline">\(((p \vee q) \wedge \lnot p) \implies q\)</span></li>
+<li><span class="math inline">\(p \implies (p \vee q)\)</span></li>
+<li><span class="math inline">\((p \wedge q) \implies p\)</span></li>
+<li><span class="math inline">\(((p) \wedge (q)) \implies (p \wedge q)\)</span></li>
+<li><span class="math inline">\(((p \vee q) \wedge (\lnot p \vee r)) \implies (q \vee r)\)</span></li>
+</ol>
+<p>Among them the “<strong>resolution rule</strong>” is often used in computer programs to automate reasoning tasks like theorem proving. It might be non-trivial to get so I’ll like to discuss it’s expansion here, remember we consider the LHS to be True. <span class="math display">\[
+((p \vee q) \wedge (\lnot p \vee r)) \implies (q \vee r) \\
+\text{we can expand the LHS as} \\
+(p \wedge \lnot p) \vee (p \wedge r) \vee (q \wedge \lnot p) \vee (q \wedge r) \\
+\text{Since } p \wedge \lnot p \equiv F \text{ and we can simplify the 2nd two parts by distributive law as:}\\
+(p \wedge r) \vee (q \wedge (\lnot p \vee r)) \\
+\text{Now remember we are still in LHS so this all has to be True}
+\]</span> Right now we are stuck at something as to show that: <span class="math display">\[
+A \vee B \implies C
+\]</span> where <span class="math inline">\(A = p \wedge r\)</span> and <span class="math inline">\(B = (q \wedge (\lnot p \vee r))\)</span> and <span class="math inline">\(C = q \vee r\)</span></p>
+<p>We can exploit the following implication property we’ve seen earlier as <span class="math display">\[
+A \implies C \\
+B \implies C \\
+Then \\
+A \vee B \implies C
+\]</span> Now all we need to do is to inference whether each of those individual <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> does imply the <span class="math inline">\(q \vee r\)</span>, so lets start with <span class="math inline">\(A\)</span>.</p>
+<p>If we said <span class="math inline">\(p \wedge r\)</span> is True means, both <span class="math inline">\(p\)</span> and <span class="math inline">\(r\)</span> are True, which directly implies to <span class="math inline">\(q \vee r\)</span> must have to be True as <span class="math inline">\(r\)</span> is True.</p>
+<p>Now talking about the <span class="math inline">\(q \wedge (\lnot p \vee r)\)</span> to be True then both <span class="math inline">\(q\)</span> and <span class="math inline">\(\lnot p \vee r\)</span> have to be True, now which again signifies that the final statement <span class="math inline">\(q \vee r\)</span> will be true because <span class="math inline">\(q\)</span> is True.</p>
+<p>From both these conclusions we can now say <span class="math display">\[
+p \wedge r \implies q \vee r \\
+q \wedge (\lnot p \vee r)) \implies q \vee r \\
+then, \\
+(p \wedge r) \vee q \wedge (\lnot p \vee r)) \implies q \vee r \text{ Proved}
+\]</span></p>
+<blockquote class="blockquote">
+<p>Edit: LOL writing this I realised we could’ve done this at the very start <span class="math inline">\(((p \vee q) \wedge (\lnot p \vee r)) \implies (q \vee r)\)</span> and taking 2 cases of <span class="math inline">\(p \equiv T/F\)</span> which woud’ve gave the exact same results without expansion and then contracting (Eq 2 and 3) 🥲</p>
+</blockquote>
+<section id="inference-rules-for-quantified-statements" class="level3">
+<h3 class="anchored" data-anchor-id="inference-rules-for-quantified-statements">Inference rules for quantified statements</h3>
+<ol type="1">
+<li><span class="math inline">\(\forall{x}P(x) \implies P(c)\)</span></li>
+<li><span class="math inline">\(P(c)\)</span> for an arbitrary <span class="math inline">\(c \implies\)</span> <span class="math inline">\(\forall{x}P(x)\)</span></li>
+<li><span class="math inline">\(\exists{x}P(x) \implies P(c)\)</span> for some element c</li>
+<li><span class="math inline">\(P(c)\)</span> for some element <span class="math inline">\(c \implies\)</span> <span class="math inline">\(\exists{x}P(x)\)</span></li>
+</ol>
+<p>With the help of these we can make the inference decisions by combining the rules</p>
+<blockquote class="blockquote">
+<p>Example:</p>
+<p>If <span class="math inline">\(\forall{x}(P(x) \implies Q(x)) \wedge P(a) \implies Q(a)\)</span></p>
+</blockquote>
+</section>
+</section>
+<section id="introduction-to-proofs" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-to-proofs">Introduction to Proofs</h2>
+<section id="some-terminology" class="level3">
+<h3 class="anchored" data-anchor-id="some-terminology">Some terminology</h3>
+<ul>
+<li><strong>Theorem</strong>: A statement that can be shown to be true.</li>
+<li><strong>Axioms/Postulates</strong> : Statements used in a proof, these are assumed to be true.</li>
+<li><strong>Lemma</strong>: A less important theorem that is helpful in a proof of other results.</li>
+<li><strong>Corollary</strong>: A theorem that can be established directly from a theorem that has been proved.</li>
+<li><strong>Conjecture</strong>: A statement that is being proposed to be true statement, usually on the basis of some partial evidence, a heuristic argument or the intuition.</li>
+</ul>
+</section>
+<section id="methods-of-proving-theorems" class="level3">
+<h3 class="anchored" data-anchor-id="methods-of-proving-theorems">Methods of Proving Theorems</h3>
+<section id="direct-proofs" class="level4">
+<h4 class="anchored" data-anchor-id="direct-proofs">Direct Proofs</h4>
+<p>To prove <span class="math inline">\(p \implies q\)</span>, we assume <span class="math inline">\(p\)</span> is true; subsequent steps are constructed by inference rules following the previous assumption leading to show that <span class="math inline">\(q\)</span> is also true. Direct proof begin with premise, continue with a sequence of deductions and end with the conclusion.</p>
+<blockquote class="blockquote">
+<p><strong>Example: If <span class="math inline">\(n\)</span> is an odd integer then, then <span class="math inline">\(n^2\)</span> is odd</strong></p>
+<p>We need to show <span class="math inline">\(\forall{x}(P(x) \implies Q(x))\)</span> where <span class="math inline">\(P(x)\)</span> is <span class="math inline">\(x\)</span> is an odd integer and <span class="math inline">\(Q(x)\)</span> is <span class="math inline">\(x^2\)</span> is an odd integer. Going by direct proof we assume, the premise <span class="math inline">\(P(x)\)</span> is true then <span class="math inline">\(x = 2k + 1\)</span> then <span class="math inline">\(x^2 = (2k + 1)^2 = 2(2k^2 + 2k) + 1\)</span> this is by definition the odd integer hence we can say <span class="math inline">\(Q(x)\)</span> is also True.</p>
+</blockquote>
+</section>
+<section id="proof-by-contraposition" class="level4">
+<h4 class="anchored" data-anchor-id="proof-by-contraposition">Proof by Contraposition</h4>
+<p>Often times attempt of direct proofs reach dead ends. We need more methods and methods that does not start with premises and end with conclusions are called <strong>indirect proofs</strong>.</p>
+<p><strong>Proof by contraposition</strong> is an extremely useful indirect proof method. It use the fact that the conditional statement <span class="math inline">\(p \implies q\)</span> is equivalent to its contrapositive <span class="math inline">\(\lnot q \implies \lnot p\)</span>.</p>
+<blockquote class="blockquote">
+<p><strong>Example-1: Prove that if <span class="math inline">\(n\)</span> is an integer and <span class="math inline">\(3n+2\)</span> is odd then <span class="math inline">\(n\)</span> is odd</strong></p>
+<p>Attempting to do a direct proof here could be assuming the premise that it, <span class="math inline">\(n\)</span> is an integer and <span class="math inline">\(3n+2 = 2k + 1\)</span> which gives <span class="math inline">\(n = \frac{2k-1}{3}\)</span> this is not clear conclusion and kind of a stuck state so we will try by contraposition.</p>
+<p><strong>The first step of contraposition is to assume that the conclusion of the statement if false</strong>. So we assume <span class="math inline">\(n\)</span> is even, hence <span class="math inline">\(n = 2k\)</span>, now we can write the premise as <span class="math inline">\(3n + 2 = 2(3k + 1)\)</span>, hence premise is also coming to be even, which is a negation of the premise. So in logic we achieved <span class="math inline">\(\lnot q \implies \lnot p\)</span> means original statement was correct.</p>
+<p><strong>Example-2: Prove that if <span class="math inline">\(n = ab\)</span> where <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are positive integers then <span class="math inline">\(a \leq \sqrt{n}\)</span> or <span class="math inline">\(b \leq \sqrt{n}\)</span></strong></p>
+<p>Lets proceed with contraposition, assuming the conclusion is false means <span class="math display">\[
+\lnot{Q} = \lnot(a \leq \sqrt{n} \vee b \leq \sqrt{n}) = (a &gt; sqrt{n}) \wedge (b &gt; \sqrt{n})
+\]</span> Then we can get <span class="math inline">\(ab &gt; n\)</span> which shows that <span class="math inline">\(ab \ne n\)</span> (Negation of the premise) hence we proved <span class="math inline">\(\lnot Q \implies \lnot P\)</span> hence the assumed hypothesis was false, means original statement was true.</p>
+</blockquote>
+<ul>
+<li><p><strong>Vacous and Trivial Proofs</strong>: We can quickly prove that a conditional statement <span class="math inline">\(p \implies q\)</span> is true when we know that <span class="math inline">\(p\)</span> is false, then we have a proof called <strong>vacous proof</strong>, often used to establish the special cases of a theorem. We can also quickly show the proof if we know that <span class="math inline">\(q\)</span> is always true, this is called <strong>trivial proof</strong>.</p></li>
+<li><p><strong>A Little Proof Strategy</strong>: Usually for statements like <span class="math inline">\(\forall{x}(P(x) \implies Q(x))\)</span> start with a direct proof and try to form some deduction about conclusion, if it does not seems to be possible (hypothesis such as <span class="math inline">\(x\)</span> is irrational or <span class="math inline">\(x \ne 0\)</span>) that are difficult to reason from are a clue that an indirect proof might be your best bet.</p></li>
+</ul>
+</section>
+<section id="proof-by-contradiction" class="level4">
+<h4 class="anchored" data-anchor-id="proof-by-contradiction">Proof by Contradiction</h4>
+<p>In such proofs, we <strong>first assume the negation of the conclusion</strong>. We then use the premise and the negation of the conclusion to arrive at a contradiction. The reason this is valid is because of logical equivalence as <span class="math inline">\(p \implies q\)</span> and <span class="math inline">\((p \wedge \lnot q) \implies F\)</span></p>
+<blockquote class="blockquote">
+<p>Why the above is logically equivalent?</p>
+<p><span class="math inline">\(p \implies q \equiv \lnot p \vee q\)</span> and $(p q) F (p q) F p q $</p>
+</blockquote>
+<p>To prove an implication <span class="math inline">\(p \implies q\)</span> by contradiction, assume <span class="math inline">\(p \wedge \lnot q\)</span>. If from these assumptions one can derive a contradiction (⊥), then <span class="math inline">\(p \implies q\)</span> holds.</p>
+<blockquote class="blockquote">
+<p><strong>Example-1: Show that atleast four of any 22 days must fall on the same day of the week.</strong></p>
+<p>Lets first try to form this into <span class="math inline">\(P \implies Q\)</span> form. We can re-write the sentence as “If there are 22 days chosen then atleast 4 of them must fall on the same day of week”</p>
+<p><span class="math inline">\(P\)</span>: “22 calendar days are selected”</p>
+<p><span class="math inline">\(Q\)</span>: “There exists a weekday on which at least 4 of the selected days fall”</p>
+<p><span class="math inline">\(Q: \exists{d} \in \{Mon, Tue, ..., Sun\} s.t. \#(d) \geq 4\)</span></p>
+<p><span class="math inline">\(\lnot Q: \forall{d}, \#(d)&lt;3\)</span></p>
+<p>So we assume the <span class="math inline">\(p \wedge \lnot q\)</span> here i.e.&nbsp;there are 22 days selected then <strong>Every weekday has at most 3 of the 22 days.</strong>. So now since each week has 7 days so total there will be <span class="math inline">\(7 \times 3=21\)</span> but wait we assumed <span class="math inline">\(P\)</span> as true that says only 22 days were selected but now we are getting 21? This is the <strong>contradiction</strong>. Hence <strong><em>our assumption <span class="math inline">\(\lnot Q\)</span> was False</em></strong> so the original statement is indeed True.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p><strong>Example-2: Prove that <span class="math inline">\(\sqrt{2}\)</span> is irrational by giving a proof by contradiction</strong></p>
+<p>So assume <span class="math inline">\(\sqrt{2}\)</span> is a rational number, then we can write <span class="math inline">\(\sqrt{2} = \frac{p}{q}\)</span> where <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> are in simplest form and <span class="math inline">\(q \ne 0\)</span>. Now squaring both sides we get <span class="math inline">\(2 = \frac{p^2}{q^2}\)</span> now this gave <span class="math inline">\(p^2 = 2q^2\)</span> which is weird because we already said <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> are in the simplest form i.e.&nbsp;they don’t have any common multiple, but here it seems not because if we write <span class="math inline">\(\frac{p \times p}{q \times q}\)</span> then there should not be anything common, but 2 is comming common from the expression hence this is a contradiction, means assuming negation of conclusion was false, hence <span class="math inline">\(\sqrt{2}\)</span> is an irrational number.</p>
+</blockquote>
+<ul>
+<li><p><strong>Proof by Contraposition as special case of Proof by Contradiction</strong>: Proof by contraposition is a special-case of Proof by contradiction, we can re-write the proof by contraposition to contradiction by assuing one more condition. In contraposition to prove <span class="math inline">\(p \implies q\)</span> we show that <span class="math inline">\(\lnot q \implies \lnot p\)</span> means we assume the <span class="math inline">\(\lnot q\)</span> and then leads to prove <span class="math inline">\(\lnot p\)</span>. <strong><em>So if we also assume <span class="math inline">\(p\)</span></em></strong> then this will lead to contradiction as we proved <span class="math inline">\(\lnot p\)</span> but assumed the <span class="math inline">\(p\)</span> .</p></li>
+<li><p><strong>Proving biconditional statements</strong>: We can show that <strong><em><span class="math inline">\((p \implies q) \wedge (q \implies p)\)</span></em></strong></p></li>
+</ul>
+<p>Sometimes a theorem states that several propositions are equivalent. Such a theorem states that all propositions <span class="math inline">\(p_1,p_2, ..., p_n\)</span> are equivalent. This can be written as <span class="math inline">\(p_1 \iff p2 \iff ... \iff p_n\)</span> which states that all propositions have same truth values and consequently that for all <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> with <span class="math inline">\(1 \leq i \leq n\)</span> and <span class="math inline">\(1 \leq j \leq n\)</span> <span class="math inline">\(, p_i\)</span> and <span class="math inline">\(p_j\)</span> are equivalent. One way to prove these are mutually equivalent is to the tautology: <span class="math display">\[
+p_1 \iff p_2 .... \iff p_n \iff (p_1 \implies p_2) \wedge (p_2 \implies p_3) \wedge ... \wedge (p_n \implies p_1)
+\]</span> This is more efficient than proving all <span class="math inline">\(p_i\)</span> and <span class="math inline">\(p_j\)</span> pairs for equivalence. (Not there will be <span class="math inline">\(n^2 - n\)</span> such conditional statements)</p>
+<ul>
+<li><strong>Counterexamples:</strong> Statements like <span class="math inline">\(\forall{x}P(x)\)</span> we just need to find one counterexample to disprove them.</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="proof-methods-and-strategy" class="level2">
+<h2 class="anchored" data-anchor-id="proof-methods-and-strategy">Proof Methods and Strategy</h2>
+<section id="proof-by-cases" class="level3">
+<h3 class="anchored" data-anchor-id="proof-by-cases">Proof by cases</h3>
+<p>In these types of proofs we check the each possible case from domain to exhaust and show that conclusion is true, this is only when its possible i.e.&nbsp;some finite and possibly doable domain.</p>
+<p>To prove something <span class="math inline">\((p_1 \vee p_2 \vee ... \vee p_n) \implies q\)</span> we use the tautology <span class="math display">\[
+[(p_1 \vee p_2 \vee ... \vee p_n ) \implies q] \wedge [(p_1 \implies q) \wedge (p_2 \implies q) \wedge ... \wedge(p_n \implies q)]
+\]</span></p>
+<section id="without-loss-of-generality" class="level4">
+<h4 class="anchored" data-anchor-id="without-loss-of-generality">Without Loss of Generality</h4>
+<p>In general, when the phrase “without the loss of generality” is used in a proof (often abbreviated as WLOG) we assert that by proving one case of a theorem, no additional argument is required to proof other specified cases i.e.&nbsp;they follow by making straightforward changes to the argument, or by filling in some straightforward initial steps. Proof by cases can be made much more efficient when the notion of WLOG is employed. Incorrect use of this principle, leads to unfortunate errors.</p>
+</section>
+</section>
+<section id="existence-proof" class="level3">
+<h3 class="anchored" data-anchor-id="existence-proof">Existence Proof</h3>
+<p>A theorem of this type is a proposition of the form <span class="math inline">\(\exists{x}P(x)\)</span> where <span class="math inline">\(P\)</span> is the <strong>predicate</strong> and a proof of proposition of this form is called “existence proof”. Multiple ways to do these proofs, a straightforward is to find the element that satisfies the predicate, this type of proof is called <strong>constructive proof</strong>.</p>
+<p>There are also <strong>non-constructive proof</strong>, in which most common is to use <strong><em>proof by contradiction, and show that the negation of existential quantification implying contradiction </em></strong></p>
+</section>
+<section id="uniqueness-proof" class="level3">
+<h3 class="anchored" data-anchor-id="uniqueness-proof">Uniqueness Proof</h3>
+<p>Some theorems assert the existence of a unique element with a particular property. To prove such we need to show that such an element exists and no other element is possible.</p>
+</section>
+<section id="proof-strategies" class="level3">
+<h3 class="anchored" data-anchor-id="proof-strategies">Proof Strategies</h3>
+<section id="forward-and-backwards-reasoning" class="level4">
+<h4 class="anchored" data-anchor-id="forward-and-backwards-reasoning">Forward and Backwards Reasoning</h4>
+<p>In forward reasoning we start with premise, deduce steps and use theorems to reach the conclusion, this is a common reasoning and sometimes it might leave us stuck in complicated results.</p>
+<p>In backward reasoning, to prove some statement <span class="math inline">\(q\)</span>, we try to find some statement <span class="math inline">\(p\)</span> that we can prove with the property <span class="math inline">\(p \implies q\)</span></p>
+<blockquote class="blockquote">
+<p><strong>Example-1</strong>: For 2 positive real numbers <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> the arithmetic mean <span class="math inline">\(\frac{x+y}{w}\)</span> is always greater than the geometric mean <span class="math inline">\(\sqrt{xy}\)</span>. Prove if its always true.</p>
+<p>Lets work backwards, we assume the conclusion and now <span class="math display">\[
+\frac{x+y}{2} &gt; \sqrt{xy} \\ \text{which leads to: }
+(x-y)^2 &gt; 0
+\]</span> since <span class="math inline">\((x-y)^2 &gt; 0\)</span> when <span class="math inline">\(x \ne y\)</span> it follows the final inequality to be true. Now we can use these steps backwards for drafting our proof.</p>
+<p><strong>Proof:</strong> Suppose <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are distinct positive real numbers. Then <span class="math inline">\((x-y)^2 &gt; 0\)</span> and solving this we get <span class="math inline">\(\frac{x+y}{2} &gt; \sqrt{xy}\)</span></p>
+</blockquote>
 
 
 </section>
