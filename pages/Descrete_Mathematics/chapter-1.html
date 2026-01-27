@@ -578,12 +578,14 @@ window.Quarto = {
 <li><span class="math inline">\(((p \vee q) \wedge (\lnot p \vee r)) \implies (q \vee r)\)</span></li>
 </ol>
 <p>Among them the “<strong>resolution rule</strong>” is often used in computer programs to automate reasoning tasks like theorem proving. It might be non-trivial to get so I’ll like to discuss it’s expansion here, remember we consider the LHS to be True. <span class="math display">\[
-((p \vee q) \wedge (\lnot p \vee r)) \implies (q \vee r) \\
-\text{we can expand the LHS as} \\
-(p \wedge \lnot p) \vee (p \wedge r) \vee (q \wedge \lnot p) \vee (q \wedge r) \\
-\text{Since } p \wedge \lnot p \equiv F \text{ and we can simplify the 2nd two parts by distributive law as:}\\
-(p \wedge r) \vee (q \wedge (\lnot p \vee r)) \\
-\text{Now remember we are still in LHS so this all has to be True}
+\begin{aligned}
+&amp;((p \vee q) \wedge (\lnot p \vee r)) \implies (q \vee r) \\
+&amp;\text{we can expand the LHS as} \\
+&amp;(p \wedge \lnot p) \vee (p \wedge r) \vee (q \wedge \lnot p) \vee (q \wedge r) \\
+&amp;\text{Since } p \wedge \lnot p \equiv F \text{ and we can simplify the 2nd two parts by distributive law as:}\\
+&amp;(p \wedge r) \vee (q \wedge (\lnot p \vee r)) \\
+&amp;\text{Now remember we are still in LHS so this all has to be True}
+\end{aligned}
 \]</span> Right now we are stuck at something as to show that: <span class="math display">\[
 A \vee B \implies C
 \]</span> where <span class="math inline">\(A = p \wedge r\)</span> and <span class="math inline">\(B = (q \wedge (\lnot p \vee r))\)</span> and <span class="math inline">\(C = q \vee r\)</span></p>
@@ -724,8 +726,11 @@ p_1 \iff p_2 .... \iff p_n \iff (p_1 \implies p_2) \wedge (p_2 \implies p_3) \we
 <blockquote class="blockquote">
 <p><strong>Example-1</strong>: For 2 positive real numbers <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> the arithmetic mean <span class="math inline">\(\frac{x+y}{w}\)</span> is always greater than the geometric mean <span class="math inline">\(\sqrt{xy}\)</span>. Prove if its always true.</p>
 <p>Lets work backwards, we assume the conclusion and now <span class="math display">\[
-\frac{x+y}{2} &gt; \sqrt{xy} \\ \text{which leads to: }
-(x-y)^2 &gt; 0
+\begin{aligned}
+&amp;\frac{x+y}{2} &gt; \sqrt{xy} \\
+&amp;\text{which leads to:} \\
+&amp;(x-y)^2 &gt; 0
+\end{aligned}
 \]</span> since <span class="math inline">\((x-y)^2 &gt; 0\)</span> when <span class="math inline">\(x \ne y\)</span> it follows the final inequality to be true. Now we can use these steps backwards for drafting our proof.</p>
 <p><strong>Proof:</strong> Suppose <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are distinct positive real numbers. Then <span class="math inline">\((x-y)^2 &gt; 0\)</span> and solving this we get <span class="math inline">\(\frac{x+y}{2} &gt; \sqrt{xy}\)</span></p>
 </blockquote>
