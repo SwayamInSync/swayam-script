@@ -157,12 +157,14 @@ Following are the rules to perform inference, read them as seeing if the LHS is 
 
 Among them the "**resolution rule**" is often used in computer programs to automate reasoning tasks like theorem proving. It might be non-trivial to get so I'll like to discuss it's expansion here, remember we consider the LHS to be True.
 $$
-((p \vee q) \wedge (\lnot p \vee r)) \implies (q \vee r) \\
-\text{we can expand the LHS as} \\
-(p \wedge \lnot p) \vee (p \wedge r) \vee (q \wedge \lnot p) \vee (q \wedge r) \\
-\text{Since } p \wedge \lnot p \equiv F \text{ and we can simplify the 2nd two parts by distributive law as:}\\
-(p \wedge r) \vee (q \wedge (\lnot p \vee r)) \\
-\text{Now remember we are still in LHS so this all has to be True}
+\begin{aligned}
+&((p \vee q) \wedge (\lnot p \vee r)) \implies (q \vee r) \\
+&\text{we can expand the LHS as} \\
+&(p \wedge \lnot p) \vee (p \wedge r) \vee (q \wedge \lnot p) \vee (q \wedge r) \\
+&\text{Since } p \wedge \lnot p \equiv F \text{ and we can simplify the 2nd two parts by distributive law as:}\\
+&(p \wedge r) \vee (q \wedge (\lnot p \vee r)) \\
+&\text{Now remember we are still in LHS so this all has to be True}
+\end{aligned}
 $$
 Right now we are stuck at something as to show that:
 $$
@@ -333,8 +335,11 @@ In backward reasoning, to prove some statement $q$, we try to find some statemen
 >
 > Lets work backwards, we assume the conclusion and now
 > $$
-> \frac{x+y}{2} > \sqrt{xy} \\ \text{which leads to: }
-> (x-y)^2 > 0
+> \begin{aligned}
+> &\frac{x+y}{2} > \sqrt{xy} \\
+> &\text{which leads to:} \\
+> &(x-y)^2 > 0
+> \end{aligned}
 > $$
 > since $(x-y)^2 > 0$ when $x \ne y$ it follows the final inequality to be true. Now we can use these steps backwards for drafting our proof.
 >
