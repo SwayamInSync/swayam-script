@@ -347,3 +347,49 @@ In backward reasoning, to prove some statement $q$, we try to find some statemen
 
 #### Tiling
 
+This will be an example where we will analyze the checkerboard tiling and try to answer/proof some conjectures. A **checkerboard** is a rectangle divided into squares of the same size by vertical and horizontal lines. A **domino** is a rectangular piece that is 1x2 or 2x1 squares, we say a board is **tiled** by dominos when all its squares got covered with no overlapping dominoes and no dominoes overhanging the board.
+
+![checkerboard](assets/chapter-1/checkerboard.png)
+
+> **Example: Can we tile the standard 8x8 checkerboard using dominoes?**
+> 
+> *Solution:* We can find multiple such ways, 32 dominoes plaed veritically can be the one or 32 placed horizontally. For a constructive proof any of the found way proves the conjecture.
+
+> **Example: Can we tile a board obtained by removing one of the four corner squares of a standard checkerboard?**
+>
+> *Solution:* Removing one square means now we left with 63, and tiling says no domino should overlap or overhang and each domino cover 2 squares hence we can only cover an even number of square. So we can prove by contradiction that this checkerboard cannot be tiled.
+
+> **Example: Can we tile the board obtained by deleting the upper left and lower right corner squares of a standard checkerboard?**
+> 
+> ![](assets/chapter-1/checkerboard-opposite-corner-removed.png){width=40% fig-align="center"}
+>
+> *Solution:* In this setting the tiles are still even $64-2=62$ but we need to be careful. First it might not be a good idea to try proving this exhaustively, we need another method so we can color the checkerboard alternatively with a different color and apply logic.
+>
+> *Proof:* Suppose we can use dominoes to tile this checkerboard with opposite squares removed. This checkerboard contains $64-2=62$ squares and the tiling would use $62/2=31$ dominoes. Note that each domino covers 1 black and 1 white hence the tiling will cover $31$ black and $31$ white squares. However when removing the opposite corner squares the checkerboard is left with either "$32$ white squares and $30$ black" or "$32$ black squares and $30$ white". This contradicts the assumption that we can tile this checkerboard.
+
+
+> **Example: Lets talk about triminoes as shown in the following figure, An 8x8 checkerboard with one of its corner square removed has $63$ squares and $63/3=21$ so it seems a tiling by straight trimiones might exist but when we tried we aren't able to find one. Exhaustive proves isn't practical so can we apply the above learnt technique here to prove? (Note: Only by straight triminoes)**
+>
+> ![](assets/chapter-1/triomino.png){width=30% fig-align="center"}
+>
+> *Solution:* So lets color the checkerboard with 3 alternative colors, blue, black and white as shown in figure below
+>
+> ![](assets/chapter-1/checkerboard-tricolor.png){width=60% fig-align="center"}
+>
+> Here we can see that there are 21 blue, 20 black and 22 whites with each color is on the corner. We need to understand something crucial here (as we are hoping this method might work)
+> 
+> One coloring gives unequal counts $\rightarrow$ tiling is definitely impossible
+> 
+> All colorings give equal counts $\rightarrow$ this method is inconclusive, not proof of possibility
+>
+> **Proof (by contradiction):**
+>
+> Assume a valid tiling exists.
+>
+> **Step 1 — Set up the coloring.** Assign each square a color based on its diagonal: color = $(i + j) \mod 3$. This splits the 64 squares into three groups of sizes 21, 21, and 22.
+>
+> **Step 2 — Choose the labeling.** Look at which diagonal group the removed corner belongs to. Label that group "blue." Label the group of 22 as "white." Label the remaining one "black." After removing the corner, the remaining 63 squares have counts: 20 blue, 21 black, 22 white.
+>
+> **Step 3 — The contradiction.** Every straight triomino (three in a row, horizontal or vertical) covers exactly one square from each of the three diagonal groups — so one blue, one black, one white. If a valid tiling with 21 triominoes existed, it would need exactly 21 of each color. But we have 20 blue, 21 black, 22 white. That's a contradiction.
+>
+> **Conclusion:** No such tiling exists. $\blacksquare$

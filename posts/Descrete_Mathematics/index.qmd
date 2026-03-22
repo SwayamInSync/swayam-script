@@ -25,5 +25,5 @@ comments: false
 
 | # | Title | Description |
 |---------|-------|-------------|
-| 1 | [Foundations: Logic and Proofs](../../pages/Descrete_Mathematics/chapter-1.qmd) | TBA |
+| 1 | [Foundations: Logic and Proofs](../../pages/Descrete_Mathematics/chapter-1.qmd) | Completed |
 
