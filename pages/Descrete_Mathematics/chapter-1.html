@@ -108,7 +108,10 @@ window.Quarto = {
 
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="Swayam’s Scripts">
+<meta property="og:image" content="https://SwayamInSync.github.io/swayam-script/pages/Descrete_Mathematics/assets/chapter-1/checkerboard.png">
 <meta property="og:site_name" content="Swayam’s Scripts">
+<meta property="og:image:height" content="800">
+<meta property="og:image:width" content="1376">
 </head>
 
 <body class="nav-fixed fullcontent quarto-light"><script id="quarto-html-before-body" type="application/javascript">
@@ -739,6 +742,54 @@ p_1 \iff p_2 .... \iff p_n \iff (p_1 \implies p_2) \wedge (p_2 \implies p_3) \we
 </section>
 <section id="tiling" class="level4">
 <h4 class="anchored" data-anchor-id="tiling">Tiling</h4>
+<p>This will be an example where we will analyze the checkerboard tiling and try to answer/proof some conjectures. A <strong>checkerboard</strong> is a rectangle divided into squares of the same size by vertical and horizontal lines. A <strong>domino</strong> is a rectangular piece that is 1x2 or 2x1 squares, we say a board is <strong>tiled</strong> by dominos when all its squares got covered with no overlapping dominoes and no dominoes overhanging the board.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="assets/chapter-1/checkerboard.png" class="img-fluid figure-img"></p>
+<figcaption>checkerboard</figcaption>
+</figure>
+</div>
+<blockquote class="blockquote">
+<p><strong>Example: Can we tile the standard 8x8 checkerboard using dominoes?</strong></p>
+<p><em>Solution:</em> We can find multiple such ways, 32 dominoes plaed veritically can be the one or 32 placed horizontally. For a constructive proof any of the found way proves the conjecture.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p><strong>Example: Can we tile a board obtained by removing one of the four corner squares of a standard checkerboard?</strong></p>
+<p><em>Solution:</em> Removing one square means now we left with 63, and tiling says no domino should overlap or overhang and each domino cover 2 squares hence we can only cover an even number of square. So we can prove by contradiction that this checkerboard cannot be tiled.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p><strong>Example: Can we tile the board obtained by deleting the upper left and lower right corner squares of a standard checkerboard?</strong></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="assets/chapter-1/checkerboard-opposite-corner-removed.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:40.0%"></p>
+</figure>
+</div>
+<p><em>Solution:</em> In this setting the tiles are still even <span class="math inline">\(64-2=62\)</span> but we need to be careful. First it might not be a good idea to try proving this exhaustively, we need another method so we can color the checkerboard alternatively with a different color and apply logic.</p>
+<p><em>Proof:</em> Suppose we can use dominoes to tile this checkerboard with opposite squares removed. This checkerboard contains <span class="math inline">\(64-2=62\)</span> squares and the tiling would use <span class="math inline">\(62/2=31\)</span> dominoes. Note that each domino covers 1 black and 1 white hence the tiling will cover <span class="math inline">\(31\)</span> black and <span class="math inline">\(31\)</span> white squares. However when removing the opposite corner squares the checkerboard is left with either “<span class="math inline">\(32\)</span> white squares and <span class="math inline">\(30\)</span> black” or “<span class="math inline">\(32\)</span> black squares and <span class="math inline">\(30\)</span> white”. This contradicts the assumption that we can tile this checkerboard.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p><strong>Example: Lets talk about triminoes as shown in the following figure, An 8x8 checkerboard with one of its corner square removed has <span class="math inline">\(63\)</span> squares and <span class="math inline">\(63/3=21\)</span> so it seems a tiling by straight trimiones might exist but when we tried we aren’t able to find one. Exhaustive proves isn’t practical so can we apply the above learnt technique here to prove? (Note: Only by straight triminoes)</strong></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="assets/chapter-1/triomino.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:30.0%"></p>
+</figure>
+</div>
+<p><em>Solution:</em> So lets color the checkerboard with 3 alternative colors, blue, black and white as shown in figure below</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="assets/chapter-1/checkerboard-tricolor.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
+</figure>
+</div>
+<p>Here we can see that there are 21 blue, 20 black and 22 whites with each color is on the corner. We need to understand something crucial here (as we are hoping this method might work)</p>
+<p>One coloring gives unequal counts <span class="math inline">\(\rightarrow\)</span> tiling is definitely impossible</p>
+<p>All colorings give equal counts <span class="math inline">\(\rightarrow\)</span> this method is inconclusive, not proof of possibility</p>
+<p><strong>Proof (by contradiction):</strong></p>
+<p>Assume a valid tiling exists.</p>
+<p><strong>Step 1 — Set up the coloring.</strong> Assign each square a color based on its diagonal: color = <span class="math inline">\((i + j) \mod 3\)</span>. This splits the 64 squares into three groups of sizes 21, 21, and 22.</p>
+<p><strong>Step 2 — Choose the labeling.</strong> Look at which diagonal group the removed corner belongs to. Label that group “blue.” Label the group of 22 as “white.” Label the remaining one “black.” After removing the corner, the remaining 63 squares have counts: 20 blue, 21 black, 22 white.</p>
+<p><strong>Step 3 — The contradiction.</strong> Every straight triomino (three in a row, horizontal or vertical) covers exactly one square from each of the three diagonal groups — so one blue, one black, one white. If a valid tiling with 21 triominoes existed, it would need exactly 21 of each color. But we have 20 blue, 21 black, 22 white. That’s a contradiction.</p>
+<p><strong>Conclusion:</strong> No such tiling exists. <span class="math inline">\(\blacksquare\)</span></p>
+</blockquote>
 
 
 </section>
