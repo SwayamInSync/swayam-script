@@ -8,27 +8,27 @@
 
 |   Operator   |  Symbol  |                           Meaning                            |
 | :----------: | :------: | :----------------------------------------------------------: |
-|  Conjuction  | $\wedge$ |    True if both P and Q propositions are true, else False    |
+|  Conjunction  | $\wedge$ |    True if both P and Q propositions are true, else False    |
 | disjunction  |  $\vee$  |    True if either of P and Q is true or both, else False     |
-|   negation   |  $\neg$  |                    Negates the prposition                    |
+|   negation   |  $\neg$  |                    Negates the proposition                    |
 | exclusive or | $\oplus$ | True when exactly one of P and Q is true, false otherwise (removes the "both true" property from OR) |
 
-> $p \oplus q \equiv (p \wedge \lnot q) \vee (\lnot p \wedge q)$(true if exactly one of P or Q is true, but not both.) 
+> $p \oplus q \equiv (p \wedge \lnot q) \vee (\lnot p \wedge q)$ (true if exactly one of P or Q is true, but not both.) 
 
 **De Morgan Law**
 
-- $\lnot (p_1 \wedge p_2 \wedge p_3 \wedge ..) \equiv (\lnot p_1 \vee \lnot p_2 \vee \lnot p_4 \vee ...)$
+- $\lnot (p_1 \wedge p_2 \wedge p_3 \wedge ..) \equiv (\lnot p_1 \vee \lnot p_2 \vee \lnot p_3 \vee ...)$
 - $\lnot (p_1 \vee p_2 \vee p_3 \vee ...) \equiv (\lnot p_1 \wedge \lnot p_2 \wedge \lnot p_3 \wedge ...)$
 
 ### Conditional Statements
 
-- **Implication** Let *p* anmd *q* be propositions. The conditional statement $p \implies q$ is the proposition **"if p, then q"**, it is false when *p* is true and *q* is false and true otherwise. In the conditional statement $p \implies q$, *p* is called **hypothesis** (or antecedent or premise) and *q* is called the **conclusion** (or consequence).
+- **Implication** Let *p* and *q* be propositions. The conditional statement $p \implies q$ is the proposition **"if p, then q"**, it is false when *p* is true and *q* is false and true otherwise. In the conditional statement $p \implies q$, *p* is called **hypothesis** (or antecedent or premise) and *q* is called the **conclusion** (or consequence).
 
   - "if $p$, then $q$", "$p$ implies $q$", "if $p$, $q$", "$p$ is sufficient for $q$", "$q$ if $p$", "$q$ whenever $p$", "$q$ is necessary for $p$", "a necessary condition for $p$ is $q$", "$q$ follows from $p$", "$q$ unless $\lnot p$"
 
   - Above them **"$q$ unless $\lnot p$"** might not be obvious, but it make sense if we treat "unless" with "or" (these are interchangeable). In langauge it means if $\lnot p$ is false, then $q$ must be true. That is same as saying if $p$ is true then $q$ has to be true to affirmate the proposition.
 
-  - **Contraverse**: The conditional statement $q \implies p$ is called contraverse.
+  - **Converse**: The conditional statement $q \implies p$ is called converse.
 
   - **Contrapositive**: The conditional statement $\lnot q \implies \lnot p$ is called contrapositive.
 
@@ -62,7 +62,7 @@
 
 ## Propositional Equivalences
 
--  **Tatuology**: A compound prposition that is always true
+-  **Tautology**: A compound proposition that is always true
   - $p \vee \lnot p$
   
 - **Contradiction**: A compound proposition that is always false.
@@ -87,10 +87,10 @@
 | **Absorption** | $p \vee (p \wedge q) \equiv p,\; p \wedge (p \vee q) \equiv p$ |
 | **Negation** | $p \vee \lnot p \equiv T,\; p \wedge \lnot p \equiv F$ |
 
-- **Some logical equivalnce involving conditional statements**
+- **Some logical equivalence involving conditional statements**
   - $(p \implies q) \wedge / \vee (p \implies r) \equiv p \implies (q \wedge / \vee r)$
   - $(p \implies r) \wedge / \vee (q \implies r) \equiv (p \wedge / \vee q) \implies r$
-- **Some logical equivalnce involving Biconditional statements**
+- **Some logical equivalence involving Biconditional statements**
   - $p \iff q \equiv \lnot p \iff \lnot q$
   - $p \iff q \equiv (p \wedge q) \vee (\lnot p \wedge \lnot q)$
   - $\lnot(p \iff q) \equiv (p \wedge \lnot q) \vee (\lnot p \wedge q) \equiv p \oplus q \equiv p \iff \lnot q$
@@ -116,7 +116,7 @@ A compound proposition is **satisfiable** if there is an assignment of truth val
 
 > The quantifiers $\forall$ and $\exists$ have higher precedence than all logical operators from propositional calculus.
 
-***NOTE: We can distribute $\forall$ over conjugation and $\exists$ over disjunction, however we cannot distribute $\forall$ over disjunction now can distribute $\exists$ over conjuction***
+***NOTE: We can distribute $\forall$ over conjunction and $\exists$ over disjunction, however we cannot distribute $\forall$ over disjunction nor can we distribute $\exists$ over conjunction***
 
 > Example: 
 >
@@ -128,7 +128,7 @@ A compound proposition is **satisfiable** if there is an assignment of truth val
 
 - **Negation of Quantifiers**
   - $\lnot \forall{x}P(x) \equiv \exists{x} \lnot P(x)$
-  - $\lnot \exists P(x) \equiv \forall{x} \lnot P(x)$
+  - $\lnot \exists{x} P(x) \equiv \forall{x} \lnot P(x)$
 
 ## Nested Quantifiers
 
@@ -186,9 +186,9 @@ Now talking about the $q \wedge (\lnot p \vee r)$ to be True then both $q$ and $
 From both these conclusions we can now say 
 $$
 p \wedge r \implies q \vee r \\
-q \wedge (\lnot p \vee r)) \implies q \vee r \\
+q \wedge (\lnot p \vee r) \implies q \vee r \\
 then, \\
-(p \wedge r) \vee q \wedge (\lnot p \vee r)) \implies q \vee r \text{ Proved}
+(p \wedge r) \vee (q \wedge (\lnot p \vee r)) \implies q \vee r \text{ Proved}
 $$
 
 > Edit: LOL writing this I realised we could've done this at the very start $((p \vee q) \wedge (\lnot p \vee r)) \implies (q \vee r)$ and taking 2 cases of $p \equiv T/F$ which woud've gave the exact same results without expansion and then contracting (Eq 2 and 3) 🥲
@@ -224,7 +224,7 @@ With the help of these we can make the inference decisions by combining the rule
 
 To prove $p \implies q$, we assume $p$ is true; subsequent steps are constructed by inference rules following the previous assumption leading to show that $q$ is also true. Direct proof begin with premise, continue with a sequence of deductions and end with the conclusion.
 
-> **Example: If $n$ is an odd integer then, then $n^2$ is odd**
+> **Example: If $n$ is an odd integer, then $n^2$ is odd**
 >
 > We need to show $\forall{x}(P(x) \implies Q(x))$ where $P(x)$ is $x$ is an odd integer and $Q(x)$ is $x^2$ is an odd integer. Going by direct proof we assume, the premise $P(x)$ is true then $x = 2k + 1$ then $x^2 = (2k + 1)^2 = 2(2k^2 + 2k) + 1$ this is by definition the odd integer hence we can say $Q(x)$ is also True.
 
@@ -246,7 +246,7 @@ Often times attempt of direct proofs reach dead ends. We need more methods and m
 >
 > Lets proceed with contraposition, assuming the conclusion is false means
 > $$
-> \lnot{Q} = \lnot(a \leq \sqrt{n} \vee b \leq \sqrt{n}) = (a > sqrt{n}) \wedge (b > \sqrt{n})
+> \lnot{Q} = \lnot(a \leq \sqrt{n} \vee b \leq \sqrt{n}) = (a > \sqrt{n}) \wedge (b > \sqrt{n})
 > $$
 > Then we can get $ab > n$ which shows that $ab \ne n$ (Negation of the premise) hence we proved $\lnot Q \implies \lnot P$ hence the assumed hypothesis was false, means original statement was true.
 
@@ -276,7 +276,7 @@ To prove an implication $p \implies q$ by contradiction, assume $p \wedge \lnot 
 >
 > $Q: \exists{d} \in \{Mon, Tue, ..., Sun\} s.t. \#(d) \geq 4$
 >
-> $\lnot Q: \forall{d}, \#(d)<3$
+> $\lnot Q: \forall{d}, \#(d) \leq 3$
 >
 > So we assume the $p \wedge \lnot q$ here i.e. there are 22 days selected then **Every weekday has at most 3 of the 22 days.**.  So now since each week has 7 days so total there will be $7 \times 3=21$ but wait we assumed $P$ as true that says only 22 days were selected but now we are getting 21? This is the **contradiction**. Hence ***our assumption $\lnot Q$ was False*** so the original statement is indeed True.
 
@@ -288,11 +288,11 @@ To prove an implication $p \implies q$ by contradiction, assume $p \wedge \lnot 
 
 - **Proving biconditional statements**: We can show that ***$(p \implies q) \wedge (q \implies p)$***
 
-Sometimes a theorem states that several propositions are equivalent. Such a theorem states that all propositions $p_1,p_2, ..., p_n$ are equivalent. This can be written as $p_1 \iff p2 \iff ... \iff p_n$ which states that all propositions have same truth values and consequently that for all $i$ and $j$ with $1 \leq i \leq n$ and $1 \leq j \leq n$ $, p_i$ and $p_j$ are equivalent. One way to prove these are mutually equivalent is to the tautology:
+Sometimes a theorem states that several propositions are equivalent. Such a theorem states that all propositions $p_1,p_2, ..., p_n$ are equivalent. This can be written as $p_1 \iff p_2 \iff ... \iff p_n$ which states that all propositions have same truth values and consequently that for all $i$ and $j$ with $1 \leq i \leq n$ and $1 \leq j \leq n$ $, p_i$ and $p_j$ are equivalent. One way to prove these are mutually equivalent is to the tautology:
 $$
 p_1 \iff p_2 .... \iff p_n \iff (p_1 \implies p_2) \wedge (p_2 \implies p_3) \wedge ... \wedge (p_n \implies p_1)
 $$
-This is more efficient than proving all $p_i$ and $p_j$ pairs for equivalence. (Not there will be $n^2 - n$ such conditional statements)
+This is more efficient than proving all $p_i$ and $p_j$ pairs for equivalence. (Note there will be $n^2 - n$ such conditional statements)
 
 - **Counterexamples:** Statements like $\forall{x}P(x)$ we just need to find one counterexample to disprove them.
 
@@ -304,7 +304,7 @@ In these types of proofs we check the each possible case from domain to exhaust 
 
 To prove something $(p_1 \vee p_2 \vee ... \vee p_n) \implies q$ we use the tautology
 $$
-[(p_1 \vee p_2 \vee ... \vee p_n ) \implies q] \wedge [(p_1 \implies q) \wedge (p_2 \implies q) \wedge ... \wedge(p_n \implies q)]
+[(p_1 \vee p_2 \vee ... \vee p_n ) \implies q] \equiv [(p_1 \implies q) \wedge (p_2 \implies q) \wedge ... \wedge(p_n \implies q)]
 $$
 
 #### Without Loss of Generality
@@ -329,13 +329,19 @@ In forward reasoning we start with premise, deduce steps and use theorems to rea
 
 In backward reasoning, to prove some statement $q$, we try to find some statement $p$ that we can prove with the property $p \implies q$
 
-> **Example-1**: For 2 positive real numbers $x$ and $y$ the arithmetic mean $\frac{x+y}{w}$ is always greater than the geometric mean $\sqrt{xy}$. Prove if its always true.
+> **Example-1**: For 2 positive real numbers $x$ and $y$ the arithmetic mean $\frac{x+y}{2}$ is always greater than the geometric mean $\sqrt{xy}$. Prove if its always true.
 >
 > Lets work backwards, we assume the conclusion and now
 > $$
-> \frac{x+y}{2} > \sqrt{xy} \\ \text{which leads to: }
+> \begin{gathered}
+> \frac{x+y}{2} > \sqrt{xy} \\
+> \text{ which leads to: } \\
 > (x-y)^2 > 0
+> \end{gathered}
 > $$
 > since $(x-y)^2 > 0$ when $x \ne y$ it follows the final inequality to be true. Now we can use these steps backwards for drafting our proof.
 >
 > **Proof:** Suppose $x$ and $y$ are distinct positive real numbers. Then $(x-y)^2 > 0$ and solving this we get $\frac{x+y}{2} > \sqrt{xy}$
+
+#### Tiling
+
