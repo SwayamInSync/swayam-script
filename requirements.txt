@@ -75,10 +75,10 @@ nbformat==5.10.4
 nest-asyncio==1.6.0
 notebook==7.2.2
 notebook_shim==0.2.4
-numpy==1.24.2
+numpy
 overrides==7.7.0
 packaging==23.0
-pandas==1.5.3
+pandas
 pandocfilters==1.5.1
 parso==0.8.4
 pexpect==4.9.0
@@ -99,7 +99,7 @@ pyparsing==3.1.4
 python-dateutil==2.8.2
 python-json-logger==2.0.7
 pytz==2023.3
-PyYAML==6.0
+PyYAML
 pyzmq==26.2.0
 referencing==0.35.1
 regex==2023.3.23
