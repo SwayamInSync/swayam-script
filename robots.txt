@@ -1,1 +1,1 @@
-Sitemap: https://SwayamInSync.github.io/swayam-script/sitemap.xml
+Sitemap: https://swayaminsync.github.io/swayam-script/sitemap.xml

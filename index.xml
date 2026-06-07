@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>Swayam&#39;s Scripts</title>
+<link>https://swayaminsync.github.io/swayam-script/</link>
+<atom:link href="https://swayaminsync.github.io/swayam-script/index.xml" rel="self" type="application/rss+xml"/>
+<description></description>
+<generator>quarto-1.9.38</generator>
+<lastBuildDate>Mon, 26 Jan 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>[WIP] Discrete Mathematics</title>
+  <dc:creator>Swayam Singh</dc:creator>
+  <link>https://swayaminsync.github.io/swayam-script/posts/Descrete_Mathematics/</link>
+  <description><![CDATA[ <img src="https://swayaminsync.github.io/swayam-script/posts/Descrete_Mathematics/assets/header.png" class="preview-image img-fluid quarto-figure quarto-figure-center figure-img" alt="Cover Image"> ]]></description>
+  <category>Mathematics</category>
+  <category>ongoing</category>
+  <guid>https://swayaminsync.github.io/swayam-script/posts/Descrete_Mathematics/</guid>
+  <pubDate>Mon, 26 Jan 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://swayaminsync.github.io/swayam-script/posts/Descrete_Mathematics/assets/header.png" medium="image" type="image/png" height="79" width="144"/>
+</item>
+<item>
+  <title>C++ Tips</title>
+  <dc:creator>Swayam Singh</dc:creator>
+  <link>https://swayaminsync.github.io/swayam-script/posts/C++ Tips/</link>
+  <description><![CDATA[ <code>constexpr</code> to if statements must need to evaluated at compile time, else error while <code>constexpr</code> functions are allowed to be compile-time evaluation if function logic allows else lowered to runtime evaluation ]]></description>
+  <category>C++</category>
+  <category>Ongoing</category>
+  <guid>https://swayaminsync.github.io/swayam-script/posts/C++ Tips/</guid>
+  <pubDate>Fri, 05 Dec 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://swayaminsync.github.io/swayam-script/posts/C++ Tips/assets/header.png" medium="image" type="image/png" height="61" width="144"/>
+</item>
+<item>
+  <title>[WIP] Effective C++</title>
+  <dc:creator>Swayam Singh</dc:creator>
+  <link>https://swayaminsync.github.io/swayam-script/posts/Effective C++/</link>
+  <description><![CDATA[ <img src="https://swayaminsync.github.io/swayam-script/posts/Effective C++/assets/header.png" style="zoom:50%;"> ]]></description>
+  <category>C++</category>
+  <category>Ongoing</category>
+  <guid>https://swayaminsync.github.io/swayam-script/posts/Effective C++/</guid>
+  <pubDate>Fri, 19 Sep 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://swayaminsync.github.io/swayam-script/posts/Effective C++/assets/header.png" medium="image" type="image/png" height="96" width="144"/>
+</item>
+<item>
+  <title>CUDA Notes: Cooperative Groups</title>
+  <dc:creator>Swayam Singh</dc:creator>
+  <link>https://swayaminsync.github.io/swayam-script/posts/Cooperative Groups/</link>
+  <description><![CDATA[ <img src="https://swayaminsync.github.io/swayam-script/posts/Cooperative Groups/assets/header.png" class="preview-image img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="Cover Image"> ]]></description>
+  <category>CUDA</category>
+  <guid>https://swayaminsync.github.io/swayam-script/posts/Cooperative Groups/</guid>
+  <pubDate>Fri, 15 Aug 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://swayaminsync.github.io/swayam-script/posts/Cooperative Groups/assets/header.png" medium="image" type="image/png" height="96" width="144"/>
+</item>
+<item>
+  <title>[WIP] A Hitchhiker’s Guide to LLVM</title>
+  <dc:creator>Swayam Singh</dc:creator>
+  <link>https://swayaminsync.github.io/swayam-script/posts/A Hitchhikers Guide to LLVM/</link>
+  <description><![CDATA[ <img src="https://swayaminsync.github.io/swayam-script/posts/A Hitchhikers Guide to LLVM/images/cover.png" class="preview-image img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="Cover Image"> ]]></description>
+  <category>Compilers</category>
+  <category>LLVM</category>
+  <category>ongoing</category>
+  <guid>https://swayaminsync.github.io/swayam-script/posts/A Hitchhikers Guide to LLVM/</guid>
+  <pubDate>Tue, 03 Jun 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://swayaminsync.github.io/swayam-script/posts/A Hitchhikers Guide to LLVM/images/cover.png" medium="image" type="image/png" height="96" width="144"/>
+</item>
+<item>
+  <title>Gradient Flow and Variance Propogation Analysis of Dynamic Tanh Layer</title>
+  <dc:creator>Swayam Singh</dc:creator>
+  <link>https://swayaminsync.github.io/swayam-script/posts/DyT Analysis/</link>
+  <description><![CDATA[ The “Curse of Depth” in Pre-LN transformers, identified by Sun et al.&nbsp;(2025), reveals that deeper layers often function as near-identity mappings, contributing minimally to the model’s performance. Their analysis found two key issues: ]]></description>
+  <category>ML-Theory</category>
+  <category>Transformers</category>
+  <guid>https://swayaminsync.github.io/swayam-script/posts/DyT Analysis/</guid>
+  <pubDate>Fri, 21 Mar 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://swayaminsync.github.io/swayam-script/posts/DyT Analysis/header.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>[WIP] The Transparent Algorithm</title>
+  <dc:creator>Swayam Singh</dc:creator>
+  <link>https://swayaminsync.github.io/swayam-script/posts/The Transparent Algorithm/</link>
+  <description><![CDATA[ <img src="https://swayaminsync.github.io/swayam-script/posts/The Transparent Algorithm/images/cover.png" class="preview-image img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="Cover Image"> ]]></description>
+  <category>ML</category>
+  <category>Theory</category>
+  <category>Book</category>
+  <category>ongoing</category>
+  <guid>https://swayaminsync.github.io/swayam-script/posts/The Transparent Algorithm/</guid>
+  <pubDate>Sat, 15 Mar 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://swayaminsync.github.io/swayam-script/posts/The Transparent Algorithm/images/cover.png" medium="image" type="image/png" height="103" width="144"/>
+</item>
+<item>
+  <title>Concurrent C++ A Practical Guide</title>
+  <dc:creator>Swayam Singh</dc:creator>
+  <link>https://swayaminsync.github.io/swayam-script/posts/Concurrent C++, A Practical Guide/</link>
+  <description><![CDATA[ undefined ]]></description>
+  <category>C++</category>
+  <category>Book</category>
+  <guid>https://swayaminsync.github.io/swayam-script/posts/Concurrent C++, A Practical Guide/</guid>
+  <pubDate>Sun, 09 Feb 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://swayaminsync.github.io/swayam-script/posts/Concurrent C++, A Practical Guide/img.jpeg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Information Theory in Machine Learning: A Fun Approach</title>
+  <dc:creator>Swayam Singh</dc:creator>
+  <link>https://swayaminsync.github.io/swayam-script/posts/Information-Theory-In-ML/</link>
+  <description><![CDATA[ <img src="https://swayaminsync.github.io/swayam-script/posts/Information-Theory-In-ML/intro.jpg" class="preview-image img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="Opening Meme"> ]]></description>
+  <category>ML</category>
+  <category>Information-Theory</category>
+  <guid>https://swayaminsync.github.io/swayam-script/posts/Information-Theory-In-ML/</guid>
+  <pubDate>Thu, 09 Jan 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://swayaminsync.github.io/swayam-script/posts/Information-Theory-In-ML/intro.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Understanding Perplexity</title>
+  <dc:creator>Swayam Singh</dc:creator>
+  <link>https://swayaminsync.github.io/swayam-script/posts/Understanding Perplexity/</link>
+  <description><![CDATA[ <img src="https://swayaminsync.github.io/swayam-script/posts/Understanding Perplexity/meme.jpg" class="preview-image img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="Meme representing perplexity"> ]]></description>
+  <category>LLM</category>
+  <guid>https://swayaminsync.github.io/swayam-script/posts/Understanding Perplexity/</guid>
+  <pubDate>Thu, 10 Oct 2024 00:00:00 GMT</pubDate>
+  <media:content url="https://swayaminsync.github.io/swayam-script/posts/Understanding Perplexity/meme.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Numpy QuadDType: Quadruple Precision for Everyone</title>
+  <dc:creator>Swayam Singh</dc:creator>
+  <link>https://swayaminsync.github.io/swayam-script/posts/Numpy QuadDtype/</link>
+  <description><![CDATA[ undefined ]]></description>
+  <category>NumPy</category>
+  <category>Open-Source</category>
+  <guid>https://swayaminsync.github.io/swayam-script/posts/Numpy QuadDtype/</guid>
+  <pubDate>Mon, 30 Sep 2024 00:00:00 GMT</pubDate>
+  <media:content url="https://labs.quansight.org/_next/image?url=%2Fposts%2Fnumpy-quaddtype-blog%2Ffeature.png&amp;w=3840&amp;q=75" medium="image"/>
+</item>
+<item>
+  <title>Self-Attention Mimicking Gradient Descent</title>
+  <dc:creator>Swayam Singh</dc:creator>
+  <link>https://swayaminsync.github.io/swayam-script/posts/Self-Attention Mimicking Gradient Descent/</link>
+  <description><![CDATA[ This section of paper <strong><a href="https://arxiv.org/abs/2309.05858">Uncovering mesa-optimization algorithms in Transformers</a></strong> presents a theoretical construction where a linear self-attention layer in a Transformer architecture can mimic a single step of gradient descent for a linear regression task. ]]></description>
+  <category>NLP</category>
+  <category>Transformers</category>
+  <guid>https://swayaminsync.github.io/swayam-script/posts/Self-Attention Mimicking Gradient Descent/</guid>
+  <pubDate>Sat, 14 Oct 2023 00:00:00 GMT</pubDate>
+</item>
+</channel>
+</rss>
