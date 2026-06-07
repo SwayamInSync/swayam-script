@@ -3,6 +3,7 @@ project:
 
 website:
   title: "Swayam's Scripts"
+  site-url: https://swayaminsync.github.io/swayam-script/
   open-graph: true
   favicon: favicon.png
   page-footer: © 2025 Swayam Singh. All rights reserved.

@@ -5,6 +5,8 @@ listing:
   contents: posts
   sort: "date desc"
   type: default
+  feed:
+    type: partial
   fields: [image, date, title, author, reading-time, description, subtitle, word-count, categories]
   categories: true
   sort-ui: false

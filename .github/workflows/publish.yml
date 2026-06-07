@@ -25,9 +25,13 @@ jobs:
       - run: pip install jupyter
       - run: pip install -r requirements.txt
 
-      - name: Render and Publish
+      - name: Render (generates the RSS feed too)
+        run: quarto render
+
+      - name: Publish to GitHub Pages
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: gh-pages
+          render: false
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
