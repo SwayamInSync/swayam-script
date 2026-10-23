@@ -2,7 +2,9 @@
 title: "Swayam's Scripts"
 subtitle: "A collection of my original writings"
 listing:
-  contents: posts
+  contents:
+    - posts
+    - substack-posts.yml
   sort: "date desc"
   type: default
   feed:
