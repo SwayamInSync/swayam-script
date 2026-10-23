@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.19">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -42,14 +45,14 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-b626d73c4c936ccc3cb08be7d45d1df6.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-94b323657c735dfe3b1bf6ebb2c33a55.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-02c264eca8910e7b441f47af9d1b12f7.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-94b323657c735dfe3b1bf6ebb2c33a55.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-55617497126496852ff9f5a59253c640.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-e4079bcb5a43a1830bfbf72f2fdf0a2a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-55617497126496852ff9f5a59253c640.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -108,7 +111,7 @@ ul.task-list li input[type="checkbox"] {
   </script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -371,7 +374,7 @@ window.Quarto = {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(12)</span></div><div class="category" data-category="Qm9vaw==">Book <span class="quarto-category-count">(2)</span></div><div class="category" data-category="QyUyQiUyQg==">C++ <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Q29tcGlsZXJz">Compilers <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q1VEQQ==">CUDA <span class="quarto-category-count">(1)</span></div><div class="category" data-category="SW5mb3JtYXRpb24tVGhlb3J5">Information-Theory <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TExN">LLM <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TExWTQ==">LLVM <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TWF0aGVtYXRpY3M=">Mathematics <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TUw=">ML <span class="quarto-category-count">(2)</span></div><div class="category" data-category="TUwtVGhlb3J5">ML-Theory <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TkxQ">NLP <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TnVtUHk=">NumPy <span class="quarto-category-count">(1)</span></div><div class="category" data-category="b25nb2luZw==">ongoing <span class="quarto-category-count">(3)</span></div><div class="category" data-category="T25nb2luZw==">Ongoing <span class="quarto-category-count">(2)</span></div><div class="category" data-category="T3Blbi1Tb3VyY2U=">Open-Source <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VGhlb3J5">Theory <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VHJhbnNmb3JtZXJz">Transformers <span class="quarto-category-count">(2)</span></div></div></div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(13)</span></div><div class="category" data-category="Qm9vaw==">Book <span class="quarto-category-count">(2)</span></div><div class="category" data-category="QyUyQiUyQg==">C++ <span class="quarto-category-count">(4)</span></div><div class="category" data-category="Q29tcGlsZXJz">Compilers <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q1VEQQ==">CUDA <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Rm9ybWFsJTIwVmVyaWZpY2F0aW9u">Formal Verification <span class="quarto-category-count">(1)</span></div><div class="category" data-category="SW5mb3JtYXRpb24tVGhlb3J5">Information-Theory <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TExN">LLM <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TExWTQ==">LLVM <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TWF0aGVtYXRpY3M=">Mathematics <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TUw=">ML <span class="quarto-category-count">(2)</span></div><div class="category" data-category="TUwtVGhlb3J5">ML-Theory <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TkxQ">NLP <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TnVtUHk=">NumPy <span class="quarto-category-count">(1)</span></div><div class="category" data-category="b25nb2luZw==">ongoing <span class="quarto-category-count">(3)</span></div><div class="category" data-category="T25nb2luZw==">Ongoing <span class="quarto-category-count">(2)</span></div><div class="category" data-category="T3Blbi1Tb3VyY2U=">Open-Source <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VGhlb3J5">Theory <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VHJhbnNmb3JtZXJz">Transformers <span class="quarto-category-count">(2)</span></div></div></div>
 <!-- main -->
 <main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
@@ -386,7 +389,46 @@ window.Quarto = {
 
 <div class="quarto-listing quarto-listing-container-default" id="listing-listing">
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="TWF0aGVtYXRpY3MlMkNvbmdvaW5n" data-listing-date-sort="1769385600000" data-listing-file-modified-sort="1780847648082" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="22">
+<div class="quarto-post image-right" data-index="0" data-categories="QyUyQiUyQiUyQ0Zvcm1hbCUyMFZlcmlmaWNhdGlvbg==" data-listing-date-sort="1792713600000" data-listing-file-modified-sort="1792752047500" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2674">
+<div class="thumbnail"><a href="./posts/Where Should the Proof Live/index.html" class="no-external">
+
+<img loading="lazy" src="./posts/Where Should the Proof Live/assets/header.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/Where Should the Proof Live/index.html" class="no-external">My take on Anthropic’s formal verification post</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./posts/Where Should the Proof Live/index.html" class="no-external">Where should the proof live: in the source or in the binary?</a>
+</div>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QyUyQiUyQg=='); return false;">C++</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Rm9ybWFsJTIwVmVyaWZpY2F0aW9u'); return false;">Formal Verification</div>
+
+</div>
+<div class="delink listing-description"><a href="./posts/Where Should the Proof Live/index.html" class="no-external">
+Anthropic, working with Theorem, just showed that real C and C++ code can come with a proof instead of just a test report. Using Claude, they proved that 239 OSS-Fuzz entry…
+</a></div>
+</div>
+<div class="metadata">
+<a href="./posts/Where Should the Proof Live/index.html" class="no-external">
+<div class="listing-date">
+Oct 23, 2026
+</div>
+<div class="listing-author">
+Swayam Singh
+</div>
+<div class="listing-reading-time">14 min</div>
+<div class="metadata-value listing-word-count">
+2,674 words
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-categories="TWF0aGVtYXRpY3MlMkNvbmdvaW5n" data-listing-date-sort="1769385600000" data-listing-file-modified-sort="1792752047495" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="22">
 <div class="thumbnail"><a href="./posts/Descrete_Mathematics/index.html" class="no-external">
 
 <img loading="lazy" src="./posts/Descrete_Mathematics/assets/header.png" class="thumbnail-image">
@@ -429,7 +471,7 @@ Swayam Singh
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-categories="QyUyQiUyQiUyQ09uZ29pbmc=" data-listing-date-sort="1764892800000" data-listing-file-modified-sort="1780847648064" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1334">
+<div class="quarto-post image-right" data-index="2" data-categories="QyUyQiUyQiUyQ09uZ29pbmc=" data-listing-date-sort="1764892800000" data-listing-file-modified-sort="1792752047477" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1334">
 <div class="thumbnail"><a href="./posts/C++ Tips/index.html" class="no-external">
 
 <img loading="lazy" src="./posts/C++ Tips/assets/header.png" class="thumbnail-image">
@@ -468,7 +510,7 @@ Swayam Singh
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-categories="QyUyQiUyQiUyQ09uZ29pbmc=" data-listing-date-sort="1758240000000" data-listing-file-modified-sort="1780847648085" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="58" data-listing-word-count-sort="11511">
+<div class="quarto-post image-right" data-index="3" data-categories="QyUyQiUyQiUyQ09uZ29pbmc=" data-listing-date-sort="1758240000000" data-listing-file-modified-sort="1792752047497" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="58" data-listing-word-count-sort="11511">
 <div class="thumbnail"><a href="./posts/Effective C++/index.html" class="no-external">
 
 <img loading="lazy" src="./posts/Effective C++/assets/header.png" class="thumbnail-image">
@@ -507,7 +549,7 @@ Swayam Singh
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="3" data-categories="Q1VEQQ==" data-listing-date-sort="1755216000000" data-listing-file-modified-sort="1780847648075" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="13" data-listing-word-count-sort="2508">
+<div class="quarto-post image-right" data-index="4" data-categories="Q1VEQQ==" data-listing-date-sort="1755216000000" data-listing-file-modified-sort="1792752047487" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="13" data-listing-word-count-sort="2508">
 <div class="thumbnail"><a href="./posts/Cooperative Groups/index.html" class="no-external">
 
 <img loading="lazy" src="./posts/Cooperative Groups/assets/header.png" class="thumbnail-image">
@@ -544,7 +586,7 @@ Swayam Singh
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="4" data-categories="Q29tcGlsZXJzJTJDTExWTSUyQ29uZ29pbmc=" data-listing-date-sort="1748908800000" data-listing-file-modified-sort="1780847648059" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1796">
+<div class="quarto-post image-right" data-index="5" data-categories="Q29tcGlsZXJzJTJDTExWTSUyQ29uZ29pbmc=" data-listing-date-sort="1748908800000" data-listing-file-modified-sort="1792752047472" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1796">
 <div class="thumbnail"><a href="./posts/A Hitchhikers Guide to LLVM/index.html" class="no-external">
 
 <img loading="lazy" src="./posts/A Hitchhikers Guide to LLVM/images/cover.png" class="thumbnail-image">
@@ -585,7 +627,7 @@ Swayam Singh
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="5" data-categories="TUwtVGhlb3J5JTJDVHJhbnNmb3JtZXJz" data-listing-date-sort="1742515200000" data-listing-file-modified-sort="1780847648084" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1625">
+<div class="quarto-post image-right" data-index="6" data-categories="TUwtVGhlb3J5JTJDVHJhbnNmb3JtZXJz" data-listing-date-sort="1742515200000" data-listing-file-modified-sort="1792752047496" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1625">
 <div class="thumbnail"><a href="./posts/DyT Analysis/index.html" class="no-external">
 
 <img loading="lazy" src="./posts/DyT Analysis/header.jpg" class="thumbnail-image">
@@ -624,7 +666,7 @@ Swayam Singh
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="6" data-categories="TUwlMkNUaGVvcnklMkNCb29rJTJDb25nb2luZw==" data-listing-date-sort="1741996800000" data-listing-file-modified-sort="1780847648087" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="24">
+<div class="quarto-post image-right" data-index="7" data-categories="TUwlMkNUaGVvcnklMkNCb29rJTJDb25nb2luZw==" data-listing-date-sort="1741996800000" data-listing-file-modified-sort="1792752047499" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="24">
 <div class="thumbnail"><a href="./posts/The Transparent Algorithm/index.html" class="no-external">
 
 <img loading="lazy" src="./posts/The Transparent Algorithm/images/cover.png" class="thumbnail-image">
@@ -671,7 +713,7 @@ Swayam Singh
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="7" data-categories="QyUyQiUyQiUyQ0Jvb2s=" data-listing-date-sort="1739059200000" data-listing-file-modified-sort="1780847648065" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="5">
+<div class="quarto-post image-right" data-index="8" data-categories="QyUyQiUyQiUyQ0Jvb2s=" data-listing-date-sort="1739059200000" data-listing-file-modified-sort="1792752047478" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="5">
 <div class="thumbnail"><a href="./posts/Concurrent C++, A Practical Guide/index.html" class="no-external">
 
 <img loading="lazy" src="./posts/Concurrent C++, A Practical Guide/img.jpeg" class="thumbnail-image">
@@ -710,7 +752,7 @@ Swayam Singh
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="8" data-categories="TUwlMkNJbmZvcm1hdGlvbi1UaGVvcnk=" data-listing-date-sort="1736380800000" data-listing-file-modified-sort="1780847648085" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2650">
+<div class="quarto-post image-right" data-index="9" data-categories="TUwlMkNJbmZvcm1hdGlvbi1UaGVvcnk=" data-listing-date-sort="1736380800000" data-listing-file-modified-sort="1792752047497" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2650">
 <div class="thumbnail"><a href="./posts/Information-Theory-In-ML/index.html" class="no-external">
 
 <img loading="lazy" src="./posts/Information-Theory-In-ML/intro.jpg" class="thumbnail-image">
@@ -749,7 +791,7 @@ Swayam Singh
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="9" data-categories="TExN" data-listing-date-sort="1728518400000" data-listing-file-modified-sort="1780847648087" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="595">
+<div class="quarto-post image-right" data-index="10" data-categories="TExN" data-listing-date-sort="1728518400000" data-listing-file-modified-sort="1792752047499" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="595">
 <div class="thumbnail"><a href="./posts/Understanding Perplexity/index.html" class="no-external">
 
 <img loading="lazy" src="./posts/Understanding Perplexity/meme.jpg" class="thumbnail-image">
@@ -786,7 +828,7 @@ Swayam Singh
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="10" data-categories="TnVtUHklMkNPcGVuLVNvdXJjZQ==" data-listing-date-sort="1727654400000" data-listing-file-modified-sort="1780847648086" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="5">
+<div class="quarto-post image-right" data-index="11" data-categories="TnVtUHklMkNPcGVuLVNvdXJjZQ==" data-listing-date-sort="1727654400000" data-listing-file-modified-sort="1792752047498" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="5">
 <div class="thumbnail"><a href="./posts/Numpy QuadDtype/index.html" class="no-external">
 
 <img loading="lazy" src="https://labs.quansight.org/_next/image?url=%2Fposts%2Fnumpy-quaddtype-blog%2Ffeature.png&amp;w=3840&amp;q=75" class="thumbnail-image">
@@ -825,7 +867,7 @@ Swayam Singh
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="11" data-categories="TkxQJTJDVHJhbnNmb3JtZXJz" data-listing-date-sort="1697241600000" data-listing-file-modified-sort="1780847648086" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1671">
+<div class="quarto-post image-right" data-index="12" data-categories="TkxQJTJDVHJhbnNmb3JtZXJz" data-listing-date-sort="1697241600000" data-listing-file-modified-sort="1792752047498" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1671">
 <div class="thumbnail"><a href="./posts/Self-Attention Mimicking Gradient Descent/index.html" class="no-external">
 
 <p class="card-img-top"><img loading='lazy' src="posts/Self-Attention Mimicking Gradient Descent/section-image.png"  class="thumbnail-image card-img"/></p>

@@ -9,8 +9,19 @@
 <link>https://swayaminsync.github.io/swayam-script/</link>
 <atom:link href="https://swayaminsync.github.io/swayam-script/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.9.38</generator>
-<lastBuildDate>Mon, 26 Jan 2026 00:00:00 GMT</lastBuildDate>
+<generator>quarto-1.10.19</generator>
+<lastBuildDate>Fri, 23 Oct 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>My take on Anthropic’s formal verification post</title>
+  <dc:creator>Swayam Singh</dc:creator>
+  <link>https://swayaminsync.github.io/swayam-script/posts/Where Should the Proof Live/</link>
+  <description><![CDATA[ <img src="https://swayaminsync.github.io/swayam-script/posts/Where Should the Proof Live/assets/header.png" class="preview-image img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" alt="Cover image: Where should the proof live? Source-level vs binary-level formal verification of C/C++"> ]]></description>
+  <category>C++</category>
+  <category>Formal Verification</category>
+  <guid>https://swayaminsync.github.io/swayam-script/posts/Where Should the Proof Live/</guid>
+  <pubDate>Fri, 23 Oct 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://swayaminsync.github.io/swayam-script/posts/Where Should the Proof Live/assets/header.png" medium="image" type="image/png" height="58" width="144"/>
+</item>
 <item>
   <title>[WIP] Discrete Mathematics</title>
   <dc:creator>Swayam Singh</dc:creator>

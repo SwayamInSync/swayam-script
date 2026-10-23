@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Swayam Singh">
+<meta name="dcterms.date" content="2026-10-23">
+
+<title>My take on Anthropic’s formal verification post – Swayam's Scripts</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-3f418c0a1af92b3d03a8c930c3125fbd.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-3f418c0a1af92b3d03a8c930c3125fbd.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-3f418c0a1af92b3d03a8c930c3125fbd.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-6065de31d457a7c50035da8edf17b3e8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-93172308680b0aac24a377fce85aa490.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-6065de31d457a7c50035da8edf17b3e8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="My take on Anthropic’s formal verification post – Swayam’s Scripts">
+<meta property="og:description" content="Where should the proof live: in the source or in the binary?">
+<meta property="og:image" content="https://swayaminsync.github.io/swayam-script/posts/Where Should the Proof Live/assets/header.png">
+<meta property="og:site_name" content="Swayam’s Scripts">
+<meta property="og:image:height" content="600">
+<meta property="og:image:width" content="1500">
+</head>
+
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Swayam’s Scripts</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://swayaminsync.github.io/"> <i class="bi bi-house-fill" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/SwayamInSync"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/swayaminsync"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">My take on Anthropic’s formal verification post</h1>
+            <p class="subtitle lead">Where should the proof live: in the source or in the binary?</p>
+                                <div class="quarto-categories">
+                <div class="quarto-category">C++</div>
+                <div class="quarto-category">Formal Verification</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Swayam Singh </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 23, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#how-their-pipeline-works" id="toc-how-their-pipeline-works" class="nav-link active" data-scroll-target="#how-their-pipeline-works">How their pipeline works</a></li>
+  <li><a href="#what-i-liked" id="toc-what-i-liked" class="nav-link" data-scroll-target="#what-i-liked">What I liked</a></li>
+  <li><a href="#where-id-bet-differently" id="toc-where-id-bet-differently" class="nav-link" data-scroll-target="#where-id-bet-differently">Where I’d bet differently</a></li>
+  <li><a href="#they-also-used-a-source-level-verifier" id="toc-they-also-used-a-source-level-verifier" class="nav-link" data-scroll-target="#they-also-used-a-source-level-verifier">They also used a source-level verifier</a></li>
+  <li><a href="#verifying-against-the-c-standard" id="toc-verifying-against-the-c-standard" class="nav-link" data-scroll-target="#verifying-against-the-c-standard">Verifying against the C++ standard</a></li>
+  <li><a href="#languages-that-compile-to-c-or-c" id="toc-languages-that-compile-to-c-or-c" class="nav-link" data-scroll-target="#languages-that-compile-to-c-or-c">Languages that compile to C or C++</a></li>
+  <li><a href="#cpp-verify" id="toc-cpp-verify" class="nav-link" data-scroll-target="#cpp-verify">Cpp-Verify</a></li>
+  <li><a href="#closing-thoughts" id="toc-closing-thoughts" class="nav-link" data-scroll-target="#closing-thoughts">Closing thoughts</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="assets/header.png" class="preview-image img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" alt="Cover image: Where should the proof live? Source-level vs binary-level formal verification of C/C++"></p>
+</figure>
+</div>
+<p>Anthropic, working with Theorem, just showed that real C and C++ code can come with a proof instead of just a test report. Using Claude, they proved that 239 OSS-Fuzz entry points across 123 open-source libraries can never crash on any input under 64 MB (on a formally modelled RISC-V Linux machine).</p>
+<p>Not “we fuzzed it for a really long time”. Proved. Checked by a proof assistant. Around 180 million lines of Rocq.</p>
+<p>Anthropic’s post: <a href="https://www.anthropic.com/research/formal-verification">LLMs are making formal software verification feasible at a much larger scale</a></p>
+<p>I spend a lot of my time building a formal verifier for C++, so I read the post twice. Here’s how it actually works, what I love about it, and the one place I’d bet differently.</p>
+<section id="how-their-pipeline-works" class="level2">
+<h2 class="anchored" data-anchor-id="how-their-pipeline-works">How their pipeline works</h2>
+<p>The main thing to understand is that they verify the compiled binary, not the C/C++ source. Here is the pipeline step by step.</p>
+<ol type="1">
+<li><p>They start from the existing OSS-Fuzz harnesses. A harness is a function that takes a byte buffer and calls into the library, and during fuzzing any crash (ASan error, failed assert, segfault) counts as a bug. So the harness already works as a spec. They just turn “the fuzzer couldn’t find a crash” into “no input can cause a crash”.</p></li>
+<li><p>Each harness is built twice, once with ASan and once without. Each build links the harness, the library, musl libc and the C startup code (plus the ASan runtime for the first one) into a single static, single-threaded RISC-V executable. With ASan, a memory error has a concrete meaning in the binary: execution reaches the ASan report routine and aborts. Roughly, a store like <code>buf[i] = x</code> turns into something like this:</p>
+<pre><code># buf[i] = x with ASan (simplified)
+srli  t0, a1, 3          # shadow address = (addr &gt;&gt; 3) + offset
+add   t0, t0, s1
+lbu   t1, 0(t0)          # load the shadow byte
+bnez  t1, asan_report    # poisoned -&gt; report and abort
+sb    a2, 0(a1)          # the actual store</code></pre></li>
+<li><p>Theorem has formal models of the RISC-V ISA and of a Linux process, written in Rocq. The RISC-V model defines the machine state (registers, program counter, memory) and how each instruction changes it. The Linux model defines what a system call (<code>ecall</code>) is allowed to return, and it is nondeterministic on purpose: for example, a <code>read</code> can return fewer bytes than requested, and memory addresses can differ between runs. The proof has to hold for every behaviour the model allows. Memory is also fixed in size, so running out of stack counts as a crash too.</p></li>
+<li><p>Plugging both binaries into these models gives the theorem to prove. It is generated mechanically, and the template is the same for every library. Here a crash means a fault, an abort, or any behaviour the model doesn’t cover (like a syscall missing from the Linux model). For every input under 64 MB and every memory layout, the theorem has three parts:</p>
+<ol type="1">
+<li>The ASan build never crashes.</li>
+<li>The ASan build and the plain build behave the same: same stdin reads, same stdout/stderr writes, same exit code and same final file system state.</li>
+<li>The plain build never crashes either.</li>
+</ol>
+<p>Part 3 is needed because a crash and an infinite loop both just end the trace, so equivalence alone would not notice one build crashing where the other loops. As I read the appendix, it also means the theorem rules out crashes, not infinite loops.</p></li>
+<li><p>Claude writes the proof and the Rocq kernel checks it. A typical proof is around 600K lines of Rocq. Nobody needs to review those lines because the checker does that. You only have to trust the RISC-V model, the Linux model, the theorem statement and the Rocq kernel.</p></li>
+<li><p>When the proof gets stuck, it usually means there is a real bug. Claude patches the C source, the binary is rebuilt, a new theorem is generated, and the proof continues from there.</p></li>
+</ol>
+</section>
+<section id="what-i-liked" class="level2">
+<h2 class="anchored" data-anchor-id="what-i-liked">What I liked</h2>
+<p>A few things I found really nice about this approach:</p>
+<p>✅ The spec comes for free. Nobody had to write per-function annotations for 123 libraries, because the fuzz harnesses already existed.</p>
+<p>✅ The trusted part stays small and fixed: the RISC-V model, the Linux model, the theorem statements and the Rocq kernel. Verifying more projects doesn’t add anything to it.</p>
+<p>✅ It finds bugs that fuzzers are very unlikely to hit. One was a counter underflow in a decompressor that only triggers on ~20 MB inputs with a specific layout. Another was an out-of-bounds read that needed a 64 MB input and more than 2 GB of memory. Fuzzers usually cap inputs around 1 MB.</p>
+<p>Also, many harnesses assert real properties, like decompressing a compressed input giving back the original, so those get proven too. For cpp-httplib, Claude even had to prove on machine code that libc++’s red-black tree keeps its depth logarithmic, just to rule out a stack overflow in a destructor.</p>
+<p>Really impressive work overall.</p>
+</section>
+<section id="where-id-bet-differently" class="level2">
+<h2 class="anchored" data-anchor-id="where-id-bet-differently">Where I’d bet differently</h2>
+<p>My disagreement is not with the result but with the layer they verify at. The appendix explains their choice: translating the code into Rocq risks translation mistakes, and interpreting the source risks disagreeing with what the compiler actually produced. That is fair, and it is the compiler-trust trade-off I come back to below.</p>
+<p>First, the proof covers static, single-threaded RISC-V binaries linked against musl. Most of us ship x86 or ARM binaries dynamically linked against glibc, and covering those needs accurate formal models for every ISA, OS and libc combination, kept up to date. The post lists this as a limitation too.</p>
+<p>Second, undefined behaviour in the source can pass a binary proof. The proof says that the code this compiler produced today is fine. It doesn’t say the source is free of UB. A classic example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// concept</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> add_padding<span class="op">(</span><span class="dt">int</span> len<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>len <span class="op">+</span> <span class="dv">100</span> <span class="op">&lt;</span> len<span class="op">)</span>   <span class="co">// "overflow check" on a signed int</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="op">-</span><span class="dv">1</span><span class="op">;</span>         <span class="co">// UB: the compiler may delete this branch</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> len <span class="op">+</span> <span class="dv">100</span><span class="op">;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Signed overflow is UB, so the compiler is allowed to assume <code>len + 100 &lt; len</code> is always false and remove the check. The binary that comes out gets verified as it is. With a different compiler version, or <code>-O3</code> instead of <code>-O2</code>, the generated code can change and the proof no longer applies.</p>
+<p>Third, most of each proof is not about your code. A typical entry point is a few hundred lines of C, around 2,000 RISC-V instructions, but every proof re-proves C startup, the allocator, <code>printf</code>, the ASan runtime and the fuzz driver from scratch. cJSON’s 391-line parser got a 630K-line proof, and only about a tenth of it is about cJSON. Checking a single proof takes 30 minutes to several hours of CPU time, and a new compiler flag means a new binary and a new proof.</p>
+<p>Fourth, “doesn’t crash” is not an API contract. It tells you the harness is safe, but nothing about what callers of a library function must guarantee. The post lists this as a limitation too.</p>
+</section>
+<section id="they-also-used-a-source-level-verifier" class="level2">
+<h2 class="anchored" data-anchor-id="they-also-used-a-source-level-verifier">They also used a source-level verifier</h2>
+<p>There is a second set of experiments in the post that I almost skipped, and I think it’s the most interesting part for this discussion.</p>
+<p>Claude also wrote an interpreter for a large subset of Python in Rust, and for that one they did not verify a binary. They used Verus, a source-level verifier for Rust, and Claude proved the interpreter follows a formal semantics of Python. They checked that semantics against CPython on 1.7 million mostly random programs (99.95% matched). The appendix says they picked Verus partly to test Claude on source-level Hoare-logic proofs, a very different setting from binary proofs.</p>
+<p>The best part: they planted 7 bugs in an early version of the interpreter. 5 of them survived the random tests. All 7 broke the proof.</p>
+<blockquote class="blockquote">
+<p>For existing code, they verified the binary. For new code, they verified the source.</p>
+</blockquote>
+<p>That is pretty much the split I would argue for: binary-level verification for the huge amount of existing code nobody will annotate, and source-level verification for code being written now. Verus is also the closest thing to what I’m building for C++ with Cpp-Verify.</p>
+</section>
+<section id="verifying-against-the-c-standard" class="level2">
+<h2 class="anchored" data-anchor-id="verifying-against-the-c-standard">Verifying against the C++ standard</h2>
+<p>C++ already has a spec that every conforming compiler follows: the abstract machine defined by the standard. If you prove your program has no UB and satisfies its contracts under those semantics, every conforming compiler has to preserve that behaviour. Compilers can implement things differently and the proof still holds.</p>
+<p>What you get from this:</p>
+<p>✅ One proof that holds for every conforming compiler targeting the same ABI (for example, <code>long</code> is 64 bits on 64-bit Linux and macOS but 32 bits on Windows, and <code>char</code> is signed on x86-64 Linux but unsigned on ARM64 Linux).</p>
+<p>✅ The proof stays valid after recompiling or upgrading the compiler, and after changing flags, as long as they don’t change the language’s meaning (like <code>-funsigned-char</code> or <code>-std=</code>).</p>
+<p>✅ The UB the verifier models is caught in the source, before the optimiser can take advantage of it.</p>
+<p>✅ Contracts are modular, so a function is verified once against its contract and callers rely on that contract.</p>
+<p>Another detail from the appendix I really liked: a formal verification expert reviewed Claude’s binary proofs. They are correct but very verbose, spelling out register contents, which addresses are distinct, and every branch, where a human would introduce abstractions like a calling convention, sets of disjoint pointers or a model of the allocator. The agents did invent a few such abstractions (a separation-logic-style framing rule, an allocator model), but they only shrank the proofs a little. The appendix leaves open whether this style scales, and experience from another agent project (MachCSL) suggests agents hit a complexity wall. At the source level those abstractions come with the language: a function contract is the calling convention, and pointer bounds and separation are part of the spec.</p>
+<p>There are real trade-offs too:</p>
+<ul>
+<li>The compiler’s code generation is trusted. If clang miscompiles something, a source-level proof won’t catch it. Translation validation, which checks each compiled binary against the source semantics (seL4 did this), can close that gap later.</li>
+<li>Someone has to write the per-function contracts. The binary approach avoids that by using the fuzz harness as the spec (its proofs still need loop invariants inside). But LLMs are good at this: in the OSS-Fuzz work, agents on their own wrote short output specs (about 110 lines at the median) for programs with about 86 KB of code.</li>
+<li>Modelling C++ precisely is hard. Pointer provenance only recently got an official model (C in 2025, C++ in 2026), and no tool models the full abstract machine yet. The practical approach is to support a well-defined subset and reject anything outside it.</li>
+<li>Resource limits are invisible at the source level. The C++ abstract machine has no stack limit, so a source-level proof can’t rule out a stack overflow. The binary proof can, as the cpp-httplib example shows.</li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Binary-level (the post)</th>
+<th>Source-level</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>What’s proven</td>
+<td>One build (an ASan and a plain binary)</td>
+<td>The program, against the C++ standard</td>
+</tr>
+<tr class="even">
+<td>Trusted</td>
+<td>ISA + OS models, theorem statements, Rocq kernel</td>
+<td>Verifier’s C++ semantics, solver, compiler codegen</td>
+</tr>
+<tr class="odd">
+<td>Portability</td>
+<td>Per ISA × OS × libc</td>
+<td>Per target ABI (data model, char signedness, …)</td>
+</tr>
+<tr class="even">
+<td>Recompile or upgrade</td>
+<td>Re-prove</td>
+<td>Proof still holds</td>
+</tr>
+<tr class="odd">
+<td>Latent UB</td>
+<td>Can slip through</td>
+<td>Caught, for the UB the verifier models</td>
+</tr>
+<tr class="even">
+<td>Annotations</td>
+<td>None (generic spec)</td>
+<td>Contracts and invariants</td>
+</tr>
+<tr class="odd">
+<td>Best fit</td>
+<td>Existing code nobody will annotate</td>
+<td>New code</td>
+</tr>
+</tbody>
+</table>
+<p>Neither approach wins on every row. But for code we are writing now, I would rather verify against the language standard.</p>
+</section>
+<section id="languages-that-compile-to-c-or-c" class="level2">
+<h2 class="anchored" data-anchor-id="languages-that-compile-to-c-or-c">Languages that compile to C or C++</h2>
+<p>Another reason I care about the source level is that C and C++ are not only written by people. A lot of other languages compile to them:</p>
+<ul>
+<li>Pythran compiles a subset of Python to C++</li>
+<li>Shed Skin compiles restricted Python to C++</li>
+<li>Cython generates C or C++</li>
+<li>Nuitka and mypyc compile Python to C</li>
+<li>Nim compiles to C or C++</li>
+<li>Vala compiles to C</li>
+<li>Lean 4 compiles its programs to C and builds them with Clang</li>
+</ul>
+<p>On top of that, a growing share of C++ is now written by LLMs. If verification works well at the C/C++ level, all of these can benefit from it.</p>
+<p>These compilers also already know useful facts about the code they generate. Pythran knows array types and dimensions, Cython knows typed memoryview bounds, and mypyc knows your type hints. So in principle they could emit contracts along with the generated code. For example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># concept: a kernel you'd hand to an AOT compiler</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#pythran export clamp_all(int64[], int64)</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clamp_all(xs, hi):</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(xs)):</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> xs[i] <span class="op">&gt;</span> hi:</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>            xs[i] <span class="op">=</span> hi</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// concept: what a contract-aware backend could emit</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> clamp_all<span class="op">(</span><span class="dt">long</span><span class="op">*</span> xs<span class="op">,</span> <span class="dt">long</span> n<span class="op">,</span> <span class="dt">long</span> hi<span class="op">)</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  cppverify<span class="op">::</span>pre<span class="op">(</span>cppverify<span class="op">::</span>valid<span class="op">(</span>xs<span class="op">,</span> n<span class="op">))</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  cppverify<span class="op">::</span>modifies<span class="op">(</span>xs<span class="op">[</span><span class="dv">0</span> <span class="op">:</span> n<span class="op">])</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span><span class="dt">long</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> n<span class="op">;</span> i <span class="op">=</span> i <span class="op">+</span> <span class="dv">1</span><span class="op">)</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    cppverify<span class="op">::</span>invariant<span class="op">(</span><span class="dv">0</span> <span class="op">&lt;=</span> i <span class="op">&amp;&amp;</span> i <span class="op">&lt;=</span> n<span class="op">)</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    cppverify<span class="op">::</span>modifies<span class="op">(</span>xs<span class="op">[</span><span class="dv">0</span> <span class="op">:</span> n<span class="op">])</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    cppverify<span class="op">::</span>decreases<span class="op">(</span>n <span class="op">-</span> i<span class="op">)</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="op">{</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>xs<span class="op">[</span>i<span class="op">]</span> <span class="op">&gt;</span> hi<span class="op">)</span> xs<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> hi<span class="op">;</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The frontend knows <code>xs</code> has <code>len(xs)</code> elements, so it can emit <code>valid(xs, n)</code> and the loop bounds itself, and the verifier proves that every access stays in bounds.</p>
+</section>
+<section id="cpp-verify" class="level2">
+<h2 class="anchored" data-anchor-id="cpp-verify">Cpp-Verify</h2>
+<p>This is the reason I started building Cpp-Verify. It is an open-source deductive verifier for C++, built directly into Clang. If Verus is source-level verification for Rust, Cpp-Verify is my attempt at the same idea for C++.</p>
+<p>✅ Contracts use C++-native syntax (<code>cppverify::pre</code>/<code>post</code>), parsed and type-checked by Clang’s own Sema, so the verifier works on the same AST the compiler compiles.</p>
+<p>✅ UB checks are generated automatically, including signed overflow, division by zero, invalid shifts, out-of-bounds accesses and use-after-delete (for simple scalar <code>new</code>/<code>delete</code> so far).</p>
+<p>✅ It supports multiple backends: Z3 (built in), cvc5, solver portfolios, bounded model checking, and Lean 4 export with kernel-checked certification.</p>
+<p>✅ Results are reported as Verified, Failed (with a concrete counterexample that gets re-checked), or Unresolved with a reason.</p>
+<p>✅ Contracts compile away, so there is no runtime cost.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> abs<span class="op">(</span><span class="dt">int</span> x<span class="op">)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  cppverify<span class="op">::</span>pre<span class="op">(</span>x <span class="op">&gt;=</span> <span class="op">-</span><span class="dv">2147483647</span><span class="op">)</span>   <span class="co">// every int except INT_MIN</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  cppverify<span class="op">::</span>post<span class="op">(</span>cppverify<span class="op">::</span>result <span class="op">&gt;=</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> x <span class="op">&lt;</span> <span class="dv">0</span> <span class="op">?</span> <span class="op">-</span>x <span class="op">:</span> x<span class="op">;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If you remove the precondition, Cpp-Verify reports a failed overflow check with <code>x = INT_MIN</code> as the counterexample.</p>
+<p>It is still early: 0.1.1 supports a documented subset of C++ (integers, pointers, buffers, structs, loops, function calls, quantifiers, recursive specs and proof functions). Templates, member functions and floating point are next, and templates matter for the transpiler idea since Pythran’s output uses them heavily.</p>
+<p>The direction I’m most excited about is using it together with LLMs. The model proposes contracts and loop invariants, and Cpp-Verify replies with the exact failing obligation and a counterexample (also available as JSON). That is basically the workflow from Anthropic’s post, but at the source level.</p>
+</section>
+<section id="closing-thoughts" class="level2">
+<h2 class="anchored" data-anchor-id="closing-thoughts">Closing thoughts</h2>
+<p>I think both approaches have a place. Binary verification works well for the huge amount of existing code nobody will annotate, and Anthropic showed it scales. For new code, written by people, transpilers or LLMs, verifying the source gives proofs that are portable, modular and still valid after the next compiler upgrade.</p>
+<p>I’m clearly biased here since I’m building one of these 😄 Would love to hear which side you’d pick.</p>
+<ul>
+<li>Anthropic’s post: <a href="https://www.anthropic.com/research/formal-verification" class="uri">https://www.anthropic.com/research/formal-verification</a></li>
+<li>Cpp-Verify on GitHub: <a href="https://github.com/SwayamInSync/cpp-verify" class="uri">https://github.com/SwayamInSync/cpp-verify</a></li>
+<li>Docs: <a href="https://swayaminsync.github.io/cpp-verify/" class="uri">https://swayaminsync.github.io/cpp-verify/</a></li>
+<li>Intro article: <a href="https://swayam.substack.com/p/cpp-verify" class="uri">https://swayam.substack.com/p/cpp-verify</a></li>
+</ul>
+<p><em>Also published on X: <a href="https://x.com/swayaminsync/status/2113568142052274186" class="uri">https://x.com/swayaminsync/status/2113568142052274186</a></em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+// Ongoing Posts Toggle Functionality
+(function() {
+  'use strict';
+  
+  // Initialize the toggle state from localStorage
+  function getOngoingToggleState() {
+    const stored = localStorage.getItem('show-ongoing-posts');
+    return stored === 'true'; // Default is false (OFF)
+  }
+  
+  function setOngoingToggleState(state) {
+    localStorage.setItem('show-ongoing-posts', state.toString());
+  }
+  
+  // Filter posts based on ongoing toggle state
+  function filterPosts() {
+    const showOngoing = getOngoingToggleState();
+    const posts = document.querySelectorAll('.quarto-post');
+    
+    posts.forEach(post => {
+      const categories = post.getAttribute('data-categories') || '';
+      // Decode base64 categories and check for "Ongoing"
+      const decodedCategories = categories.split(',').map(cat => {
+        try {
+          return atob(cat);
+        } catch(e) {
+          return '';
+        }
+      }).join(',').toLowerCase();
+      
+      const isOngoing = decodedCategories.includes('ongoing');
+      
+      if (!showOngoing && isOngoing) {
+        post.style.display = 'none';
+      } else {
+        post.style.display = '';
+      }
+    });
+    
+    // Update category counts
+    updateCategoryCounts();
+  }
+  
+  // Update category counts after filtering
+  function updateCategoryCounts() {
+    const showOngoing = getOngoingToggleState();
+    const categoryElements = document.querySelectorAll('.quarto-listing-category .category');
+    
+    categoryElements.forEach(categoryEl => {
+      const categoryValue = categoryEl.getAttribute('data-category');
+      
+      if (!categoryValue) {
+        // "All" category - count visible posts
+        const visiblePosts = document.querySelectorAll('.quarto-post[style=""], .quarto-post:not([style*="display"])');
+        const countEl = categoryEl.querySelector('.quarto-category-count');
+        if (countEl) {
+          countEl.textContent = `(${visiblePosts.length})`;
+        }
+      } else {
+        // Specific category - count visible posts with that category
+        const posts = document.querySelectorAll(`.quarto-post[data-categories*="${categoryValue}"]`);
+        let visibleCount = 0;
+        posts.forEach(post => {
+          if (post.style.display !== 'none') {
+            visibleCount++;
+          }
+        });
+        const countEl = categoryEl.querySelector('.quarto-category-count');
+        if (countEl) {
+          countEl.textContent = `(${visibleCount})`;
+        }
+      }
+    });
+  }
+  
+  // Toggle the ongoing posts visibility
+  function toggleOngoingPosts() {
+    const currentState = getOngoingToggleState();
+    const newState = !currentState;
+    setOngoingToggleState(newState);
+    updateToggleButton();
+    filterPosts();
+  }
+  
+  // Update the toggle button appearance
+  function updateToggleButton() {
+    const button = document.querySelector('.ongoing-toggle');
+    if (!button) return;
+    
+    const isOn = getOngoingToggleState();
+    const icon = button.querySelector('i');
+    
+    if (isOn) {
+      button.classList.add('active');
+      icon.classList.remove('bi-eye-slash');
+      icon.classList.add('bi-eye');
+      button.title = 'Hide ongoing posts';
+    } else {
+      button.classList.remove('active');
+      icon.classList.remove('bi-eye');
+      icon.classList.add('bi-eye-slash');
+      button.title = 'Show ongoing posts';
+    }
+  }
+  
+  // Create and insert the toggle button
+  function createToggleButton() {
+    const navbarTools = document.querySelector('.quarto-navbar-tools');
+    if (!navbarTools) return;
+    
+    // Check if button already exists
+    if (document.querySelector('.ongoing-toggle')) return;
+    
+    const button = document.createElement('a');
+    button.href = '';
+    button.className = 'ongoing-toggle quarto-navigation-tool px-1';
+    button.onclick = function(e) {
+      e.preventDefault();
+      toggleOngoingPosts();
+      return false;
+    };
+    
+    const icon = document.createElement('i');
+    icon.className = 'bi';
+    button.appendChild(icon);
+    
+    // Insert before the color scheme toggle
+    const colorToggle = navbarTools.querySelector('.quarto-color-scheme-toggle');
+    if (colorToggle) {
+      navbarTools.insertBefore(button, colorToggle);
+    } else {
+      navbarTools.appendChild(button);
+    }
+    
+    updateToggleButton();
+  }
+  
+  // Initialize when DOM is ready
+  function init() {
+    createToggleButton();
+    filterPosts();
+    
+    // Re-filter when quarto listing is loaded
+    if (window['quarto-listing-loaded']) {
+      const originalLoaded = window['quarto-listing-loaded'];
+      window['quarto-listing-loaded'] = function() {
+        originalLoaded();
+        filterPosts();
+      };
+    } else {
+      window['quarto-listing-loaded'] = function() {
+        filterPosts();
+      };
+    }
+  }
+  
+  // Wait for DOM to be ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+  
+  // Re-initialize after category filter changes
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('category') || 
+        e.target.classList.contains('listing-category')) {
+      setTimeout(filterPosts, 100);
+    }
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/swayaminsync\.github\.io\/swayam-script\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<input type="hidden" id="giscus-base-theme" value="light">
+<input type="hidden" id="giscus-alt-theme" value="dark_dimmed">
+<script>
+  function loadGiscus() {
+    // Function to get the theme based on body class
+    const getTheme = () => {
+      let baseTheme = document.getElementById('giscus-base-theme').value;
+      let altTheme = document.getElementById('giscus-alt-theme').value;
+      if (authorPrefersDark) {
+          [baseTheme, altTheme] = [altTheme, baseTheme];
+      }
+      return document.body.classList.contains('quarto-dark') ? altTheme : baseTheme;
+    };
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.async = true;
+    script.dataset.repo = "SwayamInSync/swayam-script";
+    script.dataset.repoId = "R_kgDOM9t4DA";
+    script.dataset.category = "General";
+    script.dataset.categoryId = "DIC_kwDOM9t4DM4CjN7v";
+    script.dataset.mapping = "title";
+    script.dataset.reactionsEnabled = "1";
+    script.dataset.emitMetadata = "0";
+    script.dataset.inputPosition = "top";
+    script.dataset.theme = getTheme();
+    script.dataset.lang = "en";
+    script.crossOrigin = "anonymous";
+    // Append the script to the desired div instead of at the end of the body
+    document.getElementById("quarto-content").appendChild(script);
+  }
+  loadGiscus();
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© 2025 Swayam Singh. All rights reserved.</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
