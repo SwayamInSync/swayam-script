@@ -1,0 +1,53 @@
+---
+title: "Floating Point Lab"
+subtitle: "Interactive companions to *Floating Point, Without the Lies*"
+author: "Swayam Singh"
+date: "2026-10-23"
+categories: [Floating-Point, Numerics, Interactive]
+draft: true
+comments: false
+resources:
+  - common.js
+  - fpcore.js
+  - universe.js
+  - atlas.js
+  - formats.json
+  - lab.css
+---
+
+```{=html}
+<link rel="stylesheet" href="lab.css">
+```
+
+Every value in these widgets is computed exactly (with rational arithmetic, or from the checked format tables) and only rounded for display, so nothing you see here was
+rounded by your browser's own floats.
+
+## The 8-bit universe {#universe}
+
+Eight bits give 256 codes, few enough to see every one. Pick a format, flip bits, click a value, or type
+a number to see where it lands.
+
+- **Our toy 1·4·3** uses the IEEE 754 rules: an all-ones exponent means ∞ or NaN.
+- **FP8 E4M3** gives up ∞, keeps a single NaN pattern, and turns the top exponent into one more binade.
+  That one rule change takes the largest value from 240 to 448.
+- **FP8 E5M2** has the same layout as the top byte of an IEEE `binary16`.
+
+::: {.column-page}
+```{=html}
+<div id="fp-universe"><noscript>This widget needs JavaScript.</noscript></div>
+<script type="module" src="universe.js"></script>
+```
+:::
+
+## Every format on one chart {#atlas}
+
+From the 4-bit numbers inside AI chips to 256-bit giants. Right means more range, up means more precision.
+Each extra exponent bit roughly doubles the range (counted in binades); each extra mantissa bit adds a bit of
+precision. Click any format for its layout and limits.
+
+::: {.column-page}
+```{=html}
+<div id="fp-atlas"><noscript>This widget needs JavaScript.</noscript></div>
+<script type="module" src="atlas.js"></script>
+```
+:::
