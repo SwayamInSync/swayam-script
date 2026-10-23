@@ -1,0 +1,9 @@
+# Posts published on Substack (The Solution); listing cards link straight to Substack
+- title: "Cpp-Verify: Formal deductive verification for C++, built into Clang"
+  subtitle: "Formal verification for C++. Prove correctness instead of testing examples."
+  description: "Published on my Substack, The Solution."
+  author: "Swayam Singh"
+  date: "2026-10-12"
+  categories: [C++, Formal Verification]
+  image: https://substack-post-media.s3.amazonaws.com/public/images/58a15dad-91e5-4ea2-a712-74c24949bedc_1500x1000.png
+  path: https://swayam.substack.com/p/cpp-verify
