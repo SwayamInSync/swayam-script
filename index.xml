@@ -23,6 +23,17 @@
   <media:content url="https://swayaminsync.github.io/swayam-script/posts/Where Should the Proof Live/assets/header.png" medium="image" type="image/png" height="58" width="144"/>
 </item>
 <item>
+  <title>Floating Point Lab</title>
+  <dc:creator>Swayam Singh</dc:creator>
+  <link>https://swayaminsync.github.io/swayam-script/posts/floating-point-lab/</link>
+  <description><![CDATA[ Every value in these widgets is computed exactly, with rational arithmetic or from the checked format tables, and only rounded for display. Where a widget is <em>about</em> binary64 arithmetic (the sums in the printing machine, the summation race, the special-values table and the comparison playground), it uses your browser’s own doubles on purpose: their +, −, × and ÷ are IEEE 754 operations, correctly rounded, so they give the same bits as any conforming machine (except a NaN’s sign and payload, which the standard leaves open). Each widget’s arithmetic is tested against independent references: Python, NumPy, the C library, and the post’s own verification scripts. ]]></description>
+  <category>Floating-Point</category>
+  <category>Numerics</category>
+  <category>Interactive</category>
+  <guid>https://swayaminsync.github.io/swayam-script/posts/floating-point-lab/</guid>
+  <pubDate>Fri, 23 Oct 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
   <title>Cpp-Verify: Formal deductive verification for C++, built into Clang</title>
   <link>https://swayaminsync.github.io/swayam-script/</link>
   <description>Published on my Substack, The Solution.</description>
