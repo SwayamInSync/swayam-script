@@ -32,6 +32,7 @@
   <category>Interactive</category>
   <guid>https://swayaminsync.github.io/swayam-script/posts/floating-point-lab/</guid>
   <pubDate>Fri, 23 Oct 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://swayaminsync.github.io/swayam-script/posts/floating-point-lab/assets/header.png" medium="image" type="image/png" height="96" width="144"/>
 </item>
 <item>
   <title>Cpp-Verify: Formal deductive verification for C++, built into Clang</title>
