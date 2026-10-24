@@ -4,6 +4,8 @@ subtitle: "Interactive companions to *Floating Point, Without the Lies*"
 author: "Swayam Singh"
 date: "2026-10-23"
 categories: [Floating-Point, Numerics, Interactive]
+image: assets/header.png
+image-alt: "Floating Point, Without the Lies: 0.1 + 0.2 in a console with the 64 bits of its result, and every value of an 8-bit float on a number line"
 comments: false
 resources:
   - common.js
