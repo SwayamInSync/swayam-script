@@ -5,7 +5,7 @@ author: "Swayam Singh"
 date: "2026-10-23"
 categories: [Floating-Point, Numerics, Interactive]
 image: assets/header.png
-image-alt: "Floating Point, Without the Lies: 0.1 + 0.2 in a console with the 64 bits of its result, and every value of an 8-bit float on a number line"
+image-alt: "Floating Point Lab: the map of all 256 codes of an 8-bit float, coloured by class (zero, subnormal, normal, infinity, NaN), with 0x38 = 1 highlighted"
 comments: false
 resources:
   - common.js
