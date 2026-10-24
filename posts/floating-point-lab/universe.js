@@ -5,7 +5,7 @@
 import {
   makeFormat, roundRNE, parseNumber, toDecimal, shortLabel, toNumber, neighbours, sub, rabs, div, cmp,
 } from "./fpcore.js";
-import { captureMode, hashParams, writeHash as writeSharedHash } from "./common.js";
+import { el, sv, sup, captureMode, hashParams, writeHash as writeSharedHash, own, scrollToWidget } from "./common.js";
 
 const PRESETS = {
   toy: { label: "Our toy 1·4·3", e: 4, specials: "ieee", subnormals: true },
@@ -15,7 +15,7 @@ const PRESETS = {
 
 const SPECIALS = {
   ieee: "IEEE: top exponent = ∞ and NaN",
-  e4m3: "E4M3 rule: no ∞, one NaN pattern",
+  e4m3: "E4M3 rule: no ∞, one NaN pattern per sign",
   none: "None: every code is a number",
 };
 
@@ -28,26 +28,14 @@ const CLS = {
   flushed: "reads as 0 (no subnormals)",
 };
 
-const SUP = { "-": "⁻", 0: "⁰", 1: "¹", 2: "²", 3: "³", 4: "⁴", 5: "⁵", 6: "⁶", 7: "⁷", 8: "⁸", 9: "⁹" };
-const sup = (k) => String(k).replace(/[-0-9]/g, (c) => SUP[c]);
 const bin = (v, w) => v.toString(2).padStart(w, "0");
 const hex = (c) => "0x" + c.toString(16).toUpperCase().padStart(2, "0");
-const el = (tag, attrs = {}, ...kids) => {
-  const n = document.createElement(tag);
-  for (const [k, v] of Object.entries(attrs)) {
-    if (k === "class") n.className = v;
-    else if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
-    else if (v !== false && v != null) n.setAttribute(k, v === true ? "" : v);
-  }
-  for (const k of kids.flat()) if (k != null) n.append(k);
-  return n;
+// exact decimal, with a real minus sign, and "…" if it was cut short
+const dec = (v, digits) => {
+  const t = digits ? toDecimal(v, digits) : toDecimal(v);
+  return t.text.replace(/^-/, "−") + (t.exact ? "" : "…");
 };
-const SVG = "http://www.w3.org/2000/svg";
-const sv = (tag, attrs = {}) => {
-  const n = document.createElementNS(SVG, tag);
-  for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
-  return n;
-};
+const signed = (v, s) => (s && v.n === 0n ? "−0" : dec(v)); // toDecimal can't tell −0 from 0
 
 // ---------------------------------------------------------------------------
 
@@ -60,9 +48,9 @@ const KEYS = ["preset", "e", "sp", "sub", "code", "x", "view", "zoom"];
 
 function readHash() {
   const h = hashParams();
-  if (h.has("preset") && PRESETS[h.get("preset")]) Object.assign(state, PRESETS[h.get("preset")]);
+  if (own(PRESETS, h.get("preset"))) Object.assign(state, PRESETS[h.get("preset")]);
   if (h.has("e")) state.e = Math.min(6, Math.max(2, parseInt(h.get("e"), 10) || 4));
-  if (h.has("sp") && SPECIALS[h.get("sp")]) state.specials = h.get("sp");
+  if (own(SPECIALS, h.get("sp"))) state.specials = h.get("sp");
   if (h.has("sub")) state.subnormals = h.get("sub") !== "0";
   if (h.has("code")) state.code = (parseInt(h.get("code"), 16) || 0) & 0xff;
   if (h.has("x")) state.x = h.get("x");
@@ -88,9 +76,12 @@ function rebuild() {
 }
 
 function update(partial = {}) {
+  // re-rendering replaces the buttons, so put keyboard focus back on the one that had it
+  const fk = document.activeElement?.dataset?.fk;
   Object.assign(state, partial);
   rebuild();
   render();
+  if (fk) ui.root.querySelector(`[data-fk="${fk}"]`)?.focus();
   writeHash();
 }
 
@@ -120,7 +111,7 @@ function renderControls() {
   ui.subChk.checked = state.subnormals;
   for (const b of ui.viewBtns) b.setAttribute("aria-pressed", b.dataset.v === state.view ? "true" : "false");
   for (const b of ui.zoomBtns) {
-    b.setAttribute("aria-pressed", b.dataset.z === state.zoom ? "true" : "false");
+    b.setAttribute("aria-pressed", b.dataset.z === state.zoom && state.view !== "log" ? "true" : "false");
     b.disabled = state.view === "log";
   }
   if (ui.xIn.value !== state.x) ui.xIn.value = state.x;
@@ -172,6 +163,7 @@ function renderLine() {
   if (state.view === "log") {
     // one shaded band per binade [2^k, 2^(k+1)), labelled at its left edge
     let lastLabel = -Infinity;
+    let lastText = null;
     for (let k = Math.floor(g.lo); k <= Math.ceil(g.hi); k++) {
       const x0 = g.x(2 ** k);
       const x1 = g.x(2 ** (k + 1));
@@ -184,10 +176,13 @@ function renderLine() {
       if (x0 >= g.L && x0 <= g.R) {
         svg.append(sv("line", { x1: x0, x2: x0, y1: base, y2: base + 6, class: "fpu-axis" }));
         if (x0 - lastLabel >= 38 || k === fmt.emin) {
+          // emin's label always shows; if it would collide with the one before, that one goes
+          if (x0 - lastLabel < 38 && lastText) lastText.remove();
           const t = sv("text", { x: x0, y: base + 20, class: `fpu-axis-label${k === fmt.emin ? " fpu-axis-strong" : ""}`, "text-anchor": "middle" });
           t.textContent = `2${sup(k)}`;
           svg.append(t);
           lastLabel = x0;
+          lastText = t;
         }
       }
     }
@@ -235,7 +230,7 @@ function renderLine() {
     const x = g.x(toNumber(selPos.value));
     if (x != null) {
       const t = sv("text", { x: Math.min(g.R - 4, Math.max(g.L + 4, x)), y: 42, class: "fpu-sel-label", "text-anchor": x > g.R - 60 ? "end" : x < g.L + 60 ? "start" : "middle" });
-      t.textContent = (sel.s ? "−" : "") + toDecimal(selPos.value, 12).text + (sel.s ? " (mirrored)" : "");
+      t.textContent = (sel.s ? "−" : "") + dec(selPos.value, 12) + (sel.s ? " (mirrored)" : "");
       svg.append(t);
     }
   }
@@ -279,7 +274,7 @@ function renderDetail() {
     const on = (state.code >> i) & 1;
     bits.push(
       el("button", {
-        class: `fpu-bit fpu-bit-${role}`, type: "button", "aria-pressed": on ? "true" : "false",
+        class: `fpu-bit fpu-bit-${role}`, type: "button", "aria-pressed": on ? "true" : "false", "data-fk": `bit-${i}`,
         "aria-label": `${role === "s" ? "sign" : role === "e" ? "exponent" : "mantissa"} bit ${i}, ${on}. Click to flip.`,
         onclick: () => update({ code: state.code ^ (1 << i), x: "" }),
       }, String(on)),
@@ -300,35 +295,37 @@ function renderDetail() {
       el("div", {}, `= ${sgn}2${sup(fmt.emin)} × ${d.M}/${1 << m}   (E = 0: no hidden 1, same spacing as the first normal binade)`),
     ];
   } else if (d.cls === "zero") {
-    formula = [el("div", {}, d.s ? "E = 0 and M = 0: negative zero. Equal to +0, but 1/−0 = −∞." : "E = 0 and M = 0: zero.")];
+    formula = [el("div", {}, !d.s ? "E = 0 and M = 0: zero."
+      : fmt.specials === "ieee" ? "E = 0 and M = 0: negative zero. Equal to +0, but 1/−0 = −∞."
+        : "E = 0 and M = 0: negative zero. Equal to +0 (in IEEE arithmetic 1/−0 = −∞, but this format has no ∞).")];
   } else if (d.cls === "flushed") {
     formula = [el("div", {}, "E = 0 with M ≠ 0. Without subnormals this code is just another zero: a wasted pattern, and a hole between 0 and the smallest normal.")];
   } else if (d.cls === "inf") {
     formula = [el("div", {}, `All-ones exponent with M = 0: ${sgn}∞. Overflow lands here instead of wrapping around.`)];
   } else {
     formula = [el("div", {}, fmt.specials === "e4m3"
-      ? "All-ones exponent and all-ones mantissa: the only NaN pattern in E4M3. Every other top-exponent code is a normal number."
+      ? "All-ones exponent and all-ones mantissa: under the E4M3 rule this is the only NaN pattern (one per sign). Every other top-exponent code is a normal number."
       : "All-ones exponent with M ≠ 0: NaN (0/0, ∞ − ∞, √−1). The spare mantissa bits can carry a payload.")];
   }
 
   const rows = [
     el("div", { class: "fpu-bits" }, bits),
     el("div", { class: "fpu-legend-bits" },
-      el("span", { class: "fpu-bit-s-t" }, "sign"), el("span", { class: "fpu-bit-e-t" }, `exponent (${e} bits, bias ${fmt.bias})`), el("span", { class: "fpu-bit-m-t" }, `mantissa (${m} bits)`)),
+      el("span", { class: "fpu-bit-s-t" }, "sign"), el("span", { class: "fpu-bit-e-t" }, `exponent (${e} bits, bias ${fmt.bias})`), el("span", { class: "fpu-bit-m-t" }, `mantissa (${m} bit${m === 1 ? "" : "s"})`)),
     el("div", { class: "fpu-row" },
       el("span", { class: `fpu-badge fpu-c-${d.cls}` }, CLS[d.cls]),
       el("span", { class: "fpu-mono" }, `${hex(state.code)} · ${bin(d.s, 1)} ${bin(d.E, e)} ${bin(d.M, m)} · as an unsigned integer: ${state.code}`)),
     el("div", { class: "fpu-formula fpu-mono" }, formula),
   ];
   if (d.value !== null) {
-    const exact = toDecimal(d.value);
-    rows.push(el("div", { class: "fpu-value" }, el("span", { class: "fpu-k" }, "exact value"), el("span", { class: "fpu-v fpu-mono" }, exact.text)));
+    rows.push(el("div", { class: "fpu-value" }, el("span", { class: "fpu-k" }, "exact value"), el("span", { class: "fpu-v fpu-mono" }, signed(d.value, d.s))));
     if (d.cls !== "zero" && d.cls !== "flushed") {
       const { down, up } = neighbours(fmt, d.code & (fmt.signBit - 1));
       const nb = [];
-      if (down) nb.push(`next toward 0: ${toDecimal(down.value).text}`);
-      if (up) nb.push(`next away from 0: ${toDecimal(up.value).text} (gap ${toDecimal(sub(up.value, rabs(d.value))).text})`);
-      else nb.push("this is the largest finite value");
+      const sg = d.s ? "−" : ""; // the neighbours come from the positive half: mirror them back
+      if (down) nb.push(`next toward 0: ${sg}${dec(down.value)}`);
+      if (up) nb.push(`next away from 0: ${sg}${dec(up.value)} (gap ${dec(sub(up.value, rabs(d.value)))})`);
+      else nb.push(d.s ? "this is the most negative finite value" : "this is the largest finite value");
       rows.push(el("div", { class: "fpu-neigh" }, nb.join(" · ")));
     }
   }
@@ -345,12 +342,13 @@ function renderMap() {
     for (let c = 0; c < 16; c++) {
       const code = (r << 4) | c;
       const d = fmt.all[code];
-      const label = d.value !== null ? toDecimal(d.value, 14).text : d.cls === "inf" ? (d.s ? "−∞" : "+∞") : "NaN";
+      const label = d.value !== null ? signed(d.value, d.s) : d.cls === "inf" ? (d.s ? "−∞" : "+∞") : "NaN";
       cells.push(el("button", {
         type: "button",
         class: `fpu-cell fpu-c-${d.cls}${code === state.code ? " fpu-cell-on" : ""}`,
         title: `${hex(code)} · ${bin(d.s, 1)} ${bin(d.E, fmt.e)} ${bin(d.M, fmt.m)} · ${label}`,
         "aria-label": `code ${hex(code)}, ${CLS[d.cls]}, ${label}`,
+        "data-fk": `cell-${code}`,
         onclick: () => update({ code, x: "" }),
       }));
     }
@@ -373,28 +371,33 @@ function renderLanding() {
     return;
   }
   const x = landing.x;
-  const xs = (x.neg ? "-" : "") + toDecimal(x.mag, 30).text + (toDecimal(x.mag, 30).exact ? "" : "…");
+  const xs = (x.neg ? "−" : "") + dec(x.mag, 30);
   const got = fmt.all[landing.code];
   const lines = [];
-  const val = got.value !== null ? toDecimal(got.value).text : got.cls === "inf" ? (got.s ? "−∞" : "+∞") : "NaN";
+  const val = got.value !== null ? signed(got.value, got.s) : got.cls === "inf" ? (got.s ? "−∞" : "+∞") : "NaN";
   lines.push(el("p", {}, el("b", {}, "x = "), el("span", { class: "fpu-mono" }, xs), " lands on ", el("b", { class: "fpu-mono" }, val), ` (code ${hex(landing.code)}).`));
 
   const why = {
     exact: "It's exactly representable. No rounding happened.",
     rounded: landing.tie
       ? "x sits exactly halfway between two neighbours, so the tie goes to the one with an even mantissa (last bit 0)."
-      : "Not representable, so it rounds to the nearest neighbour.",
-    "underflow-zero": "x is less than half the smallest subnormal, so it rounds all the way to zero (keeping its sign).",
+      : landing.hi ? "Not representable, so it rounds to the nearest neighbour."
+        : fmt.specials === "e4m3"
+          ? "Past the largest finite value by at most half a gap (exactly half is a tie, and the largest value is the even neighbour), so round-to-nearest still gives the largest value."
+          : "Past the largest finite value, but by less than half a gap, so round-to-nearest still gives the largest value.",
+    "underflow-zero": "x is at most half the smallest subnormal (exactly half is a tie, and 0 is the even neighbour), so it rounds all the way to zero, keeping its sign.",
     flushed: "Without subnormals, anything below the smallest normal is flushed to zero.",
     "overflow-inf": "Too big: past the largest finite value by at least half a gap, so it overflows to infinity.",
-    "overflow-sat": fmt.specials === "e4m3"
-      ? "Too big for E4M3, which has no ∞. OCP conversions must offer SAT (clamp to ±448, shown here) and OVF (give NaN)."
-      : "Too big, and this format has no ∞, so the value saturates to the largest finite number.",
+    "overflow-sat": fmt.specials !== "e4m3"
+      ? "Too big, and this format has no ∞, so the value saturates to the largest finite number."
+      : fmt.e === 4
+        ? `Too big for E4M3, which has no ∞. OCP conversions must offer SAT (clamp to ±${dec(fmt.max.value)}, shown here) and OVF (give NaN).`
+        : `Too big, and the E4M3 rule leaves no ∞, so it saturates to ±${dec(fmt.max.value)} here, as OCP's SAT conversions do for E4M3 (its OVF ones give NaN).`,
   }[landing.kind];
   lines.push(el("p", {}, why));
 
   if (landing.lo && landing.hi && landing.kind !== "exact") {
-    lines.push(el("p", { class: "fpu-mono fpu-small" }, `neighbours: ${toDecimal(landing.lo.value).text}  ≤  |x|  ≤  ${toDecimal(landing.hi.value).text}`));
+    lines.push(el("p", { class: "fpu-mono fpu-small" }, `neighbours: ${dec(landing.lo.value)}  ≤  |x|  ≤  ${dec(landing.hi.value)}`));
   }
   if (got.value !== null && landing.kind !== "exact") {
     const xSigned = x.neg ? { n: -x.mag.n, d: x.mag.d } : x.mag;
@@ -402,7 +405,7 @@ function renderLanding() {
     const rel = div(rabs(err), x.mag);
     const errT = toDecimal(err, 30);
     lines.push(el("p", { class: "fpu-mono fpu-small" },
-      `stored − x = ${err.n > 0n ? "+" : ""}${errT.text}${errT.exact ? " exactly" : "…"} · relative error ${(toNumber(rel) * 100).toPrecision(3)}%`));
+      `stored − x = ${err.n > 0n ? "+" : ""}${errT.text.replace(/^-/, "−")}${errT.exact ? " exactly" : "…"} · relative error ${(toNumber(rel) * 100).toPrecision(3)}%`));
   }
   ui.land.replaceChildren(...lines);
 }
@@ -429,6 +432,7 @@ function renderTable() {
         el("button", {
           type: "button",
           class: `fpu-tcell fpu-c-${d.cls}${(state.code & (fmt.signBit - 1)) === code ? " fpu-cell-on" : ""}`,
+          "data-fk": `tcell-${code}`,
           onclick: () => update({ code: code | (state.code & fmt.signBit), x: "" }),
         }, text)));
     }
@@ -485,7 +489,7 @@ function mount(root) {
           el("div", { class: "fpu-land" }, el("label", { class: "fpu-panel-head" }, "Where does x land? ", ui.xIn), ui.land)),
         el("div", { class: "fpu-panel fpu-p-map" }, el("div", { class: "fpu-panel-head" }, "All 256 codes (row = high hex digit)"), ui.map)),
       el("details", { class: "fpu-panel fpu-p-table", open: true },
-        el("summary", { class: "fpu-panel-head" }, "One binade per row: the positive half, by exponent field"),
+        el("summary", { class: "fpu-panel-head" }, "One exponent field per row (each normal row is one binade): the positive half"),
         ui.table),
     ),
   );
@@ -502,13 +506,15 @@ function mount(root) {
 
 const root = document.getElementById("fp-universe");
 
-captureMode("universe", root);
+const capturing = captureMode("universe", root);
 
 if (root) {
+  ui.root = root;
   readHash();
   mount(root);
   rebuild();
   render();
+  if (!capturing && KEYS.some((k) => hashParams().has(k))) scrollToWidget(root);
   let lastW = ui.line.clientWidth;
   new ResizeObserver(() => {
     if (Math.abs(ui.line.clientWidth - lastW) < 2) return;

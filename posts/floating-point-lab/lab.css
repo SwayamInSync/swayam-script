@@ -1,6 +1,6 @@
 /* Floating Point Lab widgets. Colours follow the site's light (cosmo) / dark (cyborg) themes. */
 
-.fpu, .fpa {
+.fpu, .fpa, .fpw {
   --fpu-fg: #1f2328;
   --fpu-muted: #5b636e;
   --fpu-bg: #ffffff;
@@ -29,7 +29,7 @@
   margin: 1rem 0 2rem;
 }
 
-body.quarto-dark .fpu, body.quarto-dark .fpa {
+body.quarto-dark .fpu, body.quarto-dark .fpa, body.quarto-dark .fpw {
   --fpu-fg: #e6e6e6;
   --fpu-muted: #a0a7b0;
   --fpu-bg: #060606;
@@ -180,7 +180,7 @@ body.quarto-dark .fpu-bit[aria-pressed="true"] { color: #000; }
 /* capture mode (?capture=1) for recording GIFs ------------------------------------ */
 body.fpu-capture { margin: 0; padding: 0; background: var(--bs-body-bg, #fff); }
 .fpu-capture-wrap { padding: 16px 20px; box-sizing: border-box; }
-.fpu-capture-wrap .fpu { margin: 0; }
+.fpu-capture-wrap .fpu, .fpu-capture-wrap .fpw { margin: 0; }
 #fp-universe[data-hide~="controls"] .fpu-controls,
 #fp-universe[data-hide~="stats"] .fpu-stats,
 #fp-universe[data-hide~="line"] .fpu-p-line,
@@ -248,3 +248,86 @@ body.fpu-capture > *:not(.fpu-capture-wrap) { display: none !important; }
 #fp-atlas[data-hide~="layouts"] .fpa-p-layouts { display: none; }
 #fp-atlas[data-hide~="layouts"] .fpa-cols,
 #fp-atlas[data-hide~="detail"] .fpa-cols { grid-template-columns: minmax(0, 1fr); }
+
+/* shared bits for the newer widgets (.fpw) ------------------------------------------------- */
+.fpw-grid2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0.9rem; }
+@media (max-width: 860px) { .fpw-grid2 { grid-template-columns: minmax(0, 1fr); } }
+.fpw-table { border-collapse: collapse; width: 100%; font-size: 0.9em; }
+.fpw-table th { text-align: left; font-weight: 600; color: var(--fpu-muted); padding: 0.25rem 0.5rem; border-bottom: 1px solid var(--fpu-line); white-space: nowrap; }
+.fpw-table td { padding: 0.3rem 0.5rem; border-bottom: 1px solid var(--fpu-line); vertical-align: top; overflow-wrap: anywhere; }
+.fpw-table tr.fpw-dim td { color: var(--fpu-muted); }
+.fpw-num { font-family: var(--bs-font-monospace, monospace); }
+.fpw-up { color: var(--c-normal); font-weight: 600; }
+.fpw-down { color: var(--c-sub); font-weight: 600; }
+.fpw-bad { color: var(--c-nan); font-weight: 700; }
+.fpw-good { color: var(--c-sub); font-weight: 700; }
+.fpw-warn { color: var(--c-inf); font-weight: 600; }
+.fpw-note { font-size: 0.82em; color: var(--fpu-muted); margin: 0.4rem 0 0; }
+.fpw-range { width: 100%; accent-color: var(--fpu-accent); }
+.fpw-svg { width: 100%; height: auto; display: block; }
+.fpw-svg text { font-size: 14px; fill: var(--fpu-muted); }
+.fpw-svg .fpw-strong { fill: var(--fpu-fg); font-weight: 600; }
+.fpw-line { stroke: var(--fpu-muted); stroke-width: 1.2; }
+.fpw-tick { stroke: var(--c-normal); stroke-width: 3; }
+.fpw-mid { stroke: var(--fpu-muted); stroke-width: 1.2; stroke-dasharray: 4 4; }
+.fpw-x { stroke: var(--c-inf); stroke-width: 2.5; }
+.fpw-xt { fill: var(--c-inf) !important; font-weight: 600; }
+.fpw-band { fill: var(--c-normal); opacity: 0.12; }
+.fpw-reg { font: 0.95em var(--bs-font-monospace, monospace); white-space: pre; overflow-x: auto; background: var(--fpu-bg); border: 1px solid var(--fpu-line); border-radius: 8px; padding: 0.5rem 0.7rem; margin: 0.3rem 0; }
+.fpw-reg .g { color: var(--c-inf); font-weight: 700; } .fpw-reg .r { color: var(--c-nan); font-weight: 700; } .fpw-reg .s { color: var(--c-sub); font-weight: 700; }
+.fpw-reg .lost { color: var(--fpu-muted); text-decoration: line-through; }
+.fpw-steps { display: grid; gap: 0.6rem; counter-reset: step; }
+.fpw-step { border-left: 3px solid var(--fpu-line); padding-left: 0.7rem; }
+.fpw-step h4 { margin: 0 0 0.2rem; font-size: 0.95em; }
+.fpw-ta { width: 100%; min-height: 4.5rem; font: 0.85em var(--bs-font-monospace, monospace); background: var(--fpu-bg); color: var(--fpu-fg); border: 1px solid var(--fpu-line); border-radius: 6px; padding: 0.4rem; box-sizing: border-box; }
+.fpw-bars rect.orig { fill: none; stroke: var(--fpu-muted); stroke-width: 1; }
+.fpw-bars rect.q { fill: var(--c-normal); opacity: 0.75; }
+.fpw-bars rect.zero { fill: var(--c-nan); opacity: 0.85; }
+.fpw-bars rect.blk { fill: var(--fpu-line); opacity: 0.35; }
+.fpw-bars line.axis { stroke: var(--fpu-muted); stroke-width: 1; }
+.fpw-chip { display: inline-block; border: 1px solid var(--fpu-line); border-radius: 6px; padding: 0.15rem 0.45rem; margin: 0.1rem; font: 0.82em var(--bs-font-monospace, monospace); background: var(--fpu-bg); cursor: pointer; color: var(--fpu-fg); }
+.fpw-chip:hover, .fpw-chip[aria-pressed="true"] { border-color: var(--fpu-accent); }
+.fpw-chip[aria-pressed="true"] { background: color-mix(in srgb, var(--fpu-accent) 15%, transparent); }
+.fpw-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: 0.5rem; }
+.fpw-card { background: var(--fpu-bg); border: 1px solid var(--fpu-line); border-radius: 8px; padding: 0.45rem 0.6rem; }
+.fpw-card .fpu-k { display: block; }
+.fpw-yes { color: var(--c-sub); font-weight: 700; white-space: nowrap; } .fpw-no { color: var(--c-nan); font-weight: 700; white-space: nowrap; }
+/* tables that stack into label/value cards on phones */
+@media (max-width: 620px) {
+  .fpw-table.fpw-stack thead { display: none; }
+  .fpw-table.fpw-stack tr { display: block; border-bottom: 1px solid var(--fpu-line); padding: 0.35rem 0; }
+  .fpw-table.fpw-stack td { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 0.5rem; border: 0; padding: 0.12rem 0.2rem; }
+  .fpw-table.fpw-stack td::before { content: attr(data-label); color: var(--fpu-muted); font: 0.8em var(--bs-body-font-family, sans-serif); }
+}
+.fpw-dot { fill: var(--c-normal); stroke: var(--fpu-bg); stroke-width: 2; }
+.fpw-reg-l { color: var(--fpu-muted); }
+.fpw-table tr.fpw-sel td { background: color-mix(in srgb, var(--fpu-accent) 12%, transparent); }
+/* summation race */
+.fpw-sw { width: 0.8rem; height: 0.8rem; border-radius: 2px; display: inline-block; vertical-align: -1px; }
+.fpw-run { fill: none; stroke-width: 2.2; stroke-linejoin: round; }
+.fpw-sw.m-naive { background: var(--c-nan); } polyline.m-naive { stroke: var(--c-nan); }
+.fpw-sw.m-numpy { background: var(--c-inf); } polyline.m-numpy { stroke: var(--c-inf); }
+.fpw-sw.m-kahan { background: var(--c-normal); } polyline.m-kahan { stroke: var(--c-normal); stroke-dasharray: 7 4; }
+.fpw-sw.m-neumaier { background: var(--g-ml); } polyline.m-neumaier { stroke: var(--g-ml); stroke-dasharray: 2 4; }
+.fpw-sw.m-fsum { background: var(--c-sub); } polyline.m-fsum { stroke: var(--c-sub); }
+/* special values table */
+.sp-table { border-collapse: separate; border-spacing: 3px; font-size: 0.9em; margin: 0 auto; }
+.sp-table th { font-family: var(--bs-font-monospace, monospace); color: var(--fpu-muted); font-weight: 600; padding: 0.2rem 0.4rem; text-align: center; white-space: nowrap; }
+.sp-corner { font-family: inherit !important; font-size: 0.85em; }
+.sp-cell { min-width: 4.2rem; height: 3rem; text-align: center; vertical-align: middle; border-radius: 6px; cursor: pointer; background: var(--fpu-bg); border: 1px solid var(--fpu-line); font-family: var(--bs-font-monospace, monospace); padding: 0.15rem; }
+.sp-cell:hover, .sp-cell.sp-on { border-color: var(--fpu-accent); box-shadow: 0 0 0 1px var(--fpu-accent); }
+.sp-v { display: block; font-weight: 600; }
+.sp-flag { display: block; font-size: 0.72em; color: var(--c-nan); font-weight: 600; font-family: var(--bs-body-font-family, sans-serif); }
+.sp-cell.sp-nan { background: color-mix(in srgb, var(--c-nan) 14%, var(--fpu-bg)); }
+.sp-cell.sp-inf { background: color-mix(in srgb, var(--c-inf) 16%, var(--fpu-bg)); }
+.sp-cell.sp-zero { background: color-mix(in srgb, var(--c-zero) 16%, var(--fpu-bg)); }
+.sp-cell.sp-num { background: color-mix(in srgb, var(--c-normal) 10%, var(--fpu-bg)); }
+/* capture mode: &hide=… for the newer widgets */
+[data-hide~="input"] .fpw-part-input, [data-hide~="summary"] .fpw-part-summary, [data-hide~="chart"] .fpw-part-chart,
+[data-hide~="presets"] .fpw-part-presets, [data-hide~="search"] .fpw-part-search, [data-hide~="printers"] .fpw-part-printers { display: none !important; }
+
+/* real superscripts for Unicode exponents (common.js) */
+sup.fpu-sup { font-size: 0.72em; line-height: 0; position: relative; top: -0.5em; vertical-align: baseline; }
+.fpu-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.fpw-svg text.fpw-halo { paint-order: stroke; stroke: var(--fpu-panel); stroke-width: 4px; stroke-linejoin: round; }

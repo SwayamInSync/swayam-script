@@ -49,10 +49,11 @@ export function toNumber(r) {
 }
 
 /**
- * Parse "0.1", "-2.75e-3", "1/3", "+.5", "-0".
+ * Parse "0.1", "-2.75e-3", "1/3", "+.5", "-0" (a "−" minus sign works too, as the lab prints it).
  * Returns {neg, mag} with mag an exact non-negative rational, or null.
  */
 export function parseNumber(str) {
+  str = str.replace(/−/g, "-");
   const m = /^\s*([+-])?(?:(\d+)\s*\/\s*(\d+)|(\d*)(?:\.(\d*))?(?:[eE]([+-]?\d+))?)\s*$/.exec(str);
   if (!m) return null;
   const negSign = m[1] === "-";

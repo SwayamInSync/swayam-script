@@ -4,13 +4,27 @@ subtitle: "Interactive companions to *Floating Point, Without the Lies*"
 author: "Swayam Singh"
 date: "2026-10-23"
 categories: [Floating-Point, Numerics, Interactive]
-draft: true
 comments: false
 resources:
   - common.js
   - fpcore.js
   - universe.js
   - atlas.js
+  - fpbig.js
+  - rounding.js
+  - printers.js
+  - printing.js
+  - doubles.js
+  - grs.js
+  - adder.js
+  - closeness.js
+  - compare.js
+  - blockscale.js
+  - blocks.js
+  - summation.js
+  - race.js
+  - specialops.js
+  - specials.js
   - formats.json
   - lab.css
 ---
@@ -19,8 +33,13 @@ resources:
 <link rel="stylesheet" href="lab.css">
 ```
 
-Every value in these widgets is computed exactly (with rational arithmetic, or from the checked format tables) and only rounded for display, so nothing you see here was
-rounded by your browser's own floats.
+Every value in these widgets is computed exactly, with rational arithmetic or from the checked format tables, and only
+rounded for display. Where a widget is *about* binary64 arithmetic (the sums in the printing machine, the summation race,
+the special-values table and the comparison playground), it uses your browser's own doubles on purpose: their +, −, ×
+and ÷ are IEEE 754 operations, correctly rounded, so they give the same bits as any conforming machine (except a NaN's
+sign and payload, which the standard leaves open). Each widget's
+arithmetic is tested against independent references: Python, NumPy, the C library, and the post's own verification
+scripts.
 
 ## The 8-bit universe {#universe}
 
@@ -28,7 +47,7 @@ Eight bits give 256 codes, few enough to see every one. Pick a format, flip bits
 a number to see where it lands.
 
 - **Our toy 1·4·3** uses the IEEE 754 rules: an all-ones exponent means ∞ or NaN.
-- **FP8 E4M3** gives up ∞, keeps a single NaN pattern, and turns the top exponent into one more binade.
+- **FP8 E4M3** gives up ∞, keeps a single NaN pattern per sign, and turns the top exponent into one more binade.
   That one rule change takes the largest value from 240 to 448.
 - **FP8 E5M2** has the same layout as the top byte of an IEEE `binary16`.
 
@@ -49,5 +68,97 @@ precision. Click any format for its layout and limits.
 ```{=html}
 <div id="fp-atlas"><noscript>This widget needs JavaScript.</noscript></div>
 <script type="module" src="atlas.js"></script>
+```
+:::
+
+## The rounding lab {#rounding}
+
+Every rounding rule makes the same choice: of the two values on either side of x, which one? Type a number (fractions
+like `1/3` work), pick a format, and drag x between its neighbours to watch each rule pick. The table shows the exact
+result, its bits and the error, both absolute and in ulps.
+
+::: {.column-page}
+```{=html}
+<div id="fp-rounding"><noscript>This widget needs JavaScript.</noscript></div>
+<script type="module" src="rounding.js"></script>
+```
+:::
+
+## The adder {#adder}
+
+How does hardware add two floats "as if with infinite precision" while holding only a few extra bits? Line up the
+binary points, add, normalise, round. The trick is what it keeps of the bits that fall off the end: a **guard** bit,
+a **round** bit and a **sticky** bit that remembers whether anything else was a 1. Pick fewer bits and watch it get
+answers wrong. Use a small significand to see every bit.
+
+::: {.column-page}
+```{=html}
+<div id="fp-adder"><noscript>This widget needs JavaScript.</noscript></div>
+<script type="module" src="adder.js"></script>
+```
+:::
+
+## The printing machine {#printing}
+
+Why does `0.1 + 0.2` print as 0.30000000000000004, and `0.1` as plain 0.1? Every double owns an interval of real
+numbers, the ones that round to it. A shortest-round-trip printer (JavaScript's, Python's) prints the shortest
+decimal inside that interval (and if several are that short, the one nearest the double). Type a number, or a sum like `0.1 + 0.2` (spaces around the operator).
+
+::: {.column-page}
+```{=html}
+<div id="fp-printing"><noscript>This widget needs JavaScript.</noscript></div>
+<script type="module" src="printing.js"></script>
+```
+:::
+
+## The summation race {#race}
+
+The same numbers, added up five ways: a plain loop, NumPy's pairwise `np.sum`, Kahan's compensated sum, Neumaier's
+variant (what Python 3.12's `sum()` uses for floats), and `math.fsum`, the exact sum rounded once. Each is measured against
+the exact sum, computed with big integers.
+
+::: {.column-page}
+```{=html}
+<div id="fp-race"><noscript>This widget needs JavaScript.</noscript></div>
+<script type="module" src="race.js"></script>
+```
+:::
+
+## Special values {#specials}
+
+What's −0 ÷ +∞? Is NaN < 1? What's min(NaN, 1)? Arithmetic, comparisons, min/max and totalOrder on ±0, ±1, ±∞ and
+NaN, with the IEEE 754 exception flag each one raises.
+
+::: {.column-page}
+```{=html}
+<div id="fp-specials"><noscript>This widget needs JavaScript.</noscript></div>
+<script type="module" src="specials.js"></script>
+```
+:::
+
+## The comparison playground {#compare}
+
+There's no universal epsilon. Type two numbers and see what ten common "are they equal?" tests say, from `==` to
+NumPy's `isclose`, and why they disagree.
+
+::: {.column-page}
+```{=html}
+<div id="fp-compare"><noscript>This widget needs JavaScript.</noscript></div>
+<script type="module" src="compare.js"></script>
+```
+:::
+
+## The block-scaling lab {#blocks}
+
+Four bits can be enough, if every small block gets its own scale. Here are the schemes from the post: plain FP8 with
+one FP32 scale per tensor; OCP's MXFP8 and MXFP4, with a power-of-two scale per 32 values computed as the OCP MX
+specification does, plus MXFP4 with that scale rounded up, as NVIDIA's MXFP8 training study recommends; and NVIDIA's
+NVFP4, with an FP8 scale per 16 values plus one FP32 scale per tensor, as in its NVFP4 paper. Paste your own vector, or
+plant an outlier and watch what it does to its block.
+
+::: {.column-page}
+```{=html}
+<div id="fp-blocks"><noscript>This widget needs JavaScript.</noscript></div>
+<script type="module" src="blocks.js"></script>
 ```
 :::

@@ -2,7 +2,7 @@
 // Mounts into <div id="fp-atlas">. Data comes from formats.json, which verify/formats.py generates
 // from the same checked table as the post. Hash keys: atlas=<format id>, adec=1 (show decimal formats).
 
-import { el, sv, sup, hashParams, writeHash, captureMode } from "./common.js";
+import { el, sv, sup, hashParams, writeHash, captureMode, scrollToWidget } from "./common.js";
 
 const GROUPS = {
   ieee: "IEEE 754 binary",
@@ -44,9 +44,12 @@ function readState() {
 }
 
 function update(partial) {
+  // re-rendering replaces the chart, so put keyboard focus back on the point that had it
+  const fk = document.activeElement?.dataset?.fk;
   Object.assign(state, partial);
   if (!state.dec && byId(state.sel).group === "decimal") state.sel = "binary64";
   render();
+  if (fk) root.querySelector(`[data-fk="${fk}"]`)?.focus();
   writeHash(KEYS, { atlas: state.sel, adec: state.dec ? "1" : "" });
 }
 
@@ -100,8 +103,10 @@ function renderChart() {
     const cx = x(f.range_binades);
     const cy = y(precisionBits(f));
     const on = f.id === sel.id;
-    const g = sv("g", { class: `fpa-pt fpa-g-${f.group}${on ? " fpa-pt-on" : ""}`, tabindex: "0", role: "button" });
-    g.setAttribute("aria-label", `${f.name}: ${precisionBits(f).toFixed(0)} bits of precision, ${fmtBinades(f.range_binades)} binades of range`);
+    const g = sv("g", { class: `fpa-pt fpa-g-${f.group}${on ? " fpa-pt-on" : ""}`, tabindex: "0", role: "button", "data-fk": `pt-${f.id}` });
+    g.setAttribute("aria-label", f.group === "decimal"
+      ? `${f.name}: ${f.p_digits} decimal digits (about ${precisionBits(f).toFixed(0)} bits) of precision, ${fmtBinades(f.range_binades)} binades of range`
+      : `${f.name}: ${precisionBits(f).toFixed(0)} bits of precision, ${fmtBinades(f.range_binades)} binades of range`);
     if (f.group === "decimal") {
       const r = on ? 8 : 6;
       g.append(sv("rect", { x: cx - r, y: cy - r, width: 2 * r, height: 2 * r, class: "fpa-mark fpa-mark-hollow" }));
@@ -174,15 +179,15 @@ function renderDetail() {
 
   if (f.group === "decimal") {
     row("precision", `${f.p_digits} decimal digits (≈ ${f.p_bits_equiv.toFixed(1)} bits)`);
-    row("exponent range", `emin = ${f.emin}, emax = ${f.emax} for d.ddd… × 10ᵉ; the stored exponent has bias ${f.bias}`);
+    row("exponent range", `emin = ${String(f.emin).replace("-", "−")}, emax = ${f.emax} for d.ddd… × 10ᵉ; the stored exponent is q + ${f.bias}, where q = e − ${f.p_digits - 1} is the exponent of the integer significand`);
   } else {
     row("precision", `p = ${f.p} bits`);
-    row("exponent range", `emin = ${f.emin}, emax = ${f.emax} (bias ${f.bias})`);
+    row("exponent range", `emin = ${String(f.emin).replace("-", "−")}, emax = ${f.emax} (bias ${f.bias})`);
   }
   row("largest", f.max);
   row("smallest normal", f.min_normal + (Number.isInteger(f.log2_min_normal) && f.group !== "decimal" ? `  (2${sup(f.log2_min_normal)})` : ""));
   row("smallest subnormal", f.min_subnormal + (f.group !== "decimal" && Number.isInteger(f.log2_min_pos) ? `  (2${sup(f.log2_min_pos)})` : ""));
-  if (f.group !== "decimal") row("machine epsilon", `2${sup(f.eps_exp)} = ${f.eps}`);
+  if (f.group !== "decimal") row("machine epsilon", `2${sup(f.eps_exp)} ${f.eps.startsWith("≈") ? "" : "= "}${f.eps}`);
   // the digit formulas assume a wide exponent range; for the tiny formats they'd mislead, so skip them
   if (f.group !== "decimal" && f.p >= 8) row("decimal digits", `${f.digits[0]} always survive · ${f.digits[1]} to round-trip`);
   row("range", `${fmtBinades(f.range_binades)} binades`);
@@ -264,7 +269,7 @@ if (root) {
       mount(root);
       render();
       // links from the post (…/#atlas=binary64) should land on this widget, not the top of the page
-      if (!capturing && hashParams().has("atlas")) root.scrollIntoView({ block: "start" });
+      if (!capturing && hashParams().has("atlas")) scrollToWidget(root);
       let lastW = root.clientWidth;
       new ResizeObserver(() => {
         if (Math.abs(root.clientWidth - lastW) < 2) return;
